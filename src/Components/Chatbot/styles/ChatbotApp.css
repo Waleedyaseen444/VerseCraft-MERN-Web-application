@@ -1,0 +1,168 @@
+/* General Styles */
+.chatbot-app {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.chatbot-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.chatbot-sidebar {
+  width: 250px;
+  background-color: #1e1e1e;
+  padding: 20px;
+}
+
+.chatbot-sidebar h2 {
+  margin-top: 0;
+  color: #ff9d43;
+}
+
+.chatbot-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.chatbot-sidebar li {
+  margin-bottom: 10px;
+}
+
+.chatbot-sidebar button {
+  background: none;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  color: #f0f0f0;
+}
+
+.chatbot-sidebar button:hover {
+  background-color: #333;
+}
+
+/* Main Content */
+.chatbot-main {
+  flex: 1;
+  padding: 20px;
+  display: flex; 
+}
+
+.chatbot-content-area {
+  background-color: #282828;
+  border-radius: 10px;
+  padding: 20px;
+  height: 100%;
+  width: 100%; 
+  display: flex; 
+  flex-direction: column; 
+}
+
+/* Output Area */
+.chatbot-output-area {
+  flex-grow: 1; 
+  padding: 20px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  overflow-y: auto;
+  margin-bottom: 20px; 
+}
+
+/* Message Styling */
+.chatbot-message {
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  max-width: 70%; 
+  word-wrap: break-word;
+  border: 1px solid #555;
+}
+
+.chatbot-user-message {
+  text-align: right;
+  background-color: #343541;
+  color: #f0f0f0; 
+  margin-left: auto; 
+}
+
+.chatbot-llm-message {
+  text-align: left;
+  background-color: #202123; 
+  color: #f0f0f0;
+}
+
+/* Input Area at Bottom */
+.chatbot-input-area {
+  display: flex;
+}
+
+.chatbot-input-area input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+.chatbot-input-area button {
+  background-color: #ff9d43;
+  color: #121212;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* History - Updated Styles */
+.chatbot-history {
+  background-color: #282828;
+  border-radius: 10px;
+  padding: 20px;
+  margin-left: 20px;
+  width: 300px;
+}
+
+.chatbot-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chatbot-history h3 {
+  color: #ff9d43;
+  margin: 0; 
+}
+
+.chatbot-new-prompt-button {
+  background-color: #343541;
+  color: #f0f0f0;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.chatbot-history-items {
+  overflow-y: auto;
+  max-height: 300px; 
+}
+
+.chatbot-history-item {
+  background-color: #1e1e1e;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer; 
+}
+
+.chatbot-history-item:hover {
+  background-color: #333;
+}

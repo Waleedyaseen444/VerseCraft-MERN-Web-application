@@ -1,0 +1,547 @@
+.publishing-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color:#f5f5f5;
+  
+  }
+  
+  
+  .publishing-dashboard {
+    position: relative;
+    background-color: #191B30;
+    width: 100%;
+    height: 100%;
+    margin-left:50px;
+    
+    font-family: sans-serif;
+    border:1px solid #191B30;
+  }
+  
+
+  
+
+  .publishing-title{
+    font-size:50px;
+    color:white;
+    font-family: 'Times New Roman', Times, serif;
+    margin:0px;
+    background-color: #191B30;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  .publishing-right-sidepanel{
+    width:200px;
+    height:100vh;
+    background-color: #f5f5f5;
+    margin-top:-58px;
+    overflow: auto;
+    margin-left:-1px;
+  }
+
+  /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+.publishing-right-sidepanel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.publishing-right-sidepanel {
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Edge, Internet Explorer */
+.publishing-right-sidepanel {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+  .publishing-myprojects{
+    color: #191B30;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 30px;
+    background-color: #F06B37;
+    width: 200px;
+    position: fixed;
+    z-index: 2;
+   
+    
+  }
+
+  .publishing-project-list{
+    margin-top: 40px;
+  }
+
+  .publishing-project-item {
+    margin: 10px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    font-family: "Kanit", sans-serif;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+  .publishing-project-metrics {
+    position: absolute;
+    width: 65%;
+    height: 75%;
+    background-color: transparent;
+    margin-top: -630px;
+    border-radius: 10px;
+    border: 2px solid #F06B37; /* Removed the comma after 'solid' */
+    margin-left: 220px;
+    display: flex;
+    flex-direction: column; /* Stack items vertically first */
+    flex-wrap: wrap; /* Allow items to wrap horizontally when filled vertically */
+    align-content: flex-start; /* Align wrapped items to the left */
+   
+}
+
+.publishing-project-performance-metrics {
+    width: 460px;
+    height: 150px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column; /* Stack title vertically above */
+    align-items: center; /* Center the title horizontally */
+    justify-content: flex-start; /* Keep content aligned to the top */
+    padding: 20px;
+    position: relative;
+    gap: 10px; /* Add a small gap between items */
+}
+
+/* Title styling */
+.publishing-project-performance-metrics-title {
+    font-size: 17px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+
+
+.publishing-metrics-container {
+    display: flex;
+    width: 100%; /* Ensure it takes full width of the performance metrics container */
+    justify-content: space-between; /* Space them apart */
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    gap: 5px; /* Reduce the gap between items */
+}
+
+/* Project views box */
+.publishing-project-views {
+  width: 153px;
+  height: 100px;
+  display: flex;
+  flex-direction: column; /* Change to column for text and value to be displayed vertically */
+  background-color: #191B30;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin: 0 auto; /* Center the box */
+  padding: 10px; /* Add padding for better spacing */
+  box-sizing: border-box; /* Include padding in width and height */
+}
+
+.publishing-project-views-value {
+  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+
+/* Sentiment analysis box */
+.publishing-sentiment-analysis {
+  width: 300px;
+  height: 100px;
+  background-color: #191B30;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin-right: 30px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Container to hold both positive and negative values */
+.publishing-sentiment-analysis-value {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+  overflow: hidden; /* Ensure content stays within container */
+}
+
+/* Positive sentiment box */
+.publishing-sentiment-analysis-pos {
+  flex: 65; /* Represents 65% of the width */
+  background-color: aquamarine;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #191B30; /* Dark color for contrast */
+  font-weight: bold;
+}
+
+/* Negative sentiment box */
+.publishing-sentiment-analysis-neg {
+  flex: 35; /* Represents 35% of the width */
+  background-color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff; /* White color for contrast */
+  font-weight: bold;
+}
+
+
+
+
+.publishing-project-engagement-metrics {
+    width: 480px;
+    height: auto; /* Auto height to adjust to content */
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction: row; /* Items in a row */
+    flex-wrap: wrap; /* Wrap horizontally if needed */
+    align-items: flex-start; /* Align items at the top */
+    padding: 10px; /* Add padding inside the container */
+    gap: 10px; /* Add gap between items */
+}
+
+.publishing-project-engagement-metrics-title {
+    font-size: 17px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    text-align: center; /* Center the title text */
+    margin-bottom: 20px; /* Add spacing below the title */
+    width: 100%; /* Ensures title spans the full width of the container */
+}
+
+
+
+
+.publishing-likes, 
+.publishing-followercount, 
+.publishing-bookmarked {
+    border-radius: 10px;
+    width: 153px;
+    height: 100px;
+    background-color: #191B30;
+    color: white; /* For better visibility of text inside */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    text-align: center; /* Center text */
+    display: flex;
+  flex-direction: column; 
+}
+
+/* Optional: Specific margin adjustments to fine-tune the layout */
+.publishing-likes {
+    margin-left: 0; /* Remove left margin on first item */
+}
+
+.publishing-followercount, 
+.publishing-bookmarked {
+    margin-left: 0; /* Ensure these have consistent left margin */
+}
+
+.publishing-project-like-value{
+  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
+  font-weight: bold;
+  margin-top: 5px;
+
+}
+.publishing-project-follower-value{
+  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
+  font-weight: bold;
+  margin-top: 5px;
+
+}
+
+.publishing-project-bookmark-value{
+  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
+  font-weight: bold;
+  margin-top: 5px;
+
+}
+
+.publishing-project-audience-metrics{
+    width: 450px;
+    height: 330px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    margin: 10px;
+    overflow: auto;
+    display: flex;
+    flex-direction: row; /* Stack items vertically first */
+    flex-wrap: wrap; /* Allow items to wrap horizontally when filled vertically */
+    align-content: flex-start; 
+
+}
+/* Main container for audience metrics */
+.publishing-project-audience-metrics {
+  width: 440px;
+  height: auto;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  margin: 10px 10px 10px 0px;
+  overflow:hidden;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  padding: 10px;
+  gap: 10px; /* Add space between elements */
+  box-sizing: border-box;
+}
+
+/* Title styling */
+.publishing-project-audience-metrics-title {
+  font-size: 17px;
+  font-family: "Kanit", sans-serif;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0px; /* Reduced margin for compact layout */
+  width: 100%;
+}
+
+/* Main geographic data panel */
+.publishing-geographic-data {
+  width: 100%; /* Takes full width inside the flex container */
+  height: 160px;
+  background: url("../Images/map.png");
+  background-size: 400px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f5f5f5;
+  border: 2px solid #191B30;
+}
+
+/* Container to hold both average age and gender metric side by side */
+.publishing-metrics-row {
+  display: flex;
+  width: 100%; /* Full width */
+  gap: 10px; /* Add spacing between the two metrics */
+  align-items: center; /* Center metrics vertically */
+}
+
+/* Smaller metrics (average age and gender metric) */
+.publishing-average-age {
+  border-radius: 10px;
+  background-color: #191B30;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  color: white; /* Ensure text is visible */
+  width: 100px; /* Fixed width for average age box */
+  height: 90px; /* Fixed height for average age box */
+  margin-right: 10px; /* Add spacing to the right */
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Gender metric container */
+.publishing-gender-metric {
+  flex: 1; /* Take up remaining space in the row */
+  height: 90px;
+  background-color: #191B30;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 300px;
+}
+
+/* Container to hold both male and female values */
+.publishing-project-gender-value {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+  overflow: hidden; /* Ensure content stays within container */
+}
+
+/* Male gender box */
+.publishing-gender-male {
+  flex: 50; /* Set the proportion of male participants */
+  background-color: #1e90ff; /* Light blue color for male */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #191B30; /* Dark color for contrast */
+  font-weight: bold;
+}
+
+/* Female gender box */
+.publishing-gender-female {
+  flex: 50; /* Set the proportion of female participants */
+  background-color: #ff69b4; /* Pink color for female */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff; /* White color for contrast */
+  font-weight: bold;
+}
+
+
+
+
+.publishing-project-quality-metrics{
+    width: 460px;
+    height: auto;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    margin: 10px 10px 10px 0px;
+
+}
+
+
+.publishing-project-quality-metrics-title {
+    font-size: 17px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0px; /* Reduced margin for compact layout */
+    width: 100%;
+    margin-top:10px;
+}
+
+
+
+.publishing-project-word-count{
+    margin:10px 10px 10px 10px;
+    border-radius: 10px;
+    width: 200px;
+    height: 100px;
+    background-color: #191B30;
+    color: #f5f5f5;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; 
+    flex-direction: column;
+}
+
+.publishing-project-word-value{
+  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
+  font-weight: bold;
+  margin-top: 5px;
+
+}
+
+.publishing-all-characters-button{
+  position: absolute;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  color: #191B30;
+  padding: 10px;
+  width: fit-content;
+  height: fit-content;
+  margin-left: 220px;
+  margin-top: -40px;
+
+}
+
+.publishing-all-characters-button:hover{
+  background-color: #F06B37;
+  color: white;
+  cursor: pointer;
+}
+         
+
+
+
+
+
+
+  .publishing-left-sidepanel {
+    width:235px;
+    height:100vh;
+    background-color: #f5f5f5;
+    border: 2px solid,#F06B37;
+    margin-top: -705px;
+   
+
+    margin-left:1240px;
+    font-family: sans-serif;
+}
+
+.publishing-left-sidepanel-title{
+    font-size: 25px;
+    margin-top:10px;
+}
+
+.publishing-project-collaborators {
+    margin-top: 20px;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.publishing-collaborator-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    background-color: #F06B37;
+    border-radius: 10px;
+    width:90%;
+    padding:5px;
+    margin:5px;
+
+}
+
+.publishing-collaborator-image {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #191B30;
+    margin-left: 10px;
+    border-radius: 100%;
+}
+
+.publishing-profile-icon{
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+}
+
+.publishing-collaborator-text {
+    font-size: 14px;
+    color: #333;
+    flex-grow: 1;
+    margin-left: -10px;
+    font-weight: bold;
+    font-family: "Kanit",sans-serif;
+}
+
+.publishing-collaborator-container:hover  {
+    background-color: #191B30;
+}
+
+.publishing-collaborator-container:hover .publishing-collaborator-text  {
+    color:#f5f5f5
+}
+
+
+
+

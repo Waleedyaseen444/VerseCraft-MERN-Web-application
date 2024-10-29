@@ -1,0 +1,480 @@
+
+
+.story-Container{
+    display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background-color:white;
+}
+.story-main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: 100vh; /* Ensure the main content takes full viewport height */
+    margin-left: 50px;
+    
+}
+
+.story-outline {
+    background-color: #191B30;
+    width: 15%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #F47D4B;
+    height: 96.4%; /* Ensure full height for the scrollbar */
+    overflow: hidden; /* Hide overflow to avoid scrollbars in this section */
+}
+
+.story-outline2 {
+    background-color: #ffffff;
+    width: 100%; /* Use full width of the outline container */
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 98.5%; /* Ensures scrollbar takes full height */
+    overflow-y: auto; /* Adds vertical scrollbar if content exceeds height */
+}
+
+.story-outline h2 {
+    color: #191B30;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 300;
+    border-bottom: 2px solid #191B30;
+    padding-bottom: 10px;
+}
+
+.custom-thumb {
+    background-color: #F47D4B;
+    border-radius: 10px;
+    visibility: hidden; /* Hidden by default */
+}
+
+.custom-track {
+    background-color: #191B30;
+    border-radius: 10px;
+    visibility: hidden; /* Hidden by default */
+}
+
+.story-chapter-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.story-chapter-list li {
+    padding: 10px 0;
+    color: #191B30;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 300;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 1px solid #F47D4B;
+}
+
+.story-chapter-list li:hover {
+    background-color: #F47D4B;
+    color: #191B30;
+}
+
+.story-editor {
+
+    position: relative;
+    padding-bottom: 0px; /* Ensure space for the keyboard */
+    height: 100%;
+width: 100%;
+overflow: scroll;
+
+}
+
+.rtl .ql-editor {
+    direction: rtl;
+    text-align: right;
+}
+
+.editor-container[lang='ur'] .ql-editor {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Custom styles for ReactQuill toolbar */
+.ql-toolbar {
+    width: 100%; /* Adjust width as needed */
+    height: 100px;
+    border-bottom: 1px solid #ccc; /* Add a border for better visibility */
+    padding: 1rem; /* Adjust padding */
+}
+
+.ql-formats {
+    margin-right: 0.5rem; /* Space between groups of buttons */
+}
+
+/* Customize individual button styles */
+.ql-bold, .ql-italic, .ql-underline {
+    color: #000; /* Change color */
+    font-size: 14px; /* Adjust font size */
+}
+
+.ql-header {
+    font-size: 16px; /* Adjust font size for headers */
+}
+
+.ql-list {
+    font-size: 14px; /* Adjust font size for lists */
+}
+
+/* You can also customize dropdowns and other elements */
+.ql-picker {
+    background-color: #f5f5f5; /* Background color for dropdowns */
+    border-radius: 4px; /* Round corners */
+}
+
+.ql-picker-item {
+    font-size: 14px; /* Adjust font size for dropdown items */
+}
+
+/* Optional: Customize toolbar buttons */
+.ql-toolbar .ql-active {
+    background-color: #ddd; /* Background color when active */
+    border-radius: 4px; /* Round corners */
+}
+
+.keyboard-container {
+    position: absolute;
+    bottom: 0; /* Align it to the bottom of the parent */
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    background-color: #f5f5f5; /* Adjust the background color as needed */
+}
+
+.keyboard-container.visible {
+    display: block;
+}
+
+.close-keyboard {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #F47D4B;
+    border: none;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.story-notes-section {
+    width: 20%;
+    background-color: #191B30;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 96.5%;
+    border: 2px solid #F47D4B;
+    border-bottom-right-radius: 10px;
+    overflow: hidden;
+}
+
+.story-notes-header {
+    display: flex; /* Use flexbox to align items horizontally */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center content in the header */
+    position: relative; /* Position the button relative to this container */
+}
+
+.story-add-note {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Hide scrollbar for Webkit browsers like Chrome, Safari */
+.story-notes-container::-webkit-scrollbar {
+    display: none;
+}
+
+.story-notes-container {
+    height: 70%;
+    overflow: auto;
+    padding-bottom: 20px; /* Adjust bottom padding for spacing */
+}
+
+.story-plus-icon {
+    width: 20px; /* Adjust width */
+    height: 20px; /* Adjust height */
+}
+
+.story-modal {
+    /* Container styles */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 200px;
+    transform: translate(-50%, -50%);
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 12px; /* More rounded corners */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Slightly more shadow */
+    padding: 25px;
+    position: relative; /* Relative positioning for the close button */
+}
+
+.story-modal h2 {
+    position: absolute;
+    top: 10px; /* Adjust this value as needed */
+    left: 25px; /* Adjust this value as needed for horizontal positioning */
+    font-size: 16px;
+    color: #191B30;
+    margin: 0; /* Remove default margin */
+    font-weight: 300;
+    font-family: 'Kanit', sans-serif;
+}
+
+.story-close-button {
+    position: absolute; /* Absolute positioning */
+    top: 5px; /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.story-close-icon {
+    width: 18px; /* Smaller size */
+    height: 18px;
+}
+
+.story-close-icon:hover {
+    opacity: 0.6; /* Lighter opacity on hover */
+}
+
+.story-notes-header h2 {
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.story-notes-list {
+    list-style: none;
+    padding: 0;
+    padding-top: 20px;
+    margin: 0;
+}
+
+.story-notes-list li {
+    position: relative;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 40px 10px 10px; /* Added extra padding on the right */
+    margin-bottom: 10px;
+    overflow: hidden; /* Ensure content doesn’t overflow */
+    word-wrap: break-word; /* Break long words if needed */
+    box-sizing: border-box; /* Include padding and border in the element’s total width and height */
+}
+
+.story-notes-list li:hover {
+    background-color: #F47D4B;
+    color: #191B30;
+}
+
+.story-notes-section .scrollable {
+    flex: 1; /* Make it take the remaining space */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.story-note-text .ql-toolbar {
+    height: 100px; /* Adjust the height as needed */
+    padding: 4px;
+}
+
+.story-note-text .ql-toolbar .ql-formats {
+    margin: 0;
+}
+
+.story-note-text .ql-toolbar button {
+    height: 32px; /* Adjust the button height to fit the toolbar height */
+    line-height: 32px; /* Align the text vertically */
+}
+
+.story-close-note {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1; /* Ensure button is clickable above text */
+}
+
+.story-close-note img {
+    width: 16px;
+    height: 16px;
+    display: block;
+    transition: opacity 0.3s; /* Smooth transition for hover effect */
+}
+
+.story-close-note:hover img {
+    content: url('../Images/Close-black.png'); /* Switch to closeIcon2 on hover */
+}
+
+.story-close-icon {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+.story-close-icon:hover {
+    background-color: #191B30;
+    color: #F47D4B;
+}
+
+
+.story-action-buttons {
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* Even spacing between buttons */
+}
+
+.story-save-button, .story-save-as-new-button, .story-preview-button {
+    background-color: #F47D4B;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.story-save-button:hover, .story-save-as-new-button:hover, .story-preview-button:hover {
+    background-color: #FFA07A; /* Lighter shade on hover */
+}
+
+
+
+.kanit-thin {
+    font-family: "Kanit", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.kanit-extralight {
+    font-family: "Kanit", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.kanit-light {
+    font-family: "Kanit-light", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.kanit-regular {
+    font-family: "Kanit", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.kanit-medium {
+    font-family: "Kanit", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.kanit-semibold {
+    font-family: "Kanit", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.kanit-bold {
+    font-family: "Kanit", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.kanit-extrabold {
+    font-family: "Kanit", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.kanit-black {
+    font-family: "Kanit", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+.kanit-thin-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 100;
+    font-style: italic;
+}
+
+.kanit-extralight-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 200;
+    font-style: italic;
+}
+
+.kanit-light-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.kanit-regular-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.kanit-medium-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.kanit-semibold-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.kanit-bold-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.kanit-extrabold-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 800;
+    font-style: italic;
+}
+
+.kanit-black-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 900;
+    font-style: italic;
+}

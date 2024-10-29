@@ -1,0 +1,1461 @@
+.character-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color: #ffffff;
+    width: 100%;
+}
+
+
+.character-overview {
+    position: absolute;
+    width: 12%;
+    height: 100%;
+    margin-top: 57px;
+    background: #1F2247;
+    box-shadow: 5px 0px 15px rgba(0, 0, 0, 0.5);
+    padding: 0px;
+    padding-top: 5px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    margin-left:60px
+}
+
+.character-save-btn, .character-save-btn:after {
+  width: 160px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 13px;
+  font-weight: 300;
+  font-family: 'kanit', sans-serif;
+  background: linear-gradient(45deg, transparent 5%, #F47D4B 5%);
+  border: 0;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-left:10px;
+  outline: transparent;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.character-save-btn:after {
+  --slice-0: inset(50% 50% 50% 50%);
+  --slice-1: inset(80% -6px 0 0);
+  --slice-2: inset(50% -6px 30% 0);
+  --slice-3: inset(10% -6px 85% 0);
+  --slice-4: inset(40% -6px 43% 0);
+  --slice-5: inset(80% -6px 5% 0);
+
+  content: 'Save me';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 3%, #191B30 3%, #191B30 5%, #191B30 5%);
+  text-shadow:  3px 3px 0px #F47D4B;
+  clip-path: var(--slice-0);
+}
+
+.character-save-btn:hover:after {
+  animation: 1s glitch;
+  animation-timing-function: steps(2, end);
+}
+
+@keyframes glitch {
+  0% {
+    clip-path: var(--slice-1);
+    transform: translate(-20px, -10px);
+  }
+  10% {
+    clip-path: var(--slice-3);
+    transform: translate(10px, 10px);
+  }
+  20% {
+    clip-path: var(--slice-1);
+    transform: translate(-10px, 10px);
+  }
+  30% {
+    clip-path: var(--slice-3);
+    transform: translate(0px, 5px);
+  }
+  40% {
+    clip-path: var(--slice-2);
+    transform: translate(-5px, 0px);
+  }
+  50% {
+    clip-path: var(--slice-3);
+    transform: translate(5px, 0px);
+  }
+  60% {
+    clip-path: var(--slice-4);
+    transform: translate(5px, 10px);
+  }
+  70% {
+    clip-path: var(--slice-2);
+    transform: translate(-10px, 10px);
+  }
+  80% {
+    clip-path: var(--slice-5);
+    transform: translate(20px, -10px);
+  }
+  90% {
+    clip-path: var(--slice-1);
+    transform: translate(-10px, 0px);
+  }
+  100% {
+    clip-path: var(--slice-1);
+    transform: translate(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .character-save-btn,
+  .character-save-btn:after {
+    width: 160px;
+    height: 50px;
+    line-height: 50px;
+    margin-left: 0px;
+  }
+}
+
+.character-list {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Kanit', sans-serif;
+    color: #191B30;
+    margin-top: 20px;
+    padding: 3px;
+    width: 90%;
+    margin-left: 4px;
+    background-color: white;
+    border: 2px solid, #191B30;
+}
+
+.character-list__items {
+    list-style: none;
+    padding: 10px;
+    margin-left: 0px;
+    width: 88%;
+    display: grid;
+    row-gap: 10px;
+    margin-top: 20px;
+    max-height: 70%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.character-list__items::-webkit-scrollbar {
+    display: none;
+}
+
+.character-list__item {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 5px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.7, .98, .86, .98), box-shadow .25s cubic-bezier(.7, .98, .86, .98);
+    background-color: #ffffff;
+}
+
+.character-list__item:hover {
+    transform: scale(1.10);
+    box-shadow: 0 9px 47px 11px rgba(51, 51, 51, 0.18);
+    background-color: #191B30;
+}
+
+.character-list__picture {
+    width: 24px;
+    height: 24px;
+}
+
+.character-list__name {
+    color: #191B30;
+    font-weight: bold;
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    letter-spacing: 0.64px;
+    margin-left: 2px;
+}
+
+.character-list__item:hover .character-list__name {
+    color: white;
+}
+
+.character-dashboard {
+    position: absolute;
+    margin-left: 260px;
+    margin-top: 57px;
+    margin-bottom: 30px;
+    width: 80%;
+    height: 85%;
+    background-color: #191B30;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.character-image {
+    position: absolute;
+    width: 11%;
+    height: 20%;
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    resize: both;
+    overflow: auto;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 91;
+}
+
+.character-image:hover {
+    border-color: #F47D4B;
+}
+
+.character-image h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    color: #191B30;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.character-image-item {
+    display: flex;
+    margin: 10px 0;
+}
+
+.character-image-item__btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.character-upload-image {
+    width: 50%;
+    height: 50%;
+    margin-top: 10px;
+    z-index: 90;
+}
+
+.character-upload__image-wrapper {
+    width: auto;
+    height: auto;
+    background: transparent;
+}
+
+.character-image-select {
+    background-image: url("../Images/upload.png");
+}
+
+.character-image-popup {
+    background-color: white;
+    border: 2px solid #191B30;
+    border-radius: 20px;
+    align-self: center;
+    margin-left: 26%;
+    margin-top: 210px;
+    width: 50%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.character-close-icon {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: -18px;
+    right: 10px;
+    cursor: pointer;
+
+}
+
+
+.character-uploader {
+    background-color: #191B30;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 24px;
+    font-family: "Kanit", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 50px;
+}
+
+.character-uploader:hover {
+    background-color: #F47D4B;
+    color: #191B30;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.character-updater {
+    background-color: #191B30;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-family: "Kanit", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    margin-top: 15px;
+}
+
+.character-updater:hover {
+    background-color: #F47D4B;
+    color: #191B30;
+}
+
+.character-remover {
+    background-color: #F47D4B;
+    color: #191B30;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-family: "Kanit", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.character-remover:hover {
+    background-color: #191B30;
+    color: white;
+    cursor: pointer;
+}
+
+.character-image-selected {
+    border-radius: 20px;
+    margin-left: 300px;
+    width: 150px;
+    height: 150px;
+    border: 2px solid #191B30;
+}
+
+.character-save-button {
+    background-color: #191B30;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+    font-family: "Kanit", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.character-save-button:hover {
+    background-color: #F47D4B;
+    color: white;
+    cursor: pointer;
+}
+
+.character-modal-page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease;
+}
+
+.character-modal-page h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    margin-left: 50px;
+}
+
+.character-slide-in {
+    transform: translateX(0);
+}
+
+.character-slide-out {
+    transform: translateX(100%);
+}
+
+.character-next-page-button {
+    background-color: #191B30;
+    position: absolute;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 24px;
+    font-family: "Kanit", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 50px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.character-next-page-button:hover {
+    background-color: #F47D4B;
+    color: #191B30;
+}
+
+.character-back-button {
+    background-color: #191B30;
+    position: absolute;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 24px;
+    font-family: "Kanit", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    margin-top: -60px;
+}
+
+.character-back-button:hover {
+    background-color: #F47D4B;
+}
+
+.character-note-text {
+    margin-top: 250px;
+    width: 95%;
+    margin-left: 20px;
+    border: #191B30;
+    height: auto;
+}
+
+.character-ql-toolbar {
+    display: none;
+}
+
+.character-ql-editor {
+    border: 2px solid #191B30;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.character-summary {
+    position: absolute;
+    width: 86.3%;
+    height: 20%;
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    margin-left: 140px;
+    resize: both;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.character-summary:hover {
+    border-color: #F47D4B;
+}
+
+.character-summary h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    color: #191B30;
+    margin: 0;
+    padding: 10px;
+}
+
+.character-summary-textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 1vw;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: none;
+    resize: none;
+    overflow: hidden;
+}
+
+.character-summary-textarea:focus {
+    outline: none;
+}
+
+.character-backstory {
+    position: absolute;
+    width: 72.3%;
+    height: 20%;
+    background-color: white;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    margin-left: 310px;
+    top: 150px;
+    resize: both;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.character-backstory h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    color: #191B30;
+    margin: 0;
+    padding: 10px;
+}
+
+.character-backstory-textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 1vw;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: none;
+    overflow: hidden;
+    resize: none;
+}
+
+.character-backstory-textarea:focus {
+    outline: none;
+}
+
+.character-basic-info {
+    position: absolute;
+    width: 300px;
+    height: 320px;
+    background-color: white;
+    border-radius: 10px;
+    top: 150px;
+    left: 20px;
+    overflow: hidden;
+    border: 2px solid #191B30;
+}
+
+.character-basic-info:hover {
+    border-color: #F47D4B;
+}
+
+.character-basic-heading {
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.character-basic-info .character-name {
+    position: absolute;
+    font-family: "Kanit", sans-serif;
+    font-weight: 400px;
+    margin-top: 10px;
+    left: 10px;
+}
+
+.character-basic-info .character-age {
+    position: absolute;
+    font-family: "Kanit", sans-serif;
+    font-weight: 400px;
+    margin-top: 100px;
+    left: 10px;
+}
+
+.character-basic-info .character-gender {
+    position: absolute;
+    font-family: "Kanit", sans-serif;
+    font-weight: 400px;
+    margin-top: 190px;
+    left: 10px;
+}
+
+.character-basic-info .character-ethnicity {
+    position: absolute;
+    font-family: "Kanit", sans-serif;
+    font-weight: 400px;
+    margin-top: 280px;
+    left: 10px;
+}
+
+.character-basic-info .character-field {
+    margin-bottom: 15px;
+    width: 280px;
+    margin: 2px;
+}
+
+.character-basic-info .character-label {
+    font-weight: bold;
+    margin-left: -200px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.character-input-field {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.character-physical-traits {
+    position: absolute;
+    width: 300px;
+    height: 170px;
+    background-color: white;
+    border-radius: 10px;
+    top: 280px;
+    left: 330px;
+    overflow-y: auto;
+    border: 2px solid #191B30;
+    padding: 10px;
+}
+
+.character-physical-traits:hover {
+    border-color: #F47D4B;
+}
+
+.character-physical-traits h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: -1px;
+    color: #191B30;
+}
+
+.character-add-physical {
+    position: absolute;
+    background-color: #191B30;
+    border: none;
+    align-items: center;
+    padding: 3px;
+    height: 30px;
+    padding-bottom: 3px;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    top: 5px;
+    left: 262px;
+}
+
+.character-add-physical:hover {
+    border-color: #F47D4B;
+}
+
+.character-physical-traits .character-plus-icon {
+    width: 20px;
+    height: 20px;
+    background: #191B30;
+    border: 10px;
+}
+
+.character-physical-traits .character-trait-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid #191B30;
+    border-radius: 5px;
+    position: relative;
+}
+
+.character-physical-traits .character-vert-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.character-physical-traits .character-trait-name-input,
+.character-physical-traits .character-trait-description-textarea {
+    font-family: "Kanit", sans-serif;
+    font-size: 16px;
+    margin: 5px 0;
+    padding: 5px;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+}
+
+.character-physical-traits .character-trait-description-textarea {
+    height: 30px;
+}
+
+.character-physical-traits .character-trait-name-input:focus,
+.character-physical-traits .character-trait-description-textarea:focus {
+    outline: none;
+}
+
+.character-physical-traits::-webkit-scrollbar {
+    width: 5px;
+}
+
+.character-physical-traits::-webkit-scrollbar-track {
+    background-color: #191B30;
+    border-radius: 4px;
+}
+
+.character-physical-traits::-webkit-scrollbar-thumb {
+    background-color: #F47D4B;
+    border-radius: 4px;
+}
+
+.character-personality-traits {
+    position: absolute;
+    width: 300px;
+    height: 170px;
+    background-color: white;
+    border-radius: 10px;
+    top: 280px;
+    left: 660px;
+    overflow-y: auto;
+    border: 2px solid #191B30;
+    padding: 10px;
+}
+
+.character-personality-traits:hover {
+    border-color: #F47D4B;
+}
+
+.character-personality-traits h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: -1px;
+    color: #191B30;
+}
+
+.character-add-personality {
+    position: absolute;
+    background-color: #191B30;
+    border: none;
+    align-items: center;
+    padding: 3px;
+    height: 30px;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    top: 5px;
+    left: 262px;
+}
+
+.character-add-personality:hover {
+    border-color: #F47D4B;
+}
+
+.character-personality-traits .character-plus-icon {
+    width: 20px;
+    height: 20px;
+    background: #191B30;
+    border: 10px;
+}
+
+.character-personality-traits .character-trait-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid #191B30;
+    border-radius: 5px;
+    position: relative;
+}
+
+.character-personality-traits .character-vert-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.character-personality-traits .character-trait-name-input,
+.character-personality-traits .character-trait-description-textarea {
+    font-family: "Kanit", sans-serif;
+    font-size: 16px;
+    margin: 5px 0;
+    padding: 5px;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+}
+
+.character-personality-traits .character-trait-description-textarea {
+    height: 30px;
+}
+
+.character-personality-traits .character-trait-name-input:focus,
+.character-personality-traits .character-trait-description-textarea:focus {
+    outline: none;
+}
+
+.character-personality-traits::-webkit-scrollbar {
+    width: 5px;
+}
+
+.character-personality-traits::-webkit-scrollbar-track {
+    background-color: #191B30;
+    border-radius: 4px;
+}
+
+.character-personality-traits::-webkit-scrollbar-thumb {
+    background-color: #F47D4B;
+    border-radius: 4px;
+}
+
+.character-character-arcs {
+    position: absolute;
+    width: 230px;
+    height: 190px;
+    background-color: white;
+    border-radius: 10px;
+    top: 280px;
+    left: 990px;
+    overflow: auto;
+    border: 2px solid #191B30;
+    padding: 10px;
+    resize: both;
+    min-width: 150px;
+    min-height: 150px;
+    box-sizing: border-box;
+}
+
+.character-character-arcs h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: -1px;
+    color: #191B30;
+}
+
+.character-character-arcs:hover {
+    border-color: #F47D4B;
+}
+
+.character-add-character-arc {
+    position: absolute;
+    background-color: #191B30;
+    border: none;
+    align-items: center;
+    padding: 3px;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    top: 3%;
+    left: 86%;
+    transform: translateX(-50%);
+    height: 30px;
+}
+
+.character-character-arcs .character-plus-icon {
+    width: 20px;
+    height: 20px;
+    background: #191B30;
+    border: 10px;
+}
+
+.character-character-arcs .character-trait-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid #191B30;
+    border-radius: 5px;
+    position: relative;
+}
+
+.character-character-arcs .character-vert-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.character-character-arcs .character-trait-name-input,
+.character-character-arcs .character-trait-description-textarea {
+    font-family: "Kanit", sans-serif;
+    font-size: 16px;
+    margin: 5px 0;
+    padding: 5px;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+}
+
+.character-character-arcs .character-trait-description-textarea {
+    height: 30px;
+}
+
+.character-character-arcs .character-trait-name-input:focus,
+.character-character-arcs .character-trait-description-textarea:focus {
+    outline: none;
+}
+
+.character-character-arcs::-webkit-scrollbar {
+    width: 5px;
+}
+
+.character-character-arcs::-webkit-scrollbar-track {
+    background-color: #191B30;
+    border-radius: 4px;
+}
+
+.character-character-arcs::-webkit-scrollbar-thumb {
+    background-color: #F47D4B;
+    border-radius: 4px;
+}
+
+.character-relationships {
+    position: absolute;
+    width: 300px;
+    height: 140px;
+    background-color: white;
+    border-radius: 10px;
+    top: 480px;
+    left: 20px;
+    overflow: auto;
+    border: 2px solid #191B30;
+    padding: 10px;
+    resize: both;
+    min-width: 150px;
+    min-height: 140px;
+    box-sizing: border-box;
+}
+
+.character-relationships h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: -1px;
+    color: #191B30;
+}
+
+.character-relationships:hover {
+    border-color: #F47D4B;
+}
+
+.character-add-relationship {
+    position: absolute;
+    background-color: #191B30;
+    border: none;
+    align-items: center;
+    padding: 3px;
+    height: 30px;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    top: 3%;
+    left: 85%;
+    transform: translateX(-50%);
+}
+
+.character-relationships .character-plus-icon {
+    width: 20px;
+    height: 20px;
+    background: #191B30;
+    border: 10px;
+}
+
+.character-relationships .character-trait-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid #191B30;
+    border-radius: 5px;
+    position: relative;
+}
+
+.character-relationships .character-vert-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.character-relationships .character-trait-name-input,
+.character-relationships .character-trait-description-textarea {
+    font-family: "Kanit", sans-serif;
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 1px;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+}
+
+.character-relationships .character-trait-description-textarea {
+    height: 17px;
+}
+
+.character-relationships .character-trait-name-input:focus,
+.character-relationships .character-trait-description-textarea:focus {
+    outline: none;
+}
+
+.character-relationships::-webkit-scrollbar {
+    width: 5px;
+}
+
+.character-relationships::-webkit-scrollbar-track {
+    background-color: #191B30;
+    border-radius: 4px;
+}
+
+.character-relationships::-webkit-scrollbar-thumb {
+    background-color: #F47D4B;
+    border-radius: 4px;
+}
+
+.character-skills {
+    position: absolute;
+    width: 300px;
+    height: 140px;
+    background-color: white;
+    border-radius: 10px;
+    top: 480px;
+    left: 330px;
+    overflow: auto;
+    border: 2px solid #191B30;
+    padding: 10px;
+    resize: both;
+    min-width: 150px;
+    min-height: 140px;
+    box-sizing: border-box;
+}
+
+.character-skills h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: -1px;
+    color: #191B30;
+}
+
+.character-skills:hover {
+    border-color: #F47D4B;
+}
+
+.character-add-skill {
+    position: absolute;
+    background-color: #191B30;
+    border: none;
+    align-items: center;
+    padding: 3px;
+    height: 30px;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    top: 3%;
+    left: 84%;
+    transform: translateX(-50%);
+}
+
+.character-skills .character-plus-icon {
+    width: 20px;
+    height: 20px;
+    background: #191B30;
+    border: 10px;
+}
+
+.character-skills .character-trait-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid #191B30;
+    border-radius: 5px;
+    position: relative;
+}
+
+.character-skills .character-vert-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.character-skills .character-trait-name-input,
+.character-skills .character-trait-description-textarea {
+    font-family: "Kanit", sans-serif;
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 1px;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+}
+
+.character-skills .character-trait-description-textarea {
+    height: 17px;
+}
+
+.character-skills .character-trait-name-input:focus,
+.character-skills .character-trait-description-textarea:focus {
+    outline: none;
+}
+
+.character-skills::-webkit-scrollbar {
+    width: 5px;
+}
+
+.character-skills::-webkit-scrollbar-track {
+    background-color: #191B30;
+    border-radius: 4px;
+}
+
+.character-skills::-webkit-scrollbar-thumb {
+    background-color: #F47D4B;
+    border-radius: 4px;
+}
+
+.character-weaknesses {
+    position: absolute;
+    width: 300px;
+    height: 140px;
+    background-color: white;
+    border-radius: 10px;
+    top: 480px;
+    left: 640px;
+    overflow-y: auto;
+    border: 2px solid #191B30;
+    padding: 10px;
+    resize: both;
+    min-width: 150px;
+    min-height: 140px;
+    box-sizing: border-box;
+}
+
+.character-weaknesses h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: -1px;
+    color: #191B30;
+}
+
+.character-add-weakness {
+    position: absolute;
+    background-color: #191B30;
+    border: none;
+    align-items: center;
+    padding: 3px;
+    height: 30px;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    top: 3%;
+    left: 85%;
+    transform: translateX(-50%);
+}
+
+.character-weaknesses:hover {
+    border-color: #F47D4B;
+}
+
+.character-weaknesses .character-plus-icon {
+    width: 20px;
+    height: 20px;
+    background: #191B30;
+    border: 10px;
+}
+
+.character-weaknesses .character-trait-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid #191B30;
+    border-radius: 5px;
+    position: relative;
+}
+
+.character-weaknesses .character-vert-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.character-weaknesses .character-trait-name-input,
+.character-weaknesses .character-trait-description-textarea {
+    font-family: "Kanit", sans-serif;
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 1px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+}
+
+.character-weaknesses .character-trait-description-textarea {
+    height: 17px;
+}
+
+.character-weaknesses .character-trait-name-input:focus,
+.character-weaknesses .character-trait-description-textarea:focus {
+    outline: none;
+}
+
+.character-weaknesses::-webkit-scrollbar {
+    width: 5px;
+}
+
+.character-weaknesses::-webkit-scrollbar-track {
+    background-color: #191B30;
+    border-radius: 4px;
+}
+
+.character-weaknesses::-webkit-scrollbar-thumb {
+    background-color: #F47D4B;
+    border-radius: 4px;
+}
+
+.character-roles {
+    position: absolute;
+    width: 270px;
+    height: 140px;
+    background-color: white;
+    border-radius: 10px;
+    margin-left: 930px;
+    margin-top: 460px;
+    overflow-y: auto;
+    border: 2px solid #191B30;
+    padding: 10px;
+    resize: both;
+    min-width: 150px;
+    min-height: 140px;
+    box-sizing: border-box;
+}
+
+.character-roles h1 {
+    font-size: 15px;
+    font-family: "Kanit", sans-serif;
+    font-weight: bold;
+    margin-top: -1px;
+    color: #191B30;
+}
+
+.character-add-role {
+    position: absolute;
+    background-color: #191B30;
+    border: none;
+    align-items: center;
+    padding: 3px;
+    height: 30px;
+    border-radius: 10px;
+    border: 2px solid #191B30;
+    top: 3%;
+    left: 80%;
+    transform: translateX(-50%);
+}
+
+.character-roles:hover {
+    border-color: #F47D4B;
+}
+
+.character-role-icon {
+    width: 20px;
+    height: 20px;
+    background: #191B30;
+}
+
+.character-roles .character-trait-item {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 2px solid #191B30;
+    border-radius: 5px;
+    position: relative;
+}
+
+.character-roles .character-vert-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.character-roles .character-trait-name-input,
+.character-roles .character-trait-description-textarea {
+    font-family: "Kanit", sans-serif;
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 1px;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    resize: none;
+}
+
+.character-roles .character-trait-description-textarea {
+    height: 17px;
+}
+
+.character-roles .character-trait-name-input:focus,
+.character-roles .character-trait-description-textarea:focus {
+    outline: none;
+}
+
+.character-roles::-webkit-scrollbar {
+    width: 5px;
+}
+
+.character-roles::-webkit-scrollbar-track {
+    background-color: #191B30;
+    border-radius: 4px;
+}
+
+.character-roles::-webkit-scrollbar-thumb {
+    background-color: #F47D4B;
+    border-radius: 4px;
+}
+
+
+
+
+.kanit-thin {
+    font-family: "Kanit", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.kanit-extralight {
+    font-family: "Kanit", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.kanit-light {
+    font-family: "Kanit-light", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.kanit-regular {
+    font-family: "Kanit", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.kanit-medium {
+    font-family: "Kanit", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.kanit-semibold {
+    font-family: "Kanit", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.kanit-bold {
+    font-family: "Kanit", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.kanit-extrabold {
+    font-family: "Kanit", sans-serif;
+    font-weight: 800;
+    font-style: normal;
+}
+
+.kanit-black {
+    font-family: "Kanit", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+.kanit-thin-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 100;
+    font-style: italic;
+}
+
+.kanit-extralight-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 200;
+    font-style: italic;
+}
+
+.kanit-light-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.kanit-regular-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.kanit-medium-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.kanit-semibold-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.kanit-bold-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.kanit-extrabold-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 800;
+    font-style: italic;
+}
+
+.kanit-black-italic {
+    font-family: "Kanit", sans-serif;
+    font-weight: 900;
+    font-style: italic;
+}

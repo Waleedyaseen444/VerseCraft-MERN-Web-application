@@ -1,0 +1,397 @@
+
+
+/* Style for other elements in the container */
+.saved-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color:white;
+    width: 100%;
+}
+
+
+
+
+.savedworks-dashboard{
+    width: 100%;
+    height:100%;
+    border: 2px solid #191B30;
+
+}
+  
+
+/* New styles for heading section */
+/* New styles for heading section */
+.saved-heading {
+    padding: 10px; /* Reduced padding to decrease height */
+    text-align: center; /* Center the heading text */
+    justify-content: center;
+    background-color: white;
+    height: 60px;
+}
+
+.saved-heading h1 {
+    font-size: 50px; /* Reduced font size to make the heading smaller */
+    color: #191B30; /* Match header background color */
+    font-family: 'Playfair Display', serif;
+    font-weight: 200;
+    margin-top: -5px;
+   
+}
+
+.saved-Works {
+   
+    background-color: #FFF;
+    width: 100%;
+    height: 33.55%;
+    border-top: 5px solid #191B30;
+    border-bottom: 5px solid #191B30;
+    border-left: 1px solid #191B30;
+    border-right: 1px solid #191B30;
+    display: flex;
+    
+}
+
+
+.saved-Stories {
+    
+    background-color: transparent;
+    width: 33%;
+    height: auto;
+    overflow: hidden;
+    border: 1px solid #191B30;
+    position: relative;
+    gap: 0px;
+
+}
+
+.saved-Stories h1 {
+    font-family: 'Kanit', sans-serif;
+    color: white;
+    font-weight: 300;
+    background-color: #191B30;
+    border: 1px solid #191B30; /* Adjust the border */
+    border-radius: 10px; /* Optional: to round the corners */
+    display: inline-block; /* Ensures background and border wrap around text */
+    padding: 5px 10px; /* Add some padding around the text */
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+.saved-Stories ul {
+    width: 100%; /* Ensure ul takes up the full width of the container */
+    height: auto;
+    border: 2px solid #191B30;
+    position: relative;
+    list-style-type: none; /* Remove default bullet points */
+    display: flex; /* Align children horizontally */
+    flex-direction: column; /* Stack list items vertically */
+    align-items: flex-start; /* Align items to the left */
+    overflow: hidden; /* Hide any overflowing content */
+    margin-left: -40px;
+}
+
+
+.saved-Stories ul {
+    overflow-x: hidden; /* Ensure horizontal overflow is hidden */
+}
+
+
+.saved-Novels ul {
+    overflow-x: hidden; /* Ensure horizontal overflow is hidden */
+}
+
+.saved-urdu ul {
+    overflow-x: hidden; /* Ensure horizontal overflow is hidden */
+}
+
+.saved-Stories ul {
+    overflow-x: hidden; /* Ensure horizontal overflow is hidden */
+}
+
+
+.saved-Stories ul li {
+    width: 100%; /* Ensure each list item takes up the full width of the ul */
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+   
+    padding: 10px; /* Add padding for spacing inside list items */
+    border-bottom: 2px solid #191B30; /* Add a border between items */
+    text-align: left; /* Ensure text inside list items is left-aligned */
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.saved-Stories ul li:last-child {
+    border-bottom: none; /* Remove border from the last list item */
+}
+
+.saved-Novels {
+    background-color: transparent;
+    width: 33%;
+    height: auto;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #191B30;
+    
+}
+
+.saved-Novels h2 {
+    font-family: 'Kanit', sans-serif;
+    color: #191B30;
+    background-color: #F47D4B;
+    border: 1px solid #191B30; /* Adjust the border */
+    border-radius: 10px; /* Optional: to round the corners */
+    display: inline-block; /* Ensures background and border wrap around text */
+    padding: 5px 10px; /* Add some padding around the text */
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 26px;
+    margin-top: 20px;
+}
+
+.saved-Novels ul {
+    width: 100%; /* Ensure ul takes up the full width of the container */
+    height: auto;
+    border: 2px solid #191B30;
+    position: relative;
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    list-style-type: none; /* Remove default bullet points */
+    display: flex; /* Align children horizontally */
+    flex-direction: column; /* Stack list items vertically */
+    align-items: flex-start; /* Align items to the left */
+    overflow: hidden; /* Hide any overflowing content */
+}
+
+.saved-Novels ul li {
+    width: 100%; /* Ensure each list item takes up the full width of the ul */
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+    margin: 0; /* Remove default margin */
+    background-color: #F47D4B;
+    color: #FFF;
+    padding: 10px; /* Add padding for spacing inside list items */
+    border-bottom: 2px solid #191B30; /* Add a border between items */
+    text-align: left; /* Ensure text inside list items is left-aligned */
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+   
+
+}
+
+.saved-Novels ul li:last-child {
+    margin-bottom: 18px;; /* Remove border from the last list item */
+}
+
+
+
+.saved-Urdu {
+    background-color: transparent;
+    width: 34%;
+    height: auto;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #191B30;
+    margin-left:-1px ;
+    
+}
+
+.saved-Urdu h2 {
+    font-family: 'Kanit', sans-serif;
+    color: #191B30;
+    background-color: #F47D4B;
+    border: 1px solid #191B30; /* Adjust the border */
+    border-radius: 10px; /* Optional: to round the corners */
+    display: inline-block; /* Ensures background and border wrap around text */
+    padding: 5px 10px; /* Add some padding around the text */
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 26px;
+    margin-top: 20px;
+}
+
+.saved-Urdu ul {
+    width: 99.4%; /* Ensure ul takes up the full width of the container */
+    height: auto;
+    border: 2px solid #191B30;
+    position: relative;
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    list-style-type: none; /* Remove default bullet points */
+    display: flex; /* Align children horizontally */
+    flex-direction: column; /* Stack list items vertically */
+    align-items: flex-start; /* Align items to the left */
+    overflow: hidden; /* Hide any overflowing content */
+}
+
+.saved-Urdu ul li {
+    width: 100%; /* Ensure each list item takes up the full width of the ul */
+    box-sizing: border-box; /* Include padding and border in the element's total width */
+    margin: 0; /* Remove default margin */
+    background-color: #F47D4B;
+    color: #FFF;
+    padding: 10px; /* Add padding for spacing inside list items */
+    border-bottom: 2px solid #191B30; /* Add a border between items */
+    text-align: left; /* Ensure text inside list items is left-aligned */
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.saved-Urdu ul li:last-child {
+    margin-bottom: 18px; /* Remove border from the last list item */
+}
+
+/* Ensure the Search-bar is visible and styled */
+.saved-Search-bar {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #FFF;
+    width: 30%; /* Adjust width to your preference */
+    height: 40px;
+    border: 2px solid #191B30;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: auto; /* Center the Search-bar horizontally */
+    margin-right: auto; /* Center the Search-bar horizontally */
+}
+
+
+.saved-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    font-size: 20px;
+    margin-right: 10px;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+    margin-top: 20px;
+}
+
+.saved-search-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+/* Other styles remain unchanged */
+
+/* Ensure Recents section is styled properly */
+.saved-recents {
+  
+    background-color:white; /* Solid white background */
+    color: #191B30;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: relative;
+    border: 3px solid #F47D4B;
+    padding: 10px; /* Add padding to prevent content from touching edges */
+    overflow: hidden;
+}
+
+/* Updated Recents heading */
+.saved-recents h1 {
+    font-family: 'Kanit', sans-serif;
+    color: #191B30;
+    font-size: 32px;
+    font-weight: 300;
+    margin-left: 20px;;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    text-align: left; /* Align heading to the left */
+}
+
+
+/* Enable horizontal scrolling */
+.saved-recents-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    height: 100%;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #191B30 white; /* Scrollbar thumb and track for Firefox */
+}
+
+/* For WebKit browsers (Chrome, Safari, Edge) */
+.saved-recents-container::-webkit-scrollbar {
+    height: 8px; /* Horizontal scrollbar height */
+}
+
+.saved-recents-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Track color */
+    border-radius: 5px;
+}
+
+.saved-recents-container::-webkit-scrollbar-thumb {
+    background-color: #191B30; /* Scrollbar thumb color */
+    border-radius: 5px;
+   
+}
+
+.saved-recents-container::-webkit-scrollbar-thumb:hover {
+    background-color: #333; /* Darker on hover */
+}
+
+
+.saved-recents-scroll {
+    display: flex; /* Align items horizontally */
+    flex-direction: row; /* Ensure items are in a row */
+    align-items: center; /* Center items vertically */
+    
+}
+
+.saved-recent-icon {
+    width: 200px; /* Adjust image size */
+    height: 100px;
+    border: 3px solid #191B30;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 10px; /* Optional: round corners of images */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add shadow to images */
+}
+
+.saved-recents-item p {
+    font-family: 'Kanit', sans-serif;
+    color: #191B30;
+    margin-top: 5px; /* Space between image and title */
+    font-size: 14px;
+}
+
+
+
+
+
+/* Font styles */
+.kanit-thin, .kanit-extralight, .kanit-light, .kanit-regular, .kanit-medium, .kanit-semibold, .kanit-bold, .kanit-extrabold, .kanit-black,
+.kanit-thin-italic, .kanit-extralight-italic, .kanit-light-italic, .kanit-regular-italic, .kanit-medium-italic, .kanit-semibold-italic, .kanit-bold-italic, .kanit-extrabold-italic, .kanit-black-italic {
+    font-family: "Kanit", sans-serif;
+}
+
+.kanit-thin { font-weight: 100; }
+.kanit-extralight { font-weight: 200; }
+.kanit-light { font-weight: 300; }
+.kanit-regular { font-weight: 400; }
+.kanit-medium { font-weight: 500; }
+.kanit-semibold { font-weight: 600; }
+.kanit-bold { font-weight: 700; }
+.kanit-extrabold { font-weight: 800; }
+.kanit-black { font-weight: 900; }
+
+.kanit-thin-italic { font-weight: 100; font-style: italic; }
+.kanit-extralight-italic { font-weight: 200; font-style: italic; }
+.kanit-light-italic { font-weight: 300; font-style: italic; }
+.kanit-regular-italic { font-weight: 400; font-style: italic; }
+.kanit-medium-italic { font-weight: 500; font-style: italic; }
+.kanit-semibold-italic { font-weight: 600; font-style: italic; }
+.kanit-bold-italic { font-weight: 700; font-style: italic; }
+.kanit-extrabold-italic { font-weight: 800; font-style: italic; }
+.kanit-black-italic { font-weight: 900; font-style: italic; }

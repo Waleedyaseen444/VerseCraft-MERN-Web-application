@@ -1,0 +1,280 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color: #F47D4B;
+   
+}
+
+
+.notification-second-container {
+    width:100%;
+    height: 100%;
+    display: block;
+    position: relative; /* Ensure bar1 is positioned relative to this container */
+    
+ 
+}
+
+.Notifications-container {
+    width: auto;
+    height: 100%;
+    background-color: white;
+    overflow: hidden;
+    border: 3px solid #191B30;
+    z-index: 2;;
+}
+
+.notification-Background {
+    background-image: url('../Images/user-background-image.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 200px;
+}
+
+.notification-Profile-image {
+    background-image: url('../Images/generic-user-profile-picture.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    margin-left: 50px;
+    margin-top: -75px;
+    border: 5px solid rgb(6, 31, 67);
+    z-index:3;
+}
+
+.notification-Profile-info {
+    position: absolute;
+    width: auto;
+    height: 200px;
+    margin-top: -40px;
+}
+
+.notification-Profile-info h1 {
+    font-size: 50px;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+    color: #191B30;
+    margin-left: 30px;
+}
+
+.notification-Profile-info h2 {
+    position: absolute;
+    font-size: 20px;
+    margin-left: 30px;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 400;
+    left: 0px;
+    top: 80px;
+    color: #F47D4B;
+}
+
+.notification-Join-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-Join-date h1 {
+    color: #191B30;
+    font-size: 20px;
+    margin-left: 30px;
+    font-family: 'Kanit', sans-serif;
+    margin-left: 0.5rem;
+}
+
+.notification-cal-icon {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+.notification-content {
+    overflow: hidden;
+    width: 90%;
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    margin-left: 300px;
+    align-items: center;
+    margin-top: -100px;
+    height: 80%;
+    font-family: sans-serif;
+    border-radius: 10px;
+}
+
+.notification-content h1 {
+    font-family: 'Kanit', sans-serif;
+    font-weight: 600;
+    color: #191B30;
+    margin-left: -350px;
+    
+}
+
+.notification-content-container {
+    width: 700px;
+    height:380px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-left: 160px;
+    border: 2px solid #191B30;
+    background-color: #191B30;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.notification-content-container::-webkit-scrollbar {
+    display: none; /* Hide the scrollbar */
+}
+
+/* Hide scrollbar for IE and Edge */
+.notification-content-container {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+
+.notification-content-container ul {
+    list-style-type: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    margin: 0;
+}
+
+.notification-content-container li {
+    margin: 0;
+    padding: 0;
+}
+
+.notification-notification-item {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: white;
+    border: 2px solid #F47D4B;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    text-align: left;
+}
+
+.notification-notification-item:hover{
+    background-color:#245775;
+}
+
+
+.notification-notification-item:hover .notification-date {
+    color: #fff; /* Change color on hover */
+}
+
+.notification-notification-item:hover .notification-title {
+    color: #fff; /* Change color on hover */
+}
+
+.notification-notification-item:hover .notification-description {
+    color: #f0f0f0; /* Change color on hover */
+}
+
+
+
+.notification-notification-date {
+    font-size: 14px;
+    color: #191B30;
+}
+
+.notification-notification-title {
+    font-size: 18px;
+    color: #F47D4B;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.notification-notification-description {
+    font-size: 13px;
+    color: #191B30;
+    margin-top: 5px;
+}
+
+
+
+.notification-vert-icon {
+    position: absolute; /* Position it absolutely within the notification-item */
+    right: 8px; /* Move it to the right */
+    top: 20%; /* Center it vertically */
+    transform: translateY(-50%); /* Adjust for exact vertical centering */
+    width: 20px;
+    height: 20px;
+}
+.notification-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000; /* Ensure it appears on top */
+}
+
+.notification-modal-content {
+    background-color: white; /* Background color of the modal */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    padding: 20px; /* Padding inside the modal */
+    max-width: 300px; /* Max width for the modal */
+    width: 90%; /* Responsive width */
+    text-align: center; /* Center the text */
+}
+
+.notification-modal button {
+    background-color: #191B30; /* Primary button color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for the button */
+    margin: 5px; /* Margin between buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.notification-modal button:hover {
+    background-color: #F47D4B; /* Darker shade on hover */
+}
+
+
+/* Font styles */
+.kanit-thin, .kanit-extralight, .kanit-light, .kanit-regular, .kanit-medium, .kanit-semibold, .kanit-bold, .kanit-extrabold, .kanit-black,
+.kanit-thin-italic, .kanit-extralight-italic, .kanit-light-italic, .kanit-regular-italic, .kanit-medium-italic, .kanit-semibold-italic, .kanit-bold-italic, .kanit-extrabold-italic, .kanit-black-italic {
+    font-family: "Kanit", sans-serif;
+}
+
+.kanit-thin { font-weight: 100; }
+.kanit-extralight { font-weight: 200; }
+.kanit-light { font-weight: 300; }
+.kanit-regular { font-weight: 400; }
+.kanit-medium { font-weight: 500; }
+.kanit-semibold { font-weight: 600; }
+.kanit-bold { font-weight: 700; }
+.kanit-extrabold { font-weight: 800; }
+.kanit-black { font-weight: 900; }
+
+.kanit-thin-italic { font-weight: 100; font-style: italic; }
+.kanit-extralight-italic { font-weight: 200; font-style: italic; }
+.kanit-light-italic { font-weight: 300; font-style: italic; }
+.kanit-regular-italic { font-weight: 400; font-style: italic; }
+.kanit-medium-italic { font-weight: 500; font-style: italic; }
+.kanit-semibold-italic { font-weight: 600; font-style: italic; }
+.kanit-bold-italic { font-weight: 700; font-style: italic; }
+.kanit-extrabold-italic { font-weight: 800; font-style: italic; }
+.kanit-black-italic { font-weight: 900; font-style: italic; }

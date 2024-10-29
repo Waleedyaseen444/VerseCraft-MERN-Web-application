@@ -1,0 +1,250 @@
+/* Container */
+.ue-editor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: hsl(0, 0%, 96%);
+  width: 100%;
+}
+
+/* Header */
+.ue-header {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.ue-header-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ue-menu-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.ue-app-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 10px;
+  cursor: pointer;
+  color: #191B30;
+}
+
+nav {
+  margin-left: auto;
+}
+
+.ue-nav-list {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.ue-nav-item {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #191B30;
+  font-weight: bold;
+}
+
+.ue-nav-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+/* Main Content */
+.ue-main-content {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+  overflow: auto;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Editor Panel */
+.ue-editor-panel {
+  background: linear-gradient(45deg, #F0F0F0, #FFFFFF, #F0F0F0);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden;
+}
+
+.ue-editor-panel h2 {
+  color: #191B30;
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-family: "Kanit", sans-serif;
+  font-weight: bold;
+}
+
+.ue-editor-area {
+  border: 2px solid #191B30;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  padding: 15px;
+  height: 300px;
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+.ue-editor-area textarea {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  direction: rtl;
+  background-color: transparent;
+  font-family: "Noto Nastaliq Urdu", serif;
+  color: #333;
+  resize: none;
+}
+
+.ue-editor-area textarea:focus {
+  border-color: #ff7043;
+}
+
+/* Keyboard */
+.keyboard {
+  margin-top: 20px;
+}
+
+/* Modals */
+.ue-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.ue-modal-content {
+  background-color: white;
+  width: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.ue-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f2f2f2;
+}
+
+.ue-modal-header h2 {
+  margin: 0;
+  color: #191B30;
+}
+
+.ue-close-modal-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #191B30;
+}
+
+.ue-modal-body {
+  padding: 15px;
+}
+
+.ue-modal-body input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 16px;
+  border: 2px solid #191B30;
+  border-radius: 4px;
+  outline: none;
+}
+
+.ue-modal-body input:focus {
+  border-color: #ff7043;
+}
+
+.ue-modal-footer {
+  padding: 15px;
+  display: flex;
+  justify-content: flex-end;
+  background-color: #f2f2f2;
+}
+
+.ue-modal-button {
+  background-color: #191B30;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.ue-modal-button:hover {
+  background-color: #ff5722;
+}
+
+/* Buttons */
+.ue-toolbar-btn {
+  background-color: #191B30;
+  border: none;
+  color: white;
+  padding: 8px 10px;
+  margin-right: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.ue-toolbar-btn:hover {
+  transform: scale(1.1);
+  background-color: #ff7043;
+}
+
+.ue-goal-set-button {
+  /* Removed as per request */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ue-editor-panel {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Themes - Removed as per request */
+
+/* Additional Styles if needed */
+
+/* Ensure that the keyboard doesn't overflow */
+.ue-editor-panel .simple-keyboard {
+  max-width: 100%;
+}

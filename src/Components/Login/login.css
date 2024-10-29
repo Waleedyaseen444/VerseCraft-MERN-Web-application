@@ -1,0 +1,155 @@
+/* Global Styles */
+
+/* Container Styles */
+.login-container {
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #191B30 50%, #F47D4B 50%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Login Box Styles */
+.login-container-message {
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255); /* White background */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #191B30;
+    font-size: 24px;
+}
+
+/* Form Styles */
+.login-form .login-input-group {
+    margin-bottom: 15px;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: left; /* Align input labels to the left */
+}
+
+.login-form .login-input-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.login-form .login-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #191B30;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.login-form .login-btn:hover {
+    background-color: #F47D4B;
+    color: #191B30;
+}
+
+/* Error Message */
+.login-error {
+    color: red;
+    font-size: 12px;
+    margin-top: -5px;
+}
+
+/* Link to Signup Page */
+.login-container-message p {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-container-message p a {
+    color: #F47D4B;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-container-message p a:hover {
+    text-decoration: underline;
+}
+
+.login-container-login-btn{
+    margin-top: 10px;
+    background-color: #191B30;
+    color: white;
+    padding:10px;
+    width:100%;
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-size: 15px;
+    
+}
+
+.login-container-login-btn:hover{
+    background-color: #F47D4B;
+    color: #191B30;
+}
+
+.login-btn-admin-btn{
+    margin-top: 10px;
+    background-color: #191B30;
+    color: white;
+    padding:10px;
+    width:100%;
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-size: 15px;
+}
+
+.login-btn-admin-btn:hover{
+    background-color: #F47D4B;
+    color: #191B30;
+}
+
+
+/* Particle Animation */
+.login-container .particle {
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    background-color: rgba(240, 248, 255, 0.7); /* Light snowy blue */
+    border-radius: 0; /* Square particles */
+    opacity: 0;
+    transform: rotate(45deg); /* Initial angle */
+    animation: float-upwards infinite, rotate-particle infinite; /* Add rotation animation */
+}
+
+/* Keyframes for Floating Upwards */
+@keyframes float-upwards {
+    0% {
+        transform: translateY(0) rotate(0deg); /* Start at original position */
+        opacity: 0;
+    }
+    50% {
+        opacity: 1; /* Become visible midway */
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg); /* Move to top and complete a 360-degree rotation */
+        opacity: 0;
+    }
+}

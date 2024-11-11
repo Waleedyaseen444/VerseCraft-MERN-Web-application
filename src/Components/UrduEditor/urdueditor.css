@@ -1,135 +1,1069 @@
-/* Container */
-.ue-editor-container {
+
+
+.urdu-editor-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background-color: hsl(0, 0%, 96%);
+  position: relative;
+  background-color:hsl(0, 0%, 96%);
   width: 100%;
+
+  
 }
 
-/* Header */
-.ue-header {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+
+                                                      /*Theme Button*/
+.urdu-theme {
+  all: unset;
+  width: 100px;
+  height: 20px;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  position: relative;
+  color:#f0f0f0;
+  cursor: pointer;
+  z-index: 1;
   padding: 10px 20px;
   display: flex;
   align-items: center;
-  position: relative;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin-left:40px ;
 }
 
-.ue-header-item {
-  display: flex;
-  align-items: center;
+.urdu-theme::after,
+.urdu-theme::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: -99999;
+  transition: all .4s;
+}
+
+.urdu-theme::before {
+  transform: translate(0%, 0%);
   width: 100%;
+  height: 100%;
+  background:#191B30;
+  border-radius: 10px;
 }
 
-.ue-menu-icon {
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
+.urdu-theme::after {
+  transform: translate(10px, 10px);
+  width: 25px;
+  height: 25px;
+  background: #ff7043;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 50%;
 }
 
-.ue-app-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-left: 10px;
-  cursor: pointer;
-  color: #191B30;
+.urdu-theme:hover::before {
+  transform: translate(5%, 20%);
+  width: 110%;
+  height: 110%;
 }
 
-nav {
-  margin-left: auto;
+.urdu-theme:hover::after {
+  border-radius: 10px;
+  transform: translate(0, 0);
+  width: 100%;
+  height: 100%;
 }
 
-.ue-nav-list {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  margin: 0;
+.urdu-theme:active::after {
+  transition: 0s;
+  transform: translate(0, 5%);
+}
+
+
+
+.urdu-theme-dropdown-menu {
+  position: absolute;
+  margin-left: 40px;
+  background-color: white;
+  border: 1px solid #ddd;
+  list-style-type: none;
   padding: 0;
 }
 
-.ue-nav-item {
-  margin-left: 20px;
-  display: flex;
-  align-items: center;
+.urdu-theme-dropdown-menu li {
+  padding: 10px;
   cursor: pointer;
-  color: #191B30;
-  font-weight: bold;
 }
 
-.ue-nav-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
+.urdu-theme-dropdown-menu li:hover {
+  background-color: #f1f1f1;
 }
 
-/* Main Content */
-.ue-main-content {
-  display: flex;
-  flex: 1;
-  padding: 20px;
-  overflow: auto;
-  justify-content: center;
-  align-items: center;
-}
 
-/* Editor Panel */
-.ue-editor-panel {
+                                                  /* Urdu Editor Toolbar */
+.urdu-toolbar {
+  height: 60px;
   background: linear-gradient(45deg, #F0F0F0, #FFFFFF, #F0F0F0);
-  padding: 20px;
+  border-top: 3px solid ,#ff7043; /* Bold separator */
+  padding: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  margin-left: 45px;
+  
+}
+
+
+.urdu-toolbar h5 {
+  font-weight: bold;
+  margin-right:20px;
+  color: #191B30; 
+}
+
+.urdu-toolbar-container{
+  position: absolute;
+  margin-left: 560px;
+  display: flex;
+}
+
+.urdu-toolbar-container .urdu-toolbar-btn {
+  margin-right: 8px;
+  margin-top: -30px;
+  border-radius: 3px;
+  border: 1px solid,#191B30;
+  background-color: #191B30;
+  color:white;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  padding: 8px;
+}
+
+.urdu-toolbar-btn:hover {
+  transform: scale(1.1);
+  background-color:#191B30;
+  border: 1px solid,#ff7043;
+  color: white;
+}
+
+.urdu-toolbar-btn .fa {
+  font-size: 10px;
+}
+
+                                                  /* Goal Set Button Styling */
+.urdu-goal-set {
+  position: absolute;
+  left:270px;
+  width: 100px; 
+  height: 40px; 
+  font-size: 14px; 
+  top: 55px;
+  background: transparent; 
+  border: none; 
+  color: #f0f0f0; 
+  cursor: pointer; 
+  z-index: 1;
+  padding: 10px 20px; 
+  display: flex;
+  font-family: "kanit",sans-serif;
+  font-weight: 400;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.urdu-goal-set::after,
+.urdu-goal-set::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: -99999;
+  transition: all .4s;
+}
+
+.urdu-goal-set::before {
+  transform: translate(0%, 0%);
+  width: 100%;
+  height: 100%;
+  background: #191B30; 
+  border-radius: 10px;
+}
+
+.urdu-goal-set::after {
+  transform: translate(10px, 10px);
+  width: 25px;
+  height: 25px;
+  background: #ff7043;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 50px;
+}
+
+.urdu-goal-set:hover::before {
+  transform: translate(5%, 20%);
+  width: 110%;
+  height: 110%;
+}
+
+.urdu-goal-set:hover::after {
+  border-radius: 10px;
+  transform: translate(0, 0);
+  width: 100%;
+  height: 100%;
+}
+
+.urdu-goal-set:active::after {
+  transition: 0s;
+  transform: translate(0, 5%);
+}
+
+                                                  /* Main Urdu Editor Area */
+.urdu-editor-panel {
+  background: linear-gradient(45deg, #F0F0F0, #FFFFFF, #F0F0F0);
+  padding: 10px;
+  margin-top:10px;
+  margin-left:10px;
   border-radius: 10px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 800px;
-  overflow: hidden;
+  width:100%;
+  
+  
 }
 
-.ue-editor-panel h2 {
-  color: #191B30;
+.urdu-editor-panel h2 {
+  color:#191B30;
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-  font-family: "Kanit", sans-serif;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-family: "Kanit",sans-serif;
   font-weight: bold;
 }
 
-.ue-editor-area {
-  border: 2px solid #191B30;
+.urdu-editor-area {
+  border: 2px solid #191B30; /* Darker border to define text area */
   border-radius: 10px;
-  background-color: whitesmoke;
+  background-color:whitesmoke; /* Light, soothing yellow */
   padding: 15px;
-  height: 300px;
+  height: 284px;
   overflow-y: auto;
   transition: all 0.3s ease;
 }
 
-.ue-editor-area textarea {
+.urdu-editor-area textarea {
   width: 100%;
-  height: 100%;
+  height: 284px;
   padding: 10px;
   border: none;
   outline: none;
   font-size: 18px;
   direction: rtl;
-  background-color: transparent;
+  background-color: transparent; 
   font-family: "Noto Nastaliq Urdu", serif;
   color: #333;
   resize: none;
 }
 
-.ue-editor-area textarea:focus {
+.urdu-editor-area textarea:focus {
   border-color: #ff7043;
 }
 
-/* Keyboard */
-.keyboard {
-  margin-top: 20px;
+
+
+                                      /* Right Panel (Goals, Streaks, Notes) */
+.urdu-right-panel {                           
+  width: 300px;
+  padding: 10px;
+  max-width: 300px;
+  background-color: #191B30; 
+  border-left: 4px solid #ff6d00; 
+  margin-left: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.urdu-right-panel h4 {
+  color:white;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-family: "kanit",sans-serif;
+  font-weight: bold;
+}
+
+.urdu-right-panel h5 {
+  color: whitesmoke;
+  font-size: 18px;
+}
+
+.urdu-right-panel .goal-tracker {
+  background-color:#ff7043;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.urdu-right-panel .goal-tracker h5 {
+  margin-bottom: 10px;
+}
+
+.urdu-progress-bar {
+  height: 20px;
+  background-color:#191B30;
+}
+
+.urdu-right-panel .daily-streak {
+  display: flex;
+  margin-left: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.urdu-notes-section .btn{
+  background-color: #191B30;
+  color: white;
+  border:none;
+}
+
+.urdu-notes-section .btn:hover{
+  background-color:white;
+  color: #191B30;
+  border:none;
+}
+
+
+
+
+
+
+
+.urdu-notes-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.urdu-notes-list li {
+  background-color: white;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  color:#191B30;
+  transition: transform 0.2s;
+}
+
+.urdu-notes-section{
+  max-height: 350px; /* Set a maximum height for the scrollable area */
+  overflow-y: auto; /* Add vertical scrolling when content overflows */
+  padding: 10px; /* Add some padding inside the container */
+  margin-top: 10px;
+  background-color:#ff7043;
+  border-radius: 5px;
+  
+}
+
+
+
+/* Hide scrollbar for Webkit browsers */
+.urdu-notes-section::-webkit-scrollbar {
+width: 0; /* Hide scrollbar width */
+background: transparent; /* Optional: Transparent background */
+}
+
+.urdu-notes-section::-webkit-scrollbar-thumb {
+background: transparent; /* Optional: Transparent thumb */
+}
+
+.urdu-section-management {
+  max-height: 480px; /* Set a maximum height for the scrollable area */
+  overflow-y: auto; /* Add vertical scrolling when content overflows */
+  padding: 10px; /* Add some padding inside the container */
+  margin-top: 10px;
+  background: #f9f9f9; /* Optional: Background color for better visibility */
+}
+
+.urdu-btn{
+  background-color:white;
+  border: none;
+}
+
+.urdu-btn:hover{
+  background-color:#ff7043;
+  color: #191B30;
+  border: none;
+}
+
+
+/* Hide scrollbar for Webkit browsers */
+.urdu-section-management::-webkit-scrollbar {
+width: 0; /* Hide scrollbar width */
+background: transparent; /* Optional: Transparent background */
+}
+
+.urdu-section-management::-webkit-scrollbar-thumb {
+background: transparent; /* Optional: Transparent thumb */
+}
+
+.urdu-chapter-box {
+  display: flex;
+  flex-direction: column; /* Arrange items in a column to grow with content */
+  margin-top: 10px;
+  align-items: flex-start; /* Align items to the start of the box */
+  background: white; /* Background color */
+  border: 2px solid #191B30; /* Border color */
+  border-radius: 4px; /* Rounded corners */
+  padding: 15px; /* Padding inside the box */
+  margin-bottom: 15px; /* Space below the box */
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+  font-family: 'Arial', sans-serif; /* Font family */
+  font-size: 16px; /* Font size */
+  color: #191B30; /* Text color */
+  overflow: hidden; /* Hide overflow content */
+}
+
+.urdu-chapter-box p {
+  margin: 0;
+  flex-grow: 1; /* Allow text to expand */
+  font-weight: bold; /* Bold text */
+  overflow-wrap: break-word; /* Break long words to avoid overflow */
+  word-break: break-word; /* Break words at the end of lines */
+}
+
+.urdu-close-btn {
+  position: absolute;
+  top: -10px; /* Position close button at the top */
+  right:-10px; /* Position close button on the right */
+  background: transparent; /* Transparent background */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor on hover */
+  color: #ff7043; /* Close icon color */
+  font-size: 18px; /* Icon size */
+}
+
+.urdu-close-btn:hover {
+  color: #191B30; /* Color on hover */
+  background: transparent; /* Transparent background */
+}
+
+
+.urdu-note-box {
+  display: flex;
+  flex-direction: column; /* Arrange items in a column to grow with content */
+  margin-top: 10px;
+  align-items: flex-start; /* Align items to the start of the box */
+  background: white; /* Background color */
+  border: 2px solid #191B30; /* Border color */
+  border-radius: 4px; /* Rounded corners */
+  padding: 15px; /* Padding inside the box */
+  margin-bottom: 15px; /* Space below the box */
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+  font-family: 'Arial', sans-serif; /* Font family */
+  font-size: 16px; /* Font size */
+  color: #191B30; /* Text color */
+  overflow: hidden; /* Hide overflow content */
+}
+
+.urdu-note-box p {
+  margin: 0;
+  flex-grow: 1; /* Allow text to expand */
+  font-weight: bold; /* Bold text */
+  overflow-wrap: break-word; /* Break long words to avoid overflow */
+  word-break: break-word; /* Break words at the end of lines */
+}
+
+.urdu-note-box .urdu-note-close-btn{
+  position: absolute;
+  top: -10px; /* Position close button at the top */
+  right:-10px; /* Position close button on the right */
+  background: transparent; /* Transparent background */
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer cursor on hover */
+  color: #ff7043; /* Close icon color */
+  font-size: 18px; /* Icon size */
+}
+
+.urdu-note-box .urdu-note-close-btn:hover {
+  color:#191B30; /* Color on hover */
+  background: transparent; /* Transparent background */
+}
+
+
+
+
+.urdu-notes-list li:hover {
+  transform: scale(1.05);
 }
 
 /* Modals */
-.ue-modal-overlay {
+.modal-header, .modal-footer {
+  background-color: white;
+}
+
+.modal-header .modal-title {
+  color: #191B30;
+
+}
+
+.modal-footer .btn {
+  background-color: #191B30;
+  border: none;
+  font-weight: bold;
+}
+
+.modal-footer .btn:hover {
+  background-color: #ff5722;
+}
+
+/* Buttons */
+button {
+  font-family: "Noto Nastaliq Urdu", sans-serif;
+  font-weight: bold;
+  border-radius: 50px;
+  transition: background-color 0.3s ease;
+}
+
+button:focus {
+  box-shadow: none;
+}
+
+button.primary {
+  background-color: #ff7043;
+  color: #fff;
+}
+
+button.primary:hover {
+  background-color: #f4511e;
+}
+
+/* Word Count and Goal Badge Styling */
+h5 {
+  font-weight: bold;
+  font-family: "kanit",sans-serif;
+  color: #ff7043;
+}
+
+.streak-btn{
+  background-color: white;
+  color: #191B30;
+}
+
+.badge {
+  font-size: 16px;
+  background-color: #ff7043;
+  color: white;
+}
+
+/* Light Theme */
+.theme-light .urdu-editor-area {
+  background-color:white;
+  border: 2px solid #191B30;
+}
+
+.theme-light .urdu-editor-area textarea {
+  background-color: transparent;
+  color:#191B30;
+}
+
+.theme-light .keyboard {
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Dark Theme */
+.theme-dark .urdu-editor-area {
+  background-color: #333;
+  border: 2px solid #444;
+}
+
+.theme-dark .urdu-editor-area textarea {
+  background-color: #222;
+  color: #eee;
+}
+
+.theme-dark .keyboard {
+  background-color: #222;
+  border: 1px solid #444;
+}
+
+/* Blue Theme */
+.theme-blue .urdu-editor-area {
+  background-color: #e3f2fd;
+  border: 2px solid #0288d1;
+}
+
+.theme-blue .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #0288d1;
+}
+
+.theme-blue .keyboard {
+  background-color: #e3f2fd;
+  border: 1px solid #0288d1;
+}
+
+/* Green Theme */
+.theme-green .urdu-editor-area {
+  background-color: #e8f5e9;
+  border: 2px solid #43a047;
+}
+
+.theme-green .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #43a047;
+}
+
+.theme-green .keyboard {
+  background-color: #e8f5e9;
+  border: 1px solid #43a047;
+}
+
+/* Red Theme */
+.theme-red .urdu-editor-area {
+  background-color: #ffebee;
+  border: 2px solid #e53935;
+}
+
+.theme-red .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #e53935;
+}
+
+.theme-red .keyboard {
+  background-color: #ffebee;
+  border: 1px solid #e53935;
+}
+
+/* Purple Theme */
+.theme-purple .urdu-editor-area {
+  background-color: #f3e5f5;
+  border: 2px solid #8e24aa;
+}
+
+.theme-purple .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #8e24aa;
+}
+
+.theme-purple .keyboard {
+  background-color: #f3e5f5;
+  border: 1px solid #8e24aa;
+}
+
+/* Pink Theme */
+.theme-pink .urdu-editor-area {
+  background-color: #fce4ec;
+  border: 2px solid #d81b60;
+}
+
+.theme-pink .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #d81b60;
+}
+
+.theme-pink .keyboard {
+  background-color: #fce4ec;
+  border: 1px solid #d81b60;
+}
+
+/* Yellow Theme */
+.theme-yellow .urdu-editor-area {
+  background-color: #fffde7;
+  border: 2px solid #fbc02d;
+}
+
+.theme-yellow .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #fbc02d;
+}
+
+.theme-yellow .keyboard {
+  background-color: #fffde7;
+  border: 1px solid #fbc02d;
+}
+
+/* Orange Theme */
+.theme-orange .urdu-editor-area {
+  background-color: #fff3e0;
+  border: 2px solid #fb8c00;
+}
+
+.theme-orange .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #fb8c00;
+}
+
+.theme-orange .keyboard {
+  background-color: #fff3e0;
+  border: 1px solid #fb8c00;
+}
+
+/* Teal Theme */
+.theme-teal .urdu-editor-area {
+  background-color: #e0f2f1;
+  border: 2px solid #00796b;
+}
+
+.theme-teal .editor-area textarea {
+  background-color: transparent;
+  color: #00796b;
+}
+
+.theme-teal .keyboard {
+  background-color: #e0f2f1;
+  border: 1px solid #00796b;
+}
+
+/* Cyan Theme */
+.theme-cyan .urdu-editor-area {
+  background-color: #e0f7fa;
+  border: 2px solid #00acc1;
+}
+
+.theme-cyan .urdu-editor-area textarea {
+  background-color: transparent;
+  color: #00acc1;
+}
+
+.theme-cyan .keyboard {
+  background-color: #e0f7fa;
+  border: 1px solid #00acc1;
+}
+
+.fa-crown {
+  margin-left: 10px;
+  animation: bounce 2s infinite;
+}
+
+
+.word-count {
+
+  color: #333;
+  margin-left: 1300px;
+  margin-top:-25px;
+  font-size: 25px;
+}
+
+/* Main Content Styles */
+.urdu-main-content {
+  display: flex;
+  flex: 1;
+ 
+
+ 
+}
+
+@media (max-width: 768px) {
+  .urdu-main-content {
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 20px;
+  }
+
+
+  .urdu-left-panel,
+  .urdu-right-panel {
+    width: 100%;
+    border: none;
+    position: static;
+  }
+
+  .urdu-toggle-left-panel {
+    margin: 10px;
+  }
+}
+
+.urdu-left-panel {
+  width: 300px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  overflow-y: auto;
+  margin-left: 50px;
+}
+
+.urdu-left-panel h4 {
+  margin-bottom: 10px;
+}
+
+.urdu-chapter-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: background-color 0.2s ease;
+}
+
+.urdu-chapter-btn:hover {
+  background-color: #0056b3;
+}
+
+.urdu-section-management {
+  display: flex;
+  flex-direction: column;
+}
+
+.urdu-chapter-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.urdu-chapter-box p {
+  margin: 0;
+}
+
+.urdu-note-close-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.urdu-toggle-left-panel {
+  background-color: #191B30;
+  color: white;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 20px 10px 0 10px;
+  transition: background-color 0.2s ease;
+}
+
+.urdu-toggle-left-panel:hover {
+  background-color: #f4511e;
+}
+
+
+
+
+.urdu-toggle-left-panel{
+  background-color: #191B30;
+  border: none;
+  align-items: center;
+  padding:3px;
+  margin-left: 50px;
+  width: 20px;
+  height: 100vh;
+  
+}
+
+
+.urdu-toggle-left-panel:hover{
+  background-color: #ff7043;
+  border: none;
+}
+
+
+
+.urdu-left-panel h4 {
+  color: #191B30;
+  font-size: 22px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.urdu-left-panel h5 {
+  color: #191B30;
+  font-size: 18px;
+}
+
+.urdu-left-panel .settings-section {
+  background-color: #b2dfdb;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.urdu-left-panel .settings-section h5 {
+  margin-bottom: 10px;
+}
+
+.urdu-left-panel .settings-section .option {
+  background-color: #e0f2f1;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: #191B30;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.urdu-left-panel .settings-section .option:hover {
+  background-color: #b2dfdb;
+  transform: scale(1.05);
+}
+
+.urdu-left-panel .quick-links {
+  background-color: #b2dfdb;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.urdu-left-panel .quick-links h5 {
+  margin-bottom: 10px;
+}
+
+.urdu-left-panel .quick-links .link {
+  background-color: #e0f2f1;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: #004d40;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.urdu-left-panel .quick-links .link:hover {
+  background-color: #b2dfdb;
+  transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.urdu-chapter-btn{
+  background-color: #ff7043;
+  color: #191B30;
+  border:none;
+  padding: 10px;
+}
+
+.urdu-chapter-btn:hover{
+  background-color: #191B30;
+  color:white;
+  border:none;
+}
+
+.streak-btn-badge-bg-primary{
+  background-color: #ff7043;
+  color: #191B30;
+}
+
+.streak-btn-badge-bg-primary:hover{
+  background-color: white;
+  color: #191B30;
+}
+
+
+
+
+.urdu-progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #191B30;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.urdu-progress-fill {
+  height: 100%;
+  background-color: #ffc107;
+  transition: width 0.6s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.urdu-btn {
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.urdu-btn:hover {
+  background-color: #138496;
+}
+
+/* Notes Section */
+.urdu-notes-section {
+  max-height: 350px;
+  overflow-y: auto;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #ff7043;
+  border-radius: 5px;
+}
+
+.urdu-notes-section::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.urdu-notes-section::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.urdu-note-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  color: #191B30;
+  overflow: hidden;
+}
+
+.urdu-note-box p {
+  margin: 0;
+  flex-grow: 1;
+  font-weight: bold;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.urdu-note-box .urdu-note-close-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ff7043;
+  font-size: 18px;
+}
+
+.urdu-note-box .urdu-note-close-btn:hover {
+  color: #191B30;
+  background: transparent;
+}
+
+
+/* Note Modal Styles */
+.note-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -137,114 +1071,318 @@ nav {
   height: 100%;
   background-color: rgba(0,0,0,0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 2000;
+  align-items: center;
+  z-index: 1001;
 }
 
-.ue-modal-content {
+.note-modal-content {
   background-color: white;
-  width: 400px;
+  padding: 20px;
   border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.ue-modal-header {
+.note-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  background-color: #f2f2f2;
+  margin-bottom: 15px;
 }
 
-.ue-modal-header h2 {
-  margin: 0;
+.note-modal-title {
   color: #191B30;
+  font-size: 1.2rem;
+  font-family: "Kanit", sans-serif;
+  font-weight: bold;
 }
 
-.ue-close-modal-btn {
-  background: transparent;
+.note-modal-close {
+  background: none;
   border: none;
-  font-size: 24px;
+  font-size: 1.2rem;
   cursor: pointer;
+  color: #ff7043;
+}
+
+.note-modal-close:hover {
   color: #191B30;
 }
 
-.ue-modal-body {
-  padding: 15px;
+.note-modal-body {
+  margin-bottom: 15px;
 }
 
-.ue-modal-body input {
+.note-modal-input {
   width: 100%;
-  padding: 8px 10px;
-  font-size: 16px;
-  border: 2px solid #191B30;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  outline: none;
 }
 
-.ue-modal-body input:focus {
-  border-color: #ff7043;
-}
-
-.ue-modal-footer {
-  padding: 15px;
+.note-modal-footer {
   display: flex;
   justify-content: flex-end;
-  background-color: #f2f2f2;
+  gap: 10px;
 }
 
-.ue-modal-button {
-  background-color: #191B30;
+.note-modal-btn.primary {
+  background-color: #ff7043;
   color: white;
   border: none;
-  padding: 8px 12px;
   border-radius: 4px;
+  padding: 8px 12px;
   cursor: pointer;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
-.ue-modal-button:hover {
-  background-color: #ff5722;
+.note-modal-btn.primary:hover {
+  background-color: #f4511e;
 }
 
-/* Buttons */
-.ue-toolbar-btn {
-  background-color: #191B30;
-  border: none;
+.note-modal-btn.secondary {
+  background-color: #6c757d;
   color: white;
-  padding: 8px 10px;
-  margin-right: 8px;
+  border: none;
   border-radius: 4px;
+  padding: 8px 12px;
   cursor: pointer;
-  font-size: 16px;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
 }
 
-.ue-toolbar-btn:hover {
-  transform: scale(1.1);
+.note-modal-btn.secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Goal Modal Styles */
+.goal-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.goal-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.goal-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.goal-modal-title {
+  color: #191B30;
+  font-size: 1.2rem;
+  font-family: "Kanit", sans-serif;
+  font-weight: bold;
+}
+
+.goal-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #ff7043;
+}
+
+.goal-modal-close:hover {
+  color: #191B30;
+}
+
+.goal-modal-body {
+  margin-bottom: 15px;
+}
+
+.goal-modal-input {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.goal-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.goal-modal-btn.primary {
   background-color: #ff7043;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
 }
 
-.ue-goal-set-button {
-  /* Removed as per request */
+.goal-modal-btn.primary:hover {
+  background-color: #f4511e;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .ue-editor-panel {
-    width: 100%;
-    max-width: none;
-  }
+.goal-modal-btn.secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
 }
 
-/* Themes - Removed as per request */
-
-/* Additional Styles if needed */
-
-/* Ensure that the keyboard doesn't overflow */
-.ue-editor-panel .simple-keyboard {
-  max-width: 100%;
+.goal-modal-btn.secondary:hover {
+  background-color: #5a6268;
 }
+
+
+/* Chapter Modal Styles */
+.chapter-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.chapter-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.chapter-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.chapter-modal-title {
+  color: #191B30;
+  font-size: 1.2rem;
+  font-family: "Kanit", sans-serif;
+  font-weight: bold;
+}
+
+.chapter-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #ff7043;
+}
+
+.chapter-modal-close:hover {
+  color: #191B30;
+}
+
+.chapter-modal-body {
+  margin-bottom: 15px;
+}
+
+.chapter-modal-input {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.chapter-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.chapter-modal-btn.primary {
+  background-color: #ff7043;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.chapter-modal-btn.primary:hover {
+  background-color: #f4511e;
+}
+
+.chapter-modal-btn.secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.chapter-modal-btn.secondary:hover {
+  background-color: #5a6268;
+}
+
+
+
+
+/* Font styles */
+.kanit-thin, .kanit-extralight, .kanit-light, .kanit-regular, .kanit-medium, .kanit-semibold, .kanit-bold, .kanit-extrabold, .kanit-black,
+.kanit-thin-italic, .kanit-extralight-italic, .kanit-light-italic, .kanit-regular-italic, .kanit-medium-italic, .kanit-semibold-italic, .kanit-bold-italic, .kanit-extrabold-italic, .kanit-black-italic {
+  font-family: "Kanit", sans-serif;
+}
+
+.kanit-thin { font-weight: 100; }
+.kanit-extralight { font-weight: 200; }
+.kanit-light { font-weight: 300; }
+.kanit-regular { font-weight: 400; }
+.kanit-medium { font-weight: 500; }
+.kanit-semibold { font-weight: 600; }
+.kanit-bold { font-weight: 700; }
+.kanit-extrabold { font-weight: 800; }
+.kanit-black { font-weight: 900; }
+
+.kanit-thin-italic { font-weight: 100; font-style: italic; }
+.kanit-extralight-italic { font-weight: 200; font-style: italic; }
+.kanit-light-italic { font-weight: 300; font-style: italic; }
+.kanit-regular-italic { font-weight: 400; font-style: italic; }
+.kanit-medium-italic { font-weight: 500; font-style: italic; }
+.kanit-semibold-italic { font-weight: 600; font-style: italic; }
+.kanit-bold-italic { font-weight: 700; font-style: italic; }
+.kanit-extrabold-italic { font-weight: 800; font-style: italic; }
+.kanit-black-italic { font-weight: 900; font-style: italic; }
+

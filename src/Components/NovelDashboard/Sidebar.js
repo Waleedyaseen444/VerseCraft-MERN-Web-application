@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './noveldashboard.css';
 
-function Sidebar({ chapters, addChapter, setCurrentPage }) {
+function Sidebar({ chapters, addChapter, handleChapterClick }) {
   const [newChapterTitle, setNewChapterTitle] = useState('');
 
   const handleAddChapter = () => {
@@ -11,15 +11,10 @@ function Sidebar({ chapters, addChapter, setCurrentPage }) {
     }
   };
 
-  const handleChapterClick = (index) => {
-    // Update the currentPage in App.js
-    setCurrentPage(index); 
-  };
-
   const renderChapter = (chapter, index) => {
     const id = chapter.title.replace(/\s+/g, '');
     return (
-      <li key={id} onClick={() => handleChapterClick(index)}>
+      <li key={chapter._id} onClick={() => handleChapterClick(index)}>
         <a href={`#${id}`}>
           {chapter.title}
         </a>
@@ -32,19 +27,20 @@ function Sidebar({ chapters, addChapter, setCurrentPage }) {
       <h3>Chapters</h3>
 
       <div className="novelside-add-chapter">
-        <input 
-          type="text" 
-          value={newChapterTitle} 
-          onChange={(e) => setNewChapterTitle(e.target.value)} 
-          placeholder="New chapter title..." 
+        <input
+          type="text"
+          value={newChapterTitle}
+          onChange={(e) => setNewChapterTitle(e.target.value)}
+          placeholder="New chapter title..."
         />
-        <button className="novelside-add-chapter-button" onClick={handleAddChapter}>Add Chapter</button>
+        <button className="novelside-add-chapter-button" onClick={handleAddChapter}>
+          Add Chapter
+        </button>
       </div>
 
       <ul>
         {chapters.map((chapter, index) => renderChapter(chapter, index))}
       </ul>
-      
     </div>
   );
 }

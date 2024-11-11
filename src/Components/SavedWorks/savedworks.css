@@ -18,6 +18,7 @@
     width: 100%;
     height:100%;
     border: 2px solid #191B30;
+    background-color: #1F2247;
 
 }
   
@@ -28,13 +29,14 @@
     padding: 10px; /* Reduced padding to decrease height */
     text-align: center; /* Center the heading text */
     justify-content: center;
-    background-color: white;
+    background-color: #1F2247;
     height: 60px;
+    
 }
 
 .saved-heading h1 {
     font-size: 50px; /* Reduced font size to make the heading smaller */
-    color: #191B30; /* Match header background color */
+    color: white; /* Match header background color */
     font-family: 'Playfair Display', serif;
     font-weight: 200;
     margin-top: -5px;
@@ -204,7 +206,7 @@
 .saved-Urdu h2 {
     font-family: 'Kanit', sans-serif;
     color: #191B30;
-    background-color: #F47D4B;
+    background-color: white;
     border: 1px solid #191B30; /* Adjust the border */
     border-radius: 10px; /* Optional: to round the corners */
     display: inline-block; /* Ensures background and border wrap around text */
@@ -233,10 +235,10 @@
     width: 100%; /* Ensure each list item takes up the full width of the ul */
     box-sizing: border-box; /* Include padding and border in the element's total width */
     margin: 0; /* Remove default margin */
-    background-color: #F47D4B;
+    background-color: #191B30;
     color: #FFF;
     padding: 10px; /* Add padding for spacing inside list items */
-    border-bottom: 2px solid #191B30; /* Add a border between items */
+    border-bottom: 2px solid #F47D4B; /* Add a border between items */
     text-align: left; /* Ensure text inside list items is left-aligned */
     font-family: 'Kanit', sans-serif;
     font-weight: 400;
@@ -278,17 +280,12 @@
     margin-top: 20px;
 }
 
-.saved-search-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-}
 /* Other styles remain unchanged */
 
 /* Ensure Recents section is styled properly */
 .saved-recents {
   
-    background-color:white; /* Solid white background */
+    background-color:#F47D4B; /* Solid white background */
     color: #191B30;
     width: 100%;
     height: 100%;

@@ -8,9 +8,6 @@
     position: relative;
     background-color:#fafcffff;
     width: 100%;
-    
-
-   
 }
 
 .noveldashboard-Add-plot-icon{
@@ -60,6 +57,8 @@
   height: 100%;
   background-color: #fafcffff;
   border: 1px solid #1F2247;
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -153,41 +152,41 @@
 
 
 .noveldashboard-editor{
-  position: relative;
+  position: absolute;
   width: 650px;
-  margin-top: -724px;
   background-color: #ffffff;
-  height: 100vh;
+  height: 100%;
   left:273px;
+  overflow:auto;
 }
 
 
 .noveldashboard-chatbot{
 
-  position:relative;
-  width: 387px;
-  height: 95vh;
-  margin-top: -704px;
+  position:absolute;
+  width: 363px;
+  height: 100vh;
+  
   background-color: #ffffff;
   border-left:4px solid #F47D4B;
-  left:900px;
+  left:924px;
 }
 
 
 
 /* Chatbot styles */
 .chatbot {
-  display: flex;
-  flex-direction: column;
+
   height: 100%;
   background-color: #191B30;
   color: #ffffff;
 }
 
 .chatbox {
-  flex: 1;
+  height: 550px;
   padding: 10px;
   overflow-y: auto;
+
 }
 
 .message {
@@ -209,26 +208,37 @@
 }
 
 .chat-input {
+
+  padding: 10px;
+  position: absolute;
+  width: 95%;
   display: flex;
-  padding: 10px;
+  flex-direction: row;
+  margin-top: 10px;
   background-color: #1F2247;
+
 }
 
-.chat-input input {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  margin-right: 10px;
+
+
+.chat-text-box{
+  width: 75%;
+  height: auto;
+ 
+ 
 }
 
-.novelchat-button {
+.novelchat-button{
   background-color: #fafcffff;
   color: #191B30;
   border: #191B30;
   border-radius: 5px;
   cursor: pointer;
-  margin-bottom: 20px;
+  width:20%;
+  margin-left: 10px;
+  height: 35px;
+
+
   
 }
 .novelchat-button:hover {
@@ -239,10 +249,10 @@
 
 
 .noveldashboard-notes{
-    position: relative;
+    position: absolute;
     width: 232px;
     height: 100vh;
-    margin-top: -669px;
+    
     background-color: #1F2247;
     border-left:4px solid #F47D4B;
     left:1291px;
@@ -258,7 +268,7 @@
     flex-direction: column;
     justify-content: flex-start; /* Align items to the start (top) of the container */
     font-family: 'Kanit', sans-serif;
-    height:100%;
+    height:70%;
     border: 2px solid #F47D4B;
     border-bottom-right-radius: 10px;
     overflow: hidden;
@@ -296,6 +306,34 @@
 
 .noveldashboard-notes-header h2{
   margin-top: 20px;
+}
+
+
+.noveldashboard-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.noveldashboard-button {
+  padding: 6px 12px;
+  background-color: #F47D4B;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+ 
+}
+
+.noveldashboard-button:hover {
+  background-color: #F47D4B;
+}
+
+.noveldashboard-buttons{
+  padding: 10px;
+  justify-content: center;
+
 }
 
 .noveldashboard-modal {

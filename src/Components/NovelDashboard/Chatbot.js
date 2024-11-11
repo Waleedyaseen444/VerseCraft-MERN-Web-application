@@ -24,6 +24,7 @@ function Chatbot() {
       </div>
       <div className="chat-input">
         <input 
+          className="chat-text-box"
           type="text" 
           value={input} 
           onChange={(e) => setInput(e.target.value)} 

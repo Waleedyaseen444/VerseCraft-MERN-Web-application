@@ -34,6 +34,10 @@ const urduRouter = require('./routes/urdu');
 const chapterRoutes = require('./routes/chapters');
 
 const noteRoutes = require('./routes/noteRoutes');
+const novelChaptersRoute = require('./routes/novelChapters');
+
+
+app.use('/api', novelChaptersRoute);
 
 
 app.use('/api', chapterRoutes); // Mount chapterRoutes at /api
@@ -48,6 +52,10 @@ app.use('/api/urdu', urduRouter);
 app.use('/api/stories', storyRoutes);
 
 
+
+// Define Routes
+app.use('/api/urduchapters', require('./routes/urduChapters'));
+app.use('/api/chapter-notes', require('./routes/urduChapterNotes'));
 // Mount Routes
 // Mount Routes Correctly
 app.use('/api/admin', adminRoutes);

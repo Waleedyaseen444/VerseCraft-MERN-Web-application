@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import './noveldashboard.css';
 import menuIcon from '../Images/Logo-V.png';
 import plotIcon from '../Images/Plot.png';
@@ -16,11 +16,9 @@ import closeIcon from '../Images/Close.png';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import comIcon from "../Images/comm.png"
-import botIcon from "../Images/Bot.png";
-import { useParams } from 'react-router-dom';
-
+import botIcon from "../Images/Bot.png"
 
 // Import the components
 import Chatbot from './Chatbot'; // Chatbot component
@@ -28,145 +26,188 @@ import Editor from './Editor'; // Editor component
 import Sidebar from './Sidebar'; // Sidebar component
 
 function NovelDashboard() {
-  const [chapters, setChapters] = useState([{ title: 'Chapter I', content: '# Chapter I\n\nStart writing...' }]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [visible, setVisible] = useState(false);
-  const { projectId } = useParams(); // Assuming projectId refers to Story ID
+  const { projectId } = useParams(); // Assuming projectId refers to Novel ID
 
+  const [chapters, setChapters] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [currentChapter, setCurrentChapter] = useState(null);
+  const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [notes, setNotes] = useState([]);
+  const [newNote, setNewNote] = useState('');
+
+  // Fetch chapters when the component mounts
+  useEffect(() => {
+    fetch(`/api/novels/${projectId}/chapters`)
+      .then((res) => res.json())
+      .then((data) => {
+        setChapters(data);
+        if (data.length > 0) {
+          setCurrentChapter(data[0]);
+          setCurrentPage(0);
+        }
+      })
+      .catch((error) => console.error(error));
+  }, [projectId]);
+
+  // Fetch notes when the current chapter changes
+  useEffect(() => {
+    if (currentChapter) {
+      fetch(`/api/novels/${projectId}/chapters/${currentChapter._id}/notes`)
+        .then((res) => res.json())
+        .then((data) => {
+          setNotes(data);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [currentChapter, projectId]);
+
+  // Function to handle chapter click
+  const handleChapterClick = (index) => {
+    const chapter = chapters[index];
+    fetch(`/api/novels/${projectId}/chapters/${chapter._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCurrentChapter(data);
+        setCurrentPage(index);
+      })
+      .catch((error) => console.error(error));
+  };
 
   // Function to update the content of the current chapter
   const handleTextChange = (value) => {
-    setChapters((prevChapters) =>
-      prevChapters.map((chapter, index) =>
-        index === currentPage ? { ...chapter, content: value } : chapter
-      )
-    );
+    setCurrentChapter((prevChapter) => ({ ...prevChapter, content: value }));
+  };
+
+  const handleSaveChapter = () => {
+    if (currentChapter) {
+      fetch(`/api/novels/${projectId}/chapters/${currentChapter._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(currentChapter),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const updatedChapters = [...chapters];
+          updatedChapters[currentPage] = data;
+          setChapters(updatedChapters);
+          setCurrentChapter(data);
+          alert('Chapter saved successfully!');
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   const addChapter = (title) => {
-    setChapters([...chapters, { title, content: '' }]);
+    fetch(`/api/novels/${projectId}/chapters`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setChapters([...chapters, data]);
+        setCurrentPage(chapters.length);
+        setCurrentChapter(data);
+      })
+      .catch((error) => console.error(error));
   };
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar state
   };
 
+  const stripHtmlTags = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  };
 
- 
+  const handleSaveNote = () => {
+    const plainTextNote = stripHtmlTags(newNote);
+    if (plainTextNote.trim() && currentChapter) {
+      fetch(`/api/novels/${projectId}/chapters/${currentChapter._id}/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: plainTextNote }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setNotes([...notes, data]);
+          setNewNote(''); // Clear the editor after saving
+          setVisible(false); // Close the modal
+        })
+        .catch((error) => console.error(error));
+    }
+  };
 
-  const renderThumb = ({ style, ...props }) => {
-    const thumbStyle = {
-        backgroundColor: '#F47D4B',
-        borderRadius: '10px',
-        opacity: 0, // Initially hide the scrollbar
-    };
-    return <div style={{ ...style, ...thumbStyle }} {...props} />;
-};
+  const handleDeleteNote = (noteId) => {
+    if (currentChapter) {
+      fetch(`/api/novels/${projectId}/chapters/${currentChapter._id}/notes/${noteId}`, {
+        method: 'DELETE',
+      })
+        .then(() => {
+          const updatedNotes = notes.filter((note) => note._id !== noteId);
+          setNotes(updatedNotes);
+        })
+        .catch((error) => console.error(error));
+    }
+  };
 
-const renderTrack = ({ style, ...props }) => {
-    const trackStyle = {
-        backgroundColor: '#191B30',
-        borderRadius: '10px',
-        opacity: 0, // Initially hide the track
-    };
-    return <div style={{ ...style, ...trackStyle }} {...props} />;
-};
+  // Navigation handlers
+  const handleHomepageClick = () => {
+    navigate('/Homepage');
+  };
 
-const handleScrollStart = () => {
-    // Show the scrollbar when scrolling starts
-    const thumb = document.querySelector('.custom-thumb');
-    const track = document.querySelector('.custom-track');
-    if (thumb) thumb.style.opacity = 1;
-    if (track) track.style.opacity = 1;
-};
+  const handlePlotClick = () => {
+    navigate('/Plot');
+  };
 
-const handleScrollStop = () => {
-    // Hide the scrollbar after scrolling stops
-    const thumb = document.querySelector('.custom-thumb');
-    const track = document.querySelector('.custom-track');
-    if (thumb) thumb.style.opacity = 0;
-    if (track) track.style.opacity = 0;
-};
+  const handleCharacterClick = () => {
+    navigate('/Character');
+  };
 
-const stripHtmlTags = (html) => {
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  return doc.body.textContent || "";
-};
+  const handlePublishClick = () => {
+    navigate('/Publishing');
+  };
 
-const [notes, setNotes] = useState([]);
-const [newNote, setNewNote] = useState('');
+  const handleProfileClick = () => {
+    navigate('/Profile');
+  };
 
-const handleSaveNote = () => {
-  const plainTextNote = stripHtmlTags(newNote);
-  if (plainTextNote.trim()) {
-      setNotes([...notes, plainTextNote]);
-      setNewNote(''); // Clear the editor after saving
-      setVisible(false); // Close the modal
-  }
-};
+  const handleProjectsClick = () => {
+    navigate('/Saved');
+  };
 
-const handleDeleteNote = (index) => {
-  const updatedNotes = notes.filter((_, i) => i !== index);
-  setNotes(updatedNotes);
-};
+  const handleNotificationClick = () => {
+    navigate('/Notification');
+  };
 
+  const handleChatbotClick = () => {
+    navigate('/Chatbot');
+  };
 
-const handleHomepageClick = () => {
-  navigate('/Homepage'); // Assuming your profile page route is '/profile'
-};
+  const handleProgressClick = () => {
+    navigate('/Progress');
+  };
 
-const handlePlotClick = () => {
-  navigate('/Plot'); // Assuming your profile page route is '/profile'
-};
+  const handleSettingClick = () => {
+    navigate('/Setting');
+  };
 
-const handleCharacterClick = () => {
-  navigate('/Character'); // Assuming your profile page route is '/profile'
-};
-
-const handlePublishClick = () => {
-  navigate('/Publishing'); // Assuming your profile page route is '/profile'
-};
-
-const handleProfileClick = () => {
-  navigate('/Profile'); // Assuming your profile page route is '/profile'
-};
-
-const handleProjectsClick = () => {
-  navigate('/Saved'); // Assuming your profile page route is '/profile'
-};
-
-const handleNotificationClick = () => {
-  navigate('/Notification'); // Assuming your profile page route is '/profile'
-};
-
-const handleChatbotClick = () => {
-  navigate('/Chatbot'); // Assuming your profile page route is '/profile'
-};
-
-const handleProgressClick = () => {
-  navigate('/Progress'); // Assuming your profile page route is '/profile'
-};
-
-const handleSettingClick = () => {
-  navigate('/Setting'); // Assuming your profile page route is '/profile'
-};
-
-const handleFavoriteClick = () => {
-  navigate('/Favorite'); 
-};
+  const handleFavoriteClick = () => {
+    navigate('/Favorite');
+  };
 
   return (
     <div className="noveldashboard-container">
-     <div className="homepage-header">
+      <div className="homepage-header">
         <header className="homepage-header-item">
-          <img src={menuIcon} alt="Menu" className="homepage-menu-icon"  />
-          <div className="homepage-app-title" onClick={handleHomepageClick} >VerseCraft</div>
+          <img src={menuIcon} alt="Menu" className="homepage-menu-icon" />
+          <div className="homepage-app-title" onClick={handleHomepageClick}>VerseCraft</div>
           <nav>
             <ul>
-            <li className="homepage-Plot" onClick={handleProjectsClick}>
+              <li className="homepage-Plot" onClick={handleProjectsClick}>
                 <img src={journalIcon} alt="Character" className="homepage-character-icon" />
                 My Projects
               </li>
@@ -178,11 +219,11 @@ const handleFavoriteClick = () => {
                 <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
                 InspireBot
               </li>
-              <li className="homepage-Published" onClick={handleNotificationClick} >
+              <li className="homepage-Published" onClick={handleNotificationClick}>
                 <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
                 Notifications
               </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick} >
+              <li className="homepage-inspire-bot" onClick={handleSettingClick}>
                 <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
                 Settings
               </li>
@@ -201,20 +242,19 @@ const handleFavoriteClick = () => {
         </button>
 
         <div className='homepage-journal'>
-          <img src={plotIcon} alt="journal" className="homepage-journal-icon"  />
+          <img src={plotIcon} alt="journal" className="homepage-journal-icon" />
           Plot
-          <img src={plusIcon} alt="noveldashboard-add-plot" className="noveldashboard-Add-plot-icon" onClick={handlePlotClick}/>
+          <img src={plusIcon} alt="noveldashboard-add-plot" className="noveldashboard-Add-plot-icon" onClick={handlePlotClick} />
         </div>
-        <div className='homepage-notifications' >
+        <div className='homepage-notifications'>
           <img src={characterIcon} alt="notifications" className="homepage-noti-icon" />
           Character
-          <img src={plusIcon} alt="noveldashboard-add-character" className="noveldashboard-Add-character-icon" onClick={handleCharacterClick}/>
+          <img src={plusIcon} alt="noveldashboard-add-character" className="noveldashboard-Add-character-icon" onClick={handleCharacterClick} />
         </div>
-        <div className='homepage-notifications' >
+        <div className='homepage-notifications'>
           <img src={comIcon} alt="notifications" className="homepage-noti-icon" />
           Collaborators
-          <img src={plusIcon} alt="noveldashboard-collaborator-plot" className="noveldashboard-Add-collaborator-icon" onClick={handleCharacterClick}/>
-
+          <img src={plusIcon} alt="noveldashboard-collaborator-plot" className="noveldashboard-Add-collaborator-icon" onClick={handleCharacterClick} />
         </div>
 
         <div className='homepage-goals' onClick={handlePublishClick}>
@@ -225,23 +265,26 @@ const handleFavoriteClick = () => {
           <img src={goalIcon} alt="favorites" className="homepage-fav-icon" />
           Progress
         </div>
-        
-      </div> 
+
+      </div>
 
       <div className="noveldashboard-dashboard">
         {/* Sidebar Component */}
         <div className="noveldashboard-sidebar">
-          <Sidebar className="noveldashboard-sidebar-content" chapters={chapters} addChapter={addChapter} setCurrentPage={setCurrentPage} />
+          <Sidebar
+            className="noveldashboard-sidebar-content"
+            chapters={chapters}
+            addChapter={addChapter}
+            handleChapterClick={handleChapterClick}
+          />
         </div>
 
         {/* Editor Component */}
         <div className="noveldashboard-editor">
-          <Editor text={chapters[currentPage].content} setText={handleTextChange} />
-        </div>
-
-        {/* Novel View (For Displaying current novel content or chapters) */}
-        <div className="noveldashboard-novelview">
-          {/* Novel view content goes here */}
+          <Editor
+            text={currentChapter ? currentChapter.content : ''}
+            setText={handleTextChange}
+          />
         </div>
 
         {/* Chatbot Component */}
@@ -250,52 +293,59 @@ const handleFavoriteClick = () => {
         </div>
 
         <div className="noveldashboard-notes">
-        <aside className="noveldashboard-notes-section">
-                    <div className="noveldashboard-notes-header">
-                        <button className="noveldashboard-add-note" onClick={() => setVisible(true)}>
-                            <img src={plusIcon} alt="Add Note" className="noveldashboard-plus-icon" />
-                        </button>
+          <aside className="noveldashboard-notes-section">
+            <div className="noveldashboard-notes-header">
+              <button className="noveldashboard-add-note" onClick={() => setVisible(true)}>
+                <img src={plusIcon} alt="Add Note" className="noveldashboard-plus-icon" />
+              </button>
 
-                        <Modal className="noveldashboard-modal" isOpen={visible} onRequestClose={() => setVisible(false)}>
-                            <h2>Add Note</h2>
-                            <button className="noveldashboard-close-button" onClick={() => setVisible(false)}>
-                                <img src={closeIcon} alt="Close Note" className="noveldashboard-close-icon" />
-                            </button>
-                            <div className="noveldashboard-modal-content">
-                                <ReactQuill
-                                    className="noveldashboard-note-text"
-                                    value={newNote}
-                                    onChange={setNewNote}
-                                    placeholder="Write your note here..."
-                                />
-                            </div>
-                            <button onClick={handleSaveNote}>Save</button>
-                        </Modal>
-                        <h2>Notes</h2>
-                    </div>
-                    <Scrollbars
-                        renderThumbVertical={renderThumb}
-                        renderTrackVertical={renderTrack}
-                        onScrollStart={handleScrollStart}
-                        onScrollStop={handleScrollStop}
-                        style={{ height: '570px' }} // Set a fixed height to enable scrolling
+              <Modal
+                className="noveldashboard-modal"
+                isOpen={visible}
+                onRequestClose={() => setVisible(false)}
+              >
+                <h2>Add Note</h2>
+                <button className="noveldashboard-close-button" onClick={() => setVisible(false)}>
+                  <img src={closeIcon} alt="Close Note" className="noveldashboard-close-icon" />
+                </button>
+                <div className="noveldashboard-modal-content">
+                  <ReactQuill
+                    className="noveldashboard-note-text"
+                    value={newNote}
+                    onChange={setNewNote}
+                    placeholder="Write your note here..."
+                  />
+                </div>
+                <button onClick={handleSaveNote}>Save</button>
+              </Modal>
+              <h2>Notes</h2>
+            </div>
+            <Scrollbars style={{ height: '570px' }}>
+              <ul className="noveldashboard-notes-list">
+                {notes.map((note) => (
+                  <li key={note._id}>
+                    {note.content}
+                    <button
+                      className="noveldashboard-close-note"
+                      onClick={() => handleDeleteNote(note._id)}
                     >
-                        <ul className="noveldashboard-notes-list">
-                            {notes.map((note, index) => (
-                                <li key={index}>
-                                    {note}
-                                    <button 
-                                        className="noveldashboard-close-note" 
-                                        onClick={() => handleDeleteNote(index)}
-                                    >
-                                        <img src={closeIcon} alt="Delete Note" className="noveldashboard-close-icon" />
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </Scrollbars>
-                </aside>
+                      <img src={closeIcon} alt="Delete Note" className="noveldashboard-close-icon" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </Scrollbars>
+          </aside>
 
+          <div className="noveldashboard-buttons">
+            <button className="noveldashboard-button" onClick={handleSaveChapter}>
+              Save
+            </button>
+            <button className="noveldashboard-button" >
+              Add Collaborators
+            </button>
+            {/* Add functionality for Save As and Preview if needed */}
+          </div>
         </div>
       </div>
     </div>
@@ -303,3 +353,6 @@ const handleFavoriteClick = () => {
 }
 
 export default NovelDashboard;
+
+
+

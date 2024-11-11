@@ -4,17 +4,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #fafcffff; /* Background color */
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
+  background-color: #191B30; /* Optional background color */
 }
 
+/* DNA animation container */
 .splash-dna-animation {
   display: flex;
   justify-content: space-between; /* Space circles apart for double helix */
-  align-items: flex-end; /* Align circles at the bottom of the animation area */
+  align-items: center; /* Align circles in the center vertically */
   position: relative;
-  height: 100px; /* Height of the DNA animation area */
-  width: 80%; /* Reduced width for better spacing */
+  height: 100vh; /* Full height to match the page */
+  width: 100%; /* Full width to fill the page horizontally */
 }
 
 .splash-circle {
@@ -26,48 +28,90 @@
 }
 
 /* Positioning for the first set of circles with blue to light blue gradient */
-.circle-1.set1 { animation-delay: 0s; left: 5%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
-.circle-2.set1 { animation-delay: 0.05s; left: 10%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
-.circle-3.set1 { animation-delay: 0.1s; left: 15%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
-.circle-4.set1 { animation-delay: 0.15s; left: 20%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
-.circle-5.set1 { animation-delay: 0.2s; left: 25%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
-.circle-6.set1 { animation-delay: 0.25s; left: 30%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
-.circle-7.set1 { animation-delay: 0.3s; left: 35%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
-.circle-8.set1 { animation-delay: 0.35s; left: 40%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
-.circle-9.set1 { animation-delay: 0.4s; left: 45%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
-.circle-10.set1 { animation-delay: 0.45s; left: 50%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
-.circle-11.set1 { animation-delay: 0.5s; left: 55%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
-.circle-12.set1 { animation-delay: 0.55s; left: 60%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
-.circle-13.set1 { animation-delay: 0.6s; left: 65%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
-.circle-14.set1 { animation-delay: 0.65s; left: 70%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
-.circle-15.set1 { animation-delay: 0.7s; left: 75%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
-.circle-16.set1 { animation-delay: 0.75s; left: 80%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
-.circle-17.set1 { animation-delay: 0.8s; left: 85%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
-.circle-18.set1 { animation-delay: 0.85s; left: 90%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
-.circle-19.set1 { animation-delay: 0.9s; left: 95%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
-.circle-20.set1 { animation-delay: 0.95s; left: 100%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-1.set1 { animation-delay: 0s; left: 0%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
+.circle-2.set1 { animation-delay: 0.05s; left: 2.5%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
+.circle-3.set1 { animation-delay: 0.1s; left: 5%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-4.set1 { animation-delay: 0.15s; left: 7.5%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
+.circle-5.set1 { animation-delay: 0.2s; left: 10%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-6.set1 { animation-delay: 0.25s; left: 12.5%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
+.circle-7.set1 { animation-delay: 0.3s; left: 15%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
+.circle-8.set1 { animation-delay: 0.35s; left: 17.5%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-9.set1 { animation-delay: 0.4s; left: 20%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
+.circle-10.set1 { animation-delay: 0.45s; left: 22.5%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
+.circle-11.set1 { animation-delay: 0.5s; left: 25%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
+.circle-12.set1 { animation-delay: 0.55s; left: 27.5%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-13.set1 { animation-delay: 0.6s; left: 30%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
+.circle-14.set1 { animation-delay: 0.65s; left: 32.5%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-15.set1 { animation-delay: 0.7s; left: 35%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
+.circle-16.set1 { animation-delay: 0.75s; left: 37.5%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
+.circle-17.set1 { animation-delay: 0.8s; left: 40%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-18.set1 { animation-delay: 0.85s; left: 42.5%; background: linear-gradient(135deg, #004e92, #a1c4fd); }
+.circle-19.set1 { animation-delay: 0.9s; left: 45%; background: linear-gradient(135deg, #0096c7, #d0f0fd); }
+.circle-20.set1 { animation-delay: 0.95s; left: 47.5%; background: linear-gradient(135deg, #0077b6, #b2e1f0); }
+.circle-21.set1 { animation-delay: 1s; left: 50%; background: linear-gradient(135deg, #FF4500, #FFA07A); }
+.circle-22.set1 { animation-delay: 1.05s; left: 52.5%; background: linear-gradient(135deg, #FF7F50, #FFC07A); }
+.circle-23.set1 { animation-delay: 1.1s; left: 55%; background: linear-gradient(135deg, #FF6347, #FFB07A); }
+.circle-24.set1 { animation-delay: 1.15s; left: 57.5%; background: linear-gradient(135deg, #FF4500, #FFA07A); }
+.circle-25.set1 { animation-delay: 1.2s; left: 60%; background: linear-gradient(135deg, #FF7F50, #FFC07A); }
+.circle-26.set1 { animation-delay: 1.25s; left: 62.5%; background: linear-gradient(135deg, #FF6347, #FFB07A); }
+.circle-27.set1 { animation-delay: 1.3s; left: 65%; background: linear-gradient(135deg, #FF4500, #FFA07A); }
+.circle-28.set1 { animation-delay: 1.35s; left: 67.5%; background: linear-gradient(135deg, #FF7F50, #FFC07A); }
+.circle-29.set1 { animation-delay: 1.4s; left: 70%; background: linear-gradient(135deg, #FF6347, #FFB07A); }
+.circle-30.set1 { animation-delay: 1.45s; left: 72.5%; background: linear-gradient(135deg, #FF4500, #FFA07A); }
+.circle-31.set1 { animation-delay: 1.5s; left: 75%; background: linear-gradient(135deg, #FF7F50, #FFC07A); }
+.circle-32.set1 { animation-delay: 1.55s; left: 77.5%; background: linear-gradient(135deg, #FF6347, #FFB07A); }
+.circle-33.set1 { animation-delay: 1.6s; left: 80%; background: linear-gradient(135deg, #FF4500, #FFA07A); }
+.circle-34.set1 { animation-delay: 1.65s; left: 82.5%; background: linear-gradient(135deg, #FF7F50, #FFC07A); }
+.circle-35.set1 { animation-delay: 1.7s; left: 85%; background: linear-gradient(135deg, #FF6347, #FFB07A); }
+.circle-36.set1 { animation-delay: 1.75s; left: 87.5%; background: linear-gradient(135deg, #FF4500, #FFA07A); }
+.circle-37.set1 { animation-delay: 1.8s; left: 90%; background: linear-gradient(135deg, #FF7F50, #FFC07A); }
+.circle-38.set1 { animation-delay: 1.85s; left: 92.5%; background: linear-gradient(135deg, #FF6347, #FFB07A); }
+.circle-39.set1 { animation-delay: 1.9s; left: 95%; background: linear-gradient(135deg, #FF4500, #FFA07A); }
+.circle-40.set1 { animation-delay: 1.95s; left: 97.5%; background: linear-gradient(135deg, #FF7F50, #FFC07A); }
+
 
 /* Positioning for the second set of circles with a light to dark blue gradient */
-.circle-1.set2 { animation-delay: 0.75s; left: 5%; background: linear-gradient(135deg, #61dafb, #004e92); } /* Light blue to dark blue */
-.circle-2.set2 { animation-delay: 0.8s; left: 10%; background: linear-gradient(135deg, #5b92f5, #003366); } /* Medium blue to darker blue */
-.circle-3.set2 { animation-delay: 0.85s; left: 15%; background: linear-gradient(135deg, #4a83d6, #002244); } /* Light blue to darker blue */
-.circle-4.set2 { animation-delay: 0.9s; left: 20%; background: linear-gradient(135deg, #0077b6, #003366); } /* Dark blue to darker blue */
-.circle-5.set2 { animation-delay: 0.95s; left: 25%; background: linear-gradient(135deg, #5b92f5, #003366); }
-.circle-6.set2 { animation-delay: 1s; left: 30%; background: linear-gradient(135deg, #61dafb, #004e92); }
-.circle-7.set2 { animation-delay: 1.05s; left: 35%; background: linear-gradient(135deg, #4a83d6, #002244); }
-.circle-8.set2 { animation-delay: 1.1s; left: 40%; background: linear-gradient(135deg, #0077b6, #003366); }
-.circle-9.set2 { animation-delay: 1.15s; left: 45%; background: linear-gradient(135deg, #61dafb, #004e92); }
-.circle-10.set2 { animation-delay: 1.2s; left: 50%; background: linear-gradient(135deg, #5b92f5, #003366); }
-.circle-11.set2 { animation-delay: 1.25s; left: 55%; background: linear-gradient(135deg, #4a83d6, #002244); }
-.circle-12.set2 { animation-delay: 1.3s; left: 60%; background: linear-gradient(135deg, #0077b6, #003366); }
-.circle-13.set2 { animation-delay: 1.35s; left: 65%; background: linear-gradient(135deg, #61dafb, #004e92); }
-.circle-14.set2 { animation-delay: 1.4s; left: 70%; background: linear-gradient(135deg, #5b92f5, #003366); }
-.circle-15.set2 { animation-delay: 1.45s; left: 75%; background: linear-gradient(135deg, #4a83d6, #002244); }
-.circle-16.set2 { animation-delay: 1.5s; left: 80%; background: linear-gradient(135deg, #0077b6, #003366); }
-.circle-17.set2 { animation-delay: 1.55s; left: 85%; background: linear-gradient(135deg, #61dafb, #004e92); }
-.circle-18.set2 { animation-delay: 1.6s; left: 90%; background: linear-gradient(135deg, #5b92f5, #003366); }
-.circle-19.set2 { animation-delay: 1.65s; left: 95%; background: linear-gradient(135deg, #4a83d6, #002244); }
-.circle-20.set2 { animation-delay: 1.7s; left: 100%; background: linear-gradient(135deg, #0077b6, #003366); }
+.circle-1.set2 { animation-delay: 0.75s; left: 0%; background: linear-gradient(135deg, #61dafb, #004e92); }
+.circle-2.set2 { animation-delay: 0.8s; left: 2.5%; background: linear-gradient(135deg, #5b92f5, #003366); }
+.circle-3.set2 { animation-delay: 0.85s; left: 5%; background: linear-gradient(135deg, #4a83d6, #002244); }
+.circle-4.set2 { animation-delay: 0.9s; left: 7.5%; background: linear-gradient(135deg, #0077b6, #003366); }
+.circle-5.set2 { animation-delay: 0.95s; left: 10%; background: linear-gradient(135deg, #5b92f5, #003366); }
+.circle-6.set2 { animation-delay: 1s; left: 12.5%; background: linear-gradient(135deg, #61dafb, #004e92); }
+.circle-7.set2 { animation-delay: 1.05s; left: 15%; background: linear-gradient(135deg, #4a83d6, #002244); }
+.circle-8.set2 { animation-delay: 1.1s; left: 17.5%; background: linear-gradient(135deg, #0077b6, #003366); }
+.circle-9.set2 { animation-delay: 1.15s; left: 20%; background: linear-gradient(135deg, #61dafb, #004e92); }
+.circle-10.set2 { animation-delay: 1.2s; left: 22.5%; background: linear-gradient(135deg, #5b92f5, #003366); }
+.circle-11.set2 { animation-delay: 1.25s; left: 25%; background: linear-gradient(135deg, #4a83d6, #002244); }
+.circle-12.set2 { animation-delay: 1.3s; left: 27.5%; background: linear-gradient(135deg, #0077b6, #003366); }
+.circle-13.set2 { animation-delay: 1.35s; left: 30%; background: linear-gradient(135deg, #61dafb, #004e92); }
+.circle-14.set2 { animation-delay: 1.4s; left: 32.5%; background: linear-gradient(135deg, #5b92f5, #003366); }
+.circle-15.set2 { animation-delay: 1.45s; left: 35%; background: linear-gradient(135deg, #4a83d6, #002244); }
+.circle-16.set2 { animation-delay: 1.5s; left: 37.5%; background: linear-gradient(135deg, #0077b6, #003366); }
+.circle-17.set2 { animation-delay: 1.55s; left: 40%; background: linear-gradient(135deg, #61dafb, #004e92); }
+.circle-18.set2 { animation-delay: 1.6s; left: 42.5%; background: linear-gradient(135deg, #5b92f5, #003366); }
+.circle-19.set2 { animation-delay: 1.65s; left: 45%; background: linear-gradient(135deg, #4a83d6, #002244); }
+.circle-20.set2 { animation-delay: 1.7s; left: 47.5%; background: linear-gradient(135deg, #ffa726, #ef6c00); }
+.circle-21.set2 { animation-delay: 1.75s; left: 50%; background: linear-gradient(135deg, #ff9800, #e65100); }
+.circle-22.set2 { animation-delay: 1.8s; left: 52.5%; background: linear-gradient(135deg, #fb8c00, #e64a19); }
+.circle-23.set2 { animation-delay: 1.85s; left: 55%; background: linear-gradient(135deg, #f57c00, #d84315); }
+.circle-24.set2 { animation-delay: 1.9s; left: 57.5%; background: linear-gradient(135deg, #ef6c00, #bf360c); }
+.circle-25.set2 { animation-delay: 1.95s; left: 60%; background: linear-gradient(135deg, #e65100, #bf360c); }
+.circle-26.set2 { animation-delay: 2s; left: 62.5%; background: linear-gradient(135deg, #ffcc80, #ff9800); }
+.circle-27.set2 { animation-delay: 2.05s; left: 65%; background: linear-gradient(135deg, #ffb74d, #f57c00); }
+.circle-28.set2 { animation-delay: 2.1s; left: 67.5%; background: linear-gradient(135deg, #ffa726, #ef6c00); }
+.circle-29.set2 { animation-delay: 2.15s; left: 70%; background: linear-gradient(135deg, #ff9800, #e65100); }
+.circle-30.set2 { animation-delay: 2.2s; left: 72.5%; background: linear-gradient(135deg, #fb8c00, #e64a19); }
+.circle-31.set2 { animation-delay: 2.25s; left: 75%; background: linear-gradient(135deg, #f57c00, #d84315); }
+.circle-32.set2 { animation-delay: 2.3s; left: 77.5%; background: linear-gradient(135deg, #ef6c00, #bf360c); }
+.circle-33.set2 { animation-delay: 2.35s; left: 80%; background: linear-gradient(135deg, #e65100, #bf360c); }
+.circle-34.set2 { animation-delay: 2.4s; left: 82.5%; background: linear-gradient(135deg, #ffcc80, #ff9800); }
+.circle-35.set2 { animation-delay: 2.45s; left: 85%; background: linear-gradient(135deg, #ffb74d, #f57c00); }
+.circle-36.set2 { animation-delay: 2.5s; left: 87.5%; background: linear-gradient(135deg, #ffa726, #ef6c00); }
+.circle-37.set2 { animation-delay: 2.55s; left: 90%; background: linear-gradient(135deg, #ff9800, #e65100); }
+.circle-38.set2 { animation-delay: 2.6s; left: 92.5%; background: linear-gradient(135deg, #fb8c00, #e64a19); }
+.circle-39.set2 { animation-delay: 2.65s; left: 95%; background: linear-gradient(135deg, #f57c00, #d84315); }
+.circle-40.set2 { animation-delay: 2.7s; left: 97.5%; background: linear-gradient(135deg, #ef6c00, #bf360c); }
+
 
 /* Keyframes for pulse and move animations remain the same */
 @keyframes pulse {

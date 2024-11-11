@@ -134,6 +134,7 @@ const handleItemClick = (projectId, projectType) => {
     { title: 'Featured Work 9', imageUrl: featuredImage3 },
   ];
 
+  
 
   // Effect to handle automatic slide changing
   useEffect(() => {
@@ -173,6 +174,10 @@ const handleItemClick = (projectId, projectType) => {
       setAnimationClass('sliding-in'); // Reapply animation class
     }, 5000);
   };
+
+  const handleFavoriteClick = () => {
+    navigate('/Favorite'); 
+  };
 
   const [particlesArray, setParticlesArray] = useState([]);
 

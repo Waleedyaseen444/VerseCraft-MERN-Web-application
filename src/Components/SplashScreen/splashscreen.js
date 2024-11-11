@@ -8,7 +8,7 @@ const SplashScreen = () => {
         // Simulate a loading time before transitioning to the main app
         const timer = setTimeout(() => {
             setLoading(false);
-        }, 8000); // Change this duration as needed
+        }, 5000); // Change this duration as needed
 
         return () => clearTimeout(timer);
     }, []);
@@ -18,11 +18,11 @@ const SplashScreen = () => {
             <div className="splash-screen">
                 <div className="splash-dna-animation">
                     {/* First set of circles */}
-                    {[...Array(20)].map((_, index) => (
+                    {[...Array(40)].map((_, index) => (
                         <div key={`set1-${index}`} className={`splash-circle circle-${index + 1} set1`}></div>
                     ))}
                     {/* Second set of circles */}
-                    {[...Array(20)].map((_, index) => (
+                    {[...Array(40)].map((_, index) => (
                         <div key={`set2-${index}`} className={`splash-circle circle-${index + 1} set2`}></div>
                     ))}
                 </div>

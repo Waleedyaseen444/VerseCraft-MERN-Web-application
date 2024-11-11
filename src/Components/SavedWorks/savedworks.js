@@ -105,7 +105,7 @@ function SavedWorks() {
     };
   
     const handleFavoriteClick = () => {
-      navigate('/Favorite'); 
+      navigate('/Favorites'); 
     };
   
     const handleNotificationClick = () => {
@@ -205,12 +205,7 @@ function SavedWorks() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                            <img
-                                src={searchIcon}
-                                alt="Search"
-                                className="saved-search-icon"
-                                onClick={() => setShowSearch(false)}
-                            />
+                            
                         </>
                     )}
                 </div>

@@ -24,6 +24,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Link, useNavigate } from 'react-router-dom';
 import comIcon from "../Images/comm.png";
+import Avatar from "../Avatar/Avatarapp";
 Modal.setAppElement('#root');
 
 function Character() {
@@ -139,9 +140,6 @@ function Character() {
     navigate('/Setting'); // Assuming your profile page route is '/profile'
   };
 
-  const handleAvatarClick = () => {
-    navigate('/Avatar'); // Assuming your profile page route is '/profile'
-  };
 
   const handleChatbotClick = () => {
     navigate('/Chatbot'); // Assuming your profile page route is '/profile'
@@ -156,8 +154,20 @@ function Character() {
   };
 
   const handleFavoriteClick = () => {
-    navigate('/Favorite'); 
+    navigate('/Favorites'); 
 };
+
+const [isPopupVisible, setIsPopupVisible] = useState(false); // State to handle popup visibility
+
+    // Function to open the popup
+    const handleAvatarClick = () => {
+      setIsPopupVisible(true);
+  };
+
+  // Function to close the popup
+  const closePopup = () => {
+      setIsPopupVisible(false);
+  };
 
 
 
@@ -328,7 +338,20 @@ function Character() {
                     </div>
                   )}
                 </ImageUploading>
-                <button onClick={handleAvatarClick} className="character-next-page-button">Generate</button>
+                <div>
+                    <button onClick={handleAvatarClick} className="character-next-page-button">Generate</button>
+
+                    {/* Conditionally render the Avatar popup */}
+                    {isPopupVisible && (
+                        <div className="character-avatar-modal-overlay" >
+                            <div className="character-avatar-modal-content">
+                            <button onClick={closePopup} className="character-avatar-close-popup-button">Close</button>
+                                <Avatar />
+                                
+                            </div>
+                        </div>
+                    )}
+                </div>
               </div>
             </div>
           </Modal>

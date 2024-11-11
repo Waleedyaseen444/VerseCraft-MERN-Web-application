@@ -6,8 +6,6 @@ function Sidebar() {
       <h2>VerseCraft</h2>
       <ul>
         <li><button>Project One</button></li>
-        <li><button>Characters +</button></li>
-        <li><button>Environments +</button></li>
       </ul>
     </div>
   );

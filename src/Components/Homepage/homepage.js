@@ -175,10 +175,8 @@ const handleItemClick = (projectId, projectType) => {
     }, 5000);
   };
 
-  const handleFavoriteClick = () => {
-    navigate('/Favorite'); 
-  };
 
+  
   const [particlesArray, setParticlesArray] = useState([]);
 
   useEffect(() => {

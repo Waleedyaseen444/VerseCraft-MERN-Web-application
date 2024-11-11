@@ -82,78 +82,82 @@ const Progress = ()  => {
   return (
     <div className="progress-container">
       <div className="progress-header">
-      <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img src={menuIcon} alt="Menu" className="homepage-menu-icon"  />
-          <div className="homepage-app-title" onClick={handleHomepageClick} >VerseCraft</div>
-          <nav>
-            <ul>
-            <li className="homepage-Plot" onClick={handleProjectsClick}>
-                <img src={journalIcon} alt="Character" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick}>
-                <img src={favIcon} alt="Character" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              
-              <li className="homepage-Published" onClick={handleNotificationClick} >
-                <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick} >
-                <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick}>
-                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                John Doe
-              </li>
-            </ul>
-          </nav>
-        </header>
+        <div className="homepage-header">
+          <header className="homepage-header-item">
+            <img src={menuIcon} alt="Menu" className="homepage-menu-icon"  />
+            <div className="homepage-app-title" onClick={handleHomepageClick} >VerseCraft</div>
+            <nav>
+              <ul>
+              <li className="homepage-Plot" onClick={handleProjectsClick}>
+                  <img src={journalIcon} alt="Character" className="homepage-character-icon" />
+                  My Projects
+                </li>
+                <li className="homepage-Character" onClick={handleFavoriteClick}>
+                  <img src={favIcon} alt="Character" className="homepage-character-icon" />
+                  Favorites
+                </li>
+                <li className="homepage-Chatbot" onClick={handleChatbotClick}>
+                  <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
+                  InspireBot
+                </li>
+                
+                <li className="homepage-Published" onClick={handleNotificationClick} >
+                  <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
+                  Notifications
+                </li>
+                <li className="homepage-inspire-bot" onClick={handleSettingClick} >
+                  <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
+                  Settings
+                </li>
+                <li className="homepage-Profile" onClick={handleProfileClick}>
+                  <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
+                  John Doe
+                </li>
+              </ul>
+            </nav>
+          </header>
+        </div>
+
+
+        <div className={`homepage-sidebar ${isSidebarOpen ? 'open' : ''}`} id="sidebar">
+          <button id="sidebarToggle" className="homepage-sidebar-toggle" onClick={toggleSidebar}>
+            &#9776;
+          </button>
+
+          <div className='homepage-journal'>
+            <img src={plotIcon} alt="journal" className="homepage-journal-icon"  />
+            Plot
+            <img src={plusIcon} alt="noveldashboard-add-plot" className="noveldashboard-Add-plot-icon" onClick={handlePlotClick}/>
+          </div>
+          <div className='homepage-notifications' >
+            <img src={characterIcon} alt="notifications" className="homepage-noti-icon" />
+            Character
+            <img src={plusIcon} alt="noveldashboard-add-character" className="noveldashboard-Add-character-icon" onClick={handleCharacterClick}/>
+          </div>
+          <div className='homepage-notifications' >
+            <img src={comIcon} alt="notifications" className="homepage-noti-icon" />
+            Collaborators
+            <img src={plusIcon} alt="noveldashboard-collaborator-plot" className="noveldashboard-Add-collaborator-icon" onClick={handleCharacterClick}/>
+
+          </div>
+          <div className='homepage-goals' onClick={handlePublishClick}>
+            <img src={publishIcon} alt="goals" className="homepage-goal-icon" />
+            Publishing
+          </div>
+          <div className='homepage-favorites' onClick={handleProgressClick}>
+            <img src={goalIcon} alt="favorites" className="homepage-fav-icon" />
+            Progress
+          </div>
+          
+        </div> 
+
+       
       </div>
 
+      
 
-      <div className={`homepage-sidebar ${isSidebarOpen ? 'open' : ''}`} id="sidebar">
-        <button id="sidebarToggle" className="homepage-sidebar-toggle" onClick={toggleSidebar}>
-          &#9776;
-        </button>
-
-        <div className='homepage-journal'>
-          <img src={plotIcon} alt="journal" className="homepage-journal-icon"  />
-          Plot
-          <img src={plusIcon} alt="noveldashboard-add-plot" className="noveldashboard-Add-plot-icon" onClick={handlePlotClick}/>
-        </div>
-        <div className='homepage-notifications' >
-          <img src={characterIcon} alt="notifications" className="homepage-noti-icon" />
-          Character
-          <img src={plusIcon} alt="noveldashboard-add-character" className="noveldashboard-Add-character-icon" onClick={handleCharacterClick}/>
-        </div>
-        <div className='homepage-notifications' >
-          <img src={comIcon} alt="notifications" className="homepage-noti-icon" />
-          Collaborators
-          <img src={plusIcon} alt="noveldashboard-collaborator-plot" className="noveldashboard-Add-collaborator-icon" onClick={handleCharacterClick}/>
-
-        </div>
-
-        <div className='homepage-goals' onClick={handlePublishClick}>
-          <img src={publishIcon} alt="goals" className="homepage-goal-icon" />
-          Publishing
-        </div>
-        <div className='homepage-favorites' onClick={handleProgressClick}>
-          <img src={goalIcon} alt="favorites" className="homepage-fav-icon" />
-          Progress
-        </div>
-        
-      </div> 
-
-        <div className="progress-dashboard">
-          <div className="left-side-panel">
+      <div className="progress-dashboard">
+      <div className="left-side-panel">
             <h2>My Works</h2>
             <ul>
               {workTitles.map((title, index) => (
@@ -167,10 +171,7 @@ const Progress = ()  => {
               ))}
             </ul>
           </div>
-
-          <div className="page-title">
-                <h1>Progress / Goals - {selectedWork}</h1>
-            </div>
+        
 
           <div className="progress-main-content">
             
@@ -226,7 +227,6 @@ const Progress = ()  => {
             </div>
         </div>
         </div>
-      </div>
     </div>
   );
 };

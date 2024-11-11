@@ -210,7 +210,7 @@
 }
 
 .character-image {
-    position: absolute;
+    position: relative;
     width: 11%;
     height: 20%;
     background-color: white;
@@ -316,6 +316,52 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
+/* Modal overlay to cover the entire screen */
+.character-avatar-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Make sure the modal is on top of other elements */
+}
+
+/* Modal content (popup box) */
+.character-avatar-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+     /* Adjust the width as per your need */
+    width: 1050px; /* Max width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    margin-top: 30px;
+    height: 570px;
+    margin-left: 410px;
+}
+
+/* Close button */
+.character-avatar-close-popup-button {
+   position: absolute;
+    padding: 10px 20px;
+    background-color: #f47d4b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-top: 0px;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+.character-avatar-close-popup-button:hover {
+    background-color: #d16c3f;
+}
+
 
 .character-updater {
     background-color: #191B30;
@@ -468,13 +514,13 @@
 }
 
 .character-summary {
-    position: absolute;
+    position: relative;
     width: 86.3%;
     height: 20%;
     background-color: white;
     border-radius: 10px;
     border: 2px solid #191B30;
-    margin-left: 140px;
+    
     resize: both;
     overflow: hidden;
     box-sizing: border-box;
@@ -501,7 +547,8 @@
     margin-bottom: 10px;
     border: none;
     resize: none;
-    overflow: hidden;
+    overflow-y:auto ;
+    overflow-x:hidden;
 }
 
 .character-summary-textarea:focus {
@@ -509,14 +556,12 @@
 }
 
 .character-backstory {
-    position: absolute;
+    position: relative;
     width: 72.3%;
     height: 20%;
     background-color: white;
     border-radius: 10px;
     border: 2px solid #191B30;
-    margin-left: 310px;
-    top: 150px;
     resize: both;
     overflow: hidden;
     box-sizing: border-box;
@@ -538,7 +583,8 @@
     margin-top: 5px;
     margin-bottom: 10px;
     border: none;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     resize: none;
 }
 
@@ -547,15 +593,20 @@
 }
 
 .character-basic-info {
-    position: absolute;
+    position: relative;
     width: 300px;
-    height: 320px;
+    height: 220px;
     background-color: white;
     border-radius: 10px;
-    top: 150px;
-    left: 20px;
-    overflow: hidden;
+    overflow-y: auto;
     border: 2px solid #191B30;
+      /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.character-basic-info::-webkit-scrollbar {
+    display: none; /* WebKit browsers (Chrome, Safari) */
 }
 
 .character-basic-info:hover {
@@ -572,7 +623,7 @@
     position: absolute;
     font-family: "Kanit", sans-serif;
     font-weight: 400px;
-    margin-top: 10px;
+    margin-top: 50px;
     left: 10px;
 }
 
@@ -580,7 +631,7 @@
     position: absolute;
     font-family: "Kanit", sans-serif;
     font-weight: 400px;
-    margin-top: 100px;
+    margin-top: 10px;
     left: 10px;
 }
 
@@ -588,7 +639,7 @@
     position: absolute;
     font-family: "Kanit", sans-serif;
     font-weight: 400px;
-    margin-top: 190px;
+    margin-top: 150px;
     left: 10px;
 }
 
@@ -596,12 +647,12 @@
     position: absolute;
     font-family: "Kanit", sans-serif;
     font-weight: 400px;
-    margin-top: 280px;
+    margin-top: 180px;
     left: 10px;
 }
 
 .character-basic-info .character-field {
-    margin-bottom: 15px;
+    margin-bottom: -15px;
     width: 280px;
     margin: 2px;
 }
@@ -609,29 +660,32 @@
 .character-basic-info .character-label {
     font-weight: bold;
     margin-left: -200px;
-    margin-top: 10px;
+    margin-top: -5px;
     margin-bottom: 5px;
     display: block;
 }
 
 .character-input-field {
-    width: 100%;
+    width: 90%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 .character-physical-traits {
-    position: absolute;
-    width: 300px;
-    height: 170px;
+    position: relative;
+    width: 290px;
+    height: 140px;
     background-color: white;
     border-radius: 10px;
-    top: 280px;
-    left: 330px;
-    overflow-y: auto;
+    overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
+    resize: both;
+    min-width: 290px;
+    min-height: 140px;
+    box-sizing: border-box;
+    
 }
 
 .character-physical-traits:hover {
@@ -653,11 +707,11 @@
     align-items: center;
     padding: 3px;
     height: 30px;
-    padding-bottom: 3px;
     border-radius: 10px;
     border: 2px solid #191B30;
-    top: 5px;
-    left: 262px;
+    top: 3%;
+    left: 84%;
+    transform: translateX(-50%);
 }
 
 .character-add-physical:hover {
@@ -693,9 +747,9 @@
 .character-physical-traits .character-trait-name-input,
 .character-physical-traits .character-trait-description-textarea {
     font-family: "Kanit", sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     margin: 5px 0;
-    padding: 5px;
+    padding: 1px;
     width: 100%;
     border: none;
     background-color: transparent;
@@ -703,7 +757,7 @@
 }
 
 .character-physical-traits .character-trait-description-textarea {
-    height: 30px;
+    height: 17px;
 }
 
 .character-physical-traits .character-trait-name-input:focus,
@@ -726,16 +780,18 @@
 }
 
 .character-personality-traits {
-    position: absolute;
-    width: 300px;
-    height: 170px;
+    position: relative;
+    width: 290px;
+    height: 140px;
     background-color: white;
     border-radius: 10px;
-    top: 280px;
-    left: 660px;
-    overflow-y: auto;
+    overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
+    resize: both;
+    min-width: 290px;
+    min-height: 140px;
+    box-sizing: border-box;
 }
 
 .character-personality-traits:hover {
@@ -759,8 +815,10 @@
     height: 30px;
     border-radius: 10px;
     border: 2px solid #191B30;
-    top: 5px;
-    left: 262px;
+    top: 3%;
+    left: 84%;
+    transform: translateX(-50%);
+    
 }
 
 .character-add-personality:hover {
@@ -796,9 +854,9 @@
 .character-personality-traits .character-trait-name-input,
 .character-personality-traits .character-trait-description-textarea {
     font-family: "Kanit", sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     margin: 5px 0;
-    padding: 5px;
+    padding: 1px;
     width: 100%;
     border: none;
     background-color: transparent;
@@ -806,7 +864,7 @@
 }
 
 .character-personality-traits .character-trait-description-textarea {
-    height: 30px;
+    height: 17px;
 }
 
 .character-personality-traits .character-trait-name-input:focus,
@@ -829,19 +887,17 @@
 }
 
 .character-character-arcs {
-    position: absolute;
-    width: 230px;
-    height: 190px;
+    position: relative;
+    width: 290px;
+    height: 140px;
     background-color: white;
     border-radius: 10px;
-    top: 280px;
-    left: 990px;
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
     resize: both;
-    min-width: 150px;
-    min-height: 150px;
+    min-width:290px;
+    min-height: 140px;
     box-sizing: border-box;
 }
 
@@ -900,9 +956,9 @@
 .character-character-arcs .character-trait-name-input,
 .character-character-arcs .character-trait-description-textarea {
     font-family: "Kanit", sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     margin: 5px 0;
-    padding: 5px;
+    padding: 1px;
     width: 100%;
     border: none;
     background-color: transparent;
@@ -910,7 +966,7 @@
 }
 
 .character-character-arcs .character-trait-description-textarea {
-    height: 30px;
+    height: 17px;
 }
 
 .character-character-arcs .character-trait-name-input:focus,
@@ -933,18 +989,16 @@
 }
 
 .character-relationships {
-    position: absolute;
-    width: 300px;
+    position: relative;
+    width: 290px;
     height: 140px;
     background-color: white;
     border-radius: 10px;
-    top: 480px;
-    left: 20px;
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
     resize: both;
-    min-width: 150px;
+    min-width: 290px;
     min-height: 140px;
     box-sizing: border-box;
 }
@@ -1037,18 +1091,17 @@
 }
 
 .character-skills {
-    position: absolute;
-    width: 300px;
+    position: relative;
+    width: 290px;
     height: 140px;
     background-color: white;
     border-radius: 10px;
-    top: 480px;
-    left: 330px;
+    
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
     resize: both;
-    min-width: 150px;
+    min-width: 290px;
     min-height: 140px;
     box-sizing: border-box;
 }
@@ -1141,18 +1194,17 @@
 }
 
 .character-weaknesses {
-    position: absolute;
-    width: 300px;
+    position: relative;
+    width: 290px;
     height: 140px;
     background-color: white;
     border-radius: 10px;
-    top: 480px;
-    left: 640px;
+   
     overflow-y: auto;
     border: 2px solid #191B30;
     padding: 10px;
     resize: both;
-    min-width: 150px;
+    min-width: 290px;
     min-height: 140px;
     box-sizing: border-box;
 }
@@ -1246,18 +1298,16 @@
 }
 
 .character-roles {
-    position: absolute;
-    width: 270px;
+    position: relative;
+    width: 290px;
     height: 140px;
     background-color: white;
     border-radius: 10px;
-    margin-left: 930px;
-    margin-top: 460px;
     overflow-y: auto;
     border: 2px solid #191B30;
     padding: 10px;
     resize: both;
-    min-width: 150px;
+    min-width: 290px;
     min-height: 140px;
     box-sizing: border-box;
 }

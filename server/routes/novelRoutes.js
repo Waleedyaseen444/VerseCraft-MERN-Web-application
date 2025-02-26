@@ -86,4 +86,23 @@ router.get('/novels/:novelId', async (req, res) => {
   }
 });
 
+
+
+// Get novels by collaborator email
+router.get('/collaborator/:email', async (req, res) => {
+    const collaboratorEmail = req.params.email.toLowerCase();
+    try {
+        const novels = await Novel.find({ 
+            'collaborators.email': collaboratorEmail 
+        });
+        if (novels.length === 0) {
+            return res.status(404).json({ message: 'No novels found for the given collaborator email' });
+        }
+        res.status(200).json(novels);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 module.exports = router;

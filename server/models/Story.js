@@ -1,5 +1,4 @@
 // models/Story.js
-
 const mongoose = require('mongoose');
 
 // Story Schema
@@ -40,22 +39,11 @@ const storySchema = new mongoose.Schema({
       match: [/\S+@\S+\.\S+/, 'Email is invalid'],
     } 
   }],
-  createdAt: { 
-    type: Date, 
-    default: Date.now,
-  },
-  updatedAt: { 
-    type: Date, 
-    default: Date.now,
-  },
 }, {
   timestamps: true, // Automatically manages createdAt and updatedAt
 });
 
-// Middleware to update `updatedAt` before saving
-storySchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
-  next();
-});
+
+
 
 module.exports = mongoose.model('Story', storySchema);

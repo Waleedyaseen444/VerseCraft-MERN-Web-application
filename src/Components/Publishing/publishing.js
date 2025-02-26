@@ -1,294 +1,340 @@
-import React, {  useState } from "react";
+import React, { useEffect, useState } from "react";
 import './publishing.css'; // Ensure the CSS is linked correctly
-import { useNavigate } from 'react-router-dom';
-import menuIcon from '../Images/Logo-V.png';
-import plotIcon from '../Images/Plot.png';
-import characterIcon from '../Images/Character.png';
-import publishIcon from '../Images/Published.png';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import Header from '../Header/header';
+import Sidebar from '../Sidebar/sidebar';
 import profileIcon from '../Images/generic-user-profile-picture.png';
-import goalIcon from '../Images/goal.png';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
-import journalIcon from '../Images/journal.png';
-import plusIcon from "../Images/Plus.png";
-import comIcon from "../Images/comm.png"
-import botIcon from "../Images/Bot.png";
 
-
-const collaborators = [
-    {
-      id: 1,
-      name: "John Doe",
-      image: characterIcon // Replace with actual image
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      image: characterIcon // Replace with actual image
-    },
-    {
-      id: 3,
-      name: "Samuel Green",
-      image: characterIcon // Replace with actual image
-    },
-    {
-      id: 4,
-      name: "Emily Johnson",
-      image: characterIcon // Replace with actual image
-    }
-  ];
-
-
-  const projectNames = [
-    "The Chronicles of Emberfall",
-    "Whispers in the Dark",
-    "The Lost Kingdom",
-    "Echoes of Eternity",
-    "Starlight Rebellion",
-    "Shadows of the Forgotten",
-    "The Enchanted Voyage",
-    "Legends of the Mystic Realm",
-    "Rise of the Phoenix",
-    "The Forbidden Forest",
-    "The Dreamweaver's Curse",
-    "Guardians of the Celestial Gate",
-    "Beneath the Silver Moon",
-    "The Last Heir",
-    "Tales from the Astral Plane",
-    "The Serpent's Grasp",
-    "Winds of Destiny",
-    "The Timekeeper's Journal",
-    "Fires of the Inferno",
-    "The Secret of Eldoria"
-  ];
-
-const Publishing = ()  => {
-
+const Publishing = () => {
   const navigate = useNavigate();
+  const { projectId } = useParams(); // Assuming projectId refers to Project ID
+  const [project, setProject] = useState(null); // State to hold project data
+  const [chapters, setChapters] = useState([]); // State to hold chapters data
+  const [user, setUser] = useState(null); // State to hold user data
+  const [error, setError] = useState(null); // State to handle errors
+  const [loading, setLoading] = useState(true); // Loading state
+  const [coverPicture, setCoverPicture] = useState(null); // State to store the cover picture
+  const [projectType, setProjectType] = useState(null); // State to hold the project type
 
- 
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+        const response = await axios.get('http://localhost:5001/api/users/profile', {
+          headers: { 'x-auth-token': token },
+        });
+        setUser(response.data);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load user data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserData();
+    handleDetectProject();
+  }, [navigate]);
+
+  // Detect project type
+  const handleDetectProject = async () => {
+    try {
+      setError(null);
+      const response = await axios.get(`/api/gettype/detect/${projectId}`);
+      setProjectType(response.data.type); // assuming the response has 'type' as the project type
+    } catch (err) {
+      setError(err.response ? err.response.data.message : 'An unexpected error occurred');
+    }
+  };
+
+  // Fetch project details based on project type
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+
+        if (projectType === 'Story') {
+          const projectResponse = await axios.get(`/api/stories/${projectId}`);
+          const chaptersResponse = await axios.get(`/api/stories/${projectId}/chapters`);
+          setProject(projectResponse.data);
+          setChapters(chaptersResponse.data);
+
+        } else if (projectType === 'Novel') {
+          const projectResponse = await axios.get(`/api/novels/${projectId}`);
+          const chaptersResponse = await axios.get(`/api/novels/${projectId}/chapters`);
+          setProject(projectResponse.data);
+          setChapters(chaptersResponse.data);
+
+        } else if (projectType === 'Urdu') {
+          const projectResponse = await axios.get(`/api/urdu/${projectId}`);
+          const chaptersResponse = await axios.get(`/api/urduchapters/${projectId}`);
+          setProject(projectResponse.data);
+          setChapters(chaptersResponse.data);
+        }
+
+      } catch (error) {
+        console.error('Error fetching project data:', error);
+        setError('Failed to fetch project data');
+      }
+    };
+
+    if (projectId && projectType) {
+      fetchProjectData();
+    }
+  }, [projectId, projectType, navigate]);
+
+
+  useEffect(() => {
+    const fetchPublishingData = async () => {
+      try {
+        const response = await axios.get(`/api/publishing/${projectId}`);
+        if (response.data) {
+          setProject(response.data);
+          setCoverPicture(response.data.coverPicture);
+        }
+      } catch (err) {
+       // createPublishing();
+        // console.error('Error fetching publishing data:', err);
+        // setError('Failed to fetch publishing data');
+      }
+    };
   
-  const handleHomepageClick = () => {
-    navigate('/Homepage'); // Assuming your profile page route is '/profile'
-  };
+    if (projectId) {
+      fetchPublishingData();
+    }
+  }, [projectId]);
+  
 
-  const handlePlotClick = () => {
-    navigate('/Plot'); // Assuming your profile page route is '/profile'
-  };
+  // Handle cover picture change
+const handleCoverPictureChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setCoverPicture(file); // Store the actual file (not URL)
+  }
+};
 
-  const handleCharacterClick = () => {
-    navigate('/Character'); // Assuming your profile page route is '/profile'
-  };
+// Create publishing information
+const createPublishing = async () => {
+  try {
+    const formData = new FormData();
+    formData.append('projectId', projectId);
+    formData.append('projectType', projectType);
+    formData.append('title', project.title);
+    formData.append('shortTitle', project.shortTitle);
+    formData.append('summary', project.summary);
+    formData.append('genres', project.genres.join(','));
+    formData.append('publishingType', 'Public');
+    formData.append('audience', project.audience);
 
-  const handlePublishClick = () => {
-    navigate('/Publishing'); // Assuming your profile page route is '/profile'
-  };
+    // Append the cover picture file if selected
+    if (coverPicture) {
+      formData.append('coverPicture', coverPicture);
+    }
 
-  const handleProfileClick = () => {
-    navigate('/Profile'); // Assuming your profile page route is '/profile'
-  };
+    await axios.post(`/api/publishing/create/${projectId}`, formData, {
+      headers: { 'x-auth-token': localStorage.getItem('token') },
+    });
+    alert('Publishing project created successfully');
+    // navigate(`/projects/${projectId}`);
+  } catch (err) {
+    console.error(err);
+    setError('Failed to create publishing data');
+  }
+};
 
-  const handleChatbotClick = () => {
-    navigate('/Chatbot'); // Assuming your profile page route is '/profile'
-  };
+// Update publishing information
+const updatePublishing = async () => {
+  try {
+    const formData = new FormData();
+    formData.append('projectId', projectId);
+    formData.append('projectType', projectType);
+    formData.append('title', project.title);
+    formData.append('shortTitle', project.shortTitle);
+    formData.append('summary', project.summary);
+    formData.append('genres', project.genres.join(','));
+    formData.append('publishingType', 'Public');
+    formData.append('audience', project.audience);
 
+    // Append the cover picture file if selected
+    if (coverPicture) {
+      formData.append('coverPicture', coverPicture);
+    }
 
-  const handleProjectsClick = () => {
-    navigate('/Saved'); // Assuming your profile page route is '/profile'
-  };
-
-  const handleNotificationClick = () => {
-    navigate('/Notification'); // Assuming your profile page route is '/profile'
-  };
-
-  const handleProgressClick = () => {
-    navigate('/Progress'); // Assuming your profile page route is '/profile'
-  };
-
-  const handleSettingClick = () => {
-    navigate('/Setting'); // Assuming your profile page route is '/profile'
-  };
-
-      
-  const handleFavoriteClick = () => {
-      navigate('/Favorite'); 
-  };
-
-     
-  const handleCharacterGridClick = () => {
-    navigate('/CharacterGrid'); 
+    await axios.put(`/api/publishing/create/${projectId}`, formData, {
+      headers: { 'x-auth-token': localStorage.getItem('token') },
+    });
+    alert('Publishing project updated successfully');
+    navigate(`/projects/${projectId}`);
+  } catch (err) {
+    console.error(err);
+    setError('Failed to update publishing data');
+  }
 };
 
 
+  // Ensure user data is loaded before rendering
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar state
-  };
-
-
-  
   return (
     <div className="publishing-container">
-      <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img src={menuIcon} alt="Menu" className="homepage-menu-icon"  />
-          <div className="homepage-app-title" onClick={handleHomepageClick} >VerseCraft</div>
-          <nav>
-            <ul>
-            <li className="homepage-Plot" onClick={handleProjectsClick}>
-                <img src={journalIcon} alt="Character" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick}>
-                <img src={favIcon} alt="Character" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              
-              <li className="homepage-Published" onClick={handleNotificationClick} >
-                <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick} >
-                <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick}>
-                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                John Doe
-              </li>
-            </ul>
-          </nav>
-        </header>
-      </div>
-
-
-      <div className={`homepage-sidebar ${isSidebarOpen ? 'open' : ''}`} id="sidebar">
-        <button id="sidebarToggle" className="homepage-sidebar-toggle" onClick={toggleSidebar}>
-          &#9776;
-        </button>
-
-        <div className='homepage-journal'>
-          <img src={plotIcon} alt="journal" className="homepage-journal-icon"  />
-          Plot
-          <img src={plusIcon} alt="noveldashboard-add-plot" className="noveldashboard-Add-plot-icon" onClick={handlePlotClick}/>
-        </div>
-        <div className='homepage-notifications' >
-          <img src={characterIcon} alt="notifications" className="homepage-noti-icon" />
-          Character
-          <img src={plusIcon} alt="noveldashboard-add-character" className="noveldashboard-Add-character-icon" onClick={handleCharacterClick}/>
-        </div>
-        <div className='homepage-notifications' >
-          <img src={comIcon} alt="notifications" className="homepage-noti-icon" />
-          Collaborators
-          <img src={plusIcon} alt="noveldashboard-collaborator-plot" className="noveldashboard-Add-collaborator-icon" onClick={handleCharacterClick}/>
-
-        </div>
-
-        <div className='homepage-goals' onClick={handlePublishClick}>
-          <img src={publishIcon} alt="goals" className="homepage-goal-icon" />
-          Publishing
-        </div>
-        <div className='homepage-favorites' onClick={handleProgressClick}>
-          <img src={goalIcon} alt="favorites" className="homepage-fav-icon" />
-          Progress
-        </div>
-        
-      </div> 
-
+      <Header />
+      <Sidebar />
       <div className="publishing-dashboard">
-        <div className="publishing-title">Publishing</div>
-        <div className="publishing-all-characters-button" onClick={handleCharacterGridClick}>
-          Character List 
-        </div>
-        <div className="publishing-right-sidepanel">
-            <div className="publishing-myprojects">Projects</div>
-            <div className="publishing-project-list">
-                {projectNames.map((project, index) => (
-                <div key={index} className="publishing-project-item">
-                    {project}
+        {/* Project Preview Section */}
+        <div className="publishing-project-preview-container">
+          <div className="publishing-project">
+            {chapters.length > 0 ? (
+              chapters.map((chapter) => (
+                <div key={chapter._id} id={`chapter-${chapter._id}`} className="ReadStoryProject-chapter" style={{display:"flex",flexDirection:"column"}}>
+                  <h2 className="ReadStoryProject-chapter-title">
+                    Chapter {chapter.number}: {chapter.title}
+                  </h2>
+                  <div
+                    className="ReadStoryProject-chapter-content"
+                    dangerouslySetInnerHTML={{ __html: chapter.content }}
+                  />
                 </div>
-                ))}
-            </div>
-        </div>
-        <div className="publishing-project-metrics">
-            <div className="publishing-project-performance-metrics">
-                <div className="publishing-project-performance-metrics-title">Project Performance Metrics</div>
-                <div className="publishing-metrics-container">
-                    <div className="publishing-project-views">Views
-                    <div className="publishing-project-views-value">127</div>
-                    </div>
-                    
-                    <div className="publishing-sentiment-analysis">Sentiment
-                      <div className="publishing-sentiment-analysis-value">
-                        <div className="publishing-sentiment-analysis-pos"> 65%</div>
-                        <div className="publishing-sentiment-analysis-neg"> 35% </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div className="publishing-project-engagement-metrics">
-            <div className="publishing-project-engagement-metrics-title">Engagement Metrics</div>
-                <div className="publishing-likes">Likes
-                <div className="publishing-project-like-value">1930</div>
-                </div>
-                <div className="publishing-followercount">Follower count
-                <div className="publishing-project-follower-value">2040</div>
-                </div>
-                <div className="publishing-bookmarked">Favorites
-                <div className="publishing-project-bookmark-value">64</div>
-                </div>
-            </div>
-            <div className="publishing-project-audience-metrics">
-              <div className="publishing-project-audience-metrics-title">Audience Metrics</div>
-
+              ))
+            ) : (
+              <div>No chapters available</div>
+            )}
             
-              <div className="publishing-geographic-data">
-                  <p>Geographic Data</p>
-              </div>
-
-
-              <div className="publishing-metrics-row">
-                  <div className="publishing-average-age">Average Age: 25</div>
-                  <div className="publishing-gender-metric">Gender Split
-                      <div className="publishing-project-gender-value">
-                          <div className="publishing-gender-male">65% Male</div>
-                          <div className="publishing-gender-female">35% Female</div>
-                      </div>
-                  </div>
-              </div>
           </div>
-            <div className="publishing-project-quality-metrics">
-            <div className="publishing-project-quality-metrics-title">Quality Metrics</div>
-                <div className="publishing-project-word-count">Word Count
-                <div className="publishing-project-word-value">13000</div>
-                </div>
-                
-            </div>
         </div>
-        <div className="publishing-project-reviews"></div>
-        <div className="publishing-left-sidepanel">
-            <div className="publishing-left-sidepanel-title">Collaborators</div>
-            <div className="publishing-project-collaborators">
-                {collaborators.map(collaborator => (
+
+        {/* Publishing Form Section */}
+        <div className="publishing-project-description">
+          <div className="publishing-publishing-heading">Publishing</div>
+          <div className="publishing-project-title">
+            <h2>Project Title</h2>
+            <input
+              type="text"
+              placeholder="Enter Project Title..."
+              className="publishing-input"
+              value={project ? project.title : ''}
+              onChange={(e) =>
+                setProject({ ...project, title: e.target.value })
+              }
+            />
+          </div>
+          <div className="publishing-project-short-title">
+            <h3>Short Title</h3>
+            <input
+              type="text"
+              placeholder="Enter Short Title"
+              className="publishing-input"
+              value={project ? project.shortTitle : ''}
+              onChange={(e) =>
+                setProject({ ...project, shortTitle: e.target.value })
+              }
+            />
+          </div>
+          <div style={{display:"flex",flexDirection:"row",gap:"20%"}}>
+          <div className="publishing-project-audience">
+            <h4>Who This Book Is For</h4>
+            <textarea
+              placeholder="Enter Audience Details"
+              className="publishing-textarea"
+              value={project ? project.audience : ''}
+              onChange={(e) =>
+                setProject({ ...project, audience: e.target.value })
+              }
+            />
+          </div>
+          
+          <div className="publishing-project-genre">
+            <h4>Genre</h4>
+            <input
+              type="text"
+              placeholder="Enter Genre (comma-separated)"
+              className="publishing-input"
+              value={project ? project.genres.join(', ') : ''}
+              onChange={(e) => {
+                const genres = e.target.value.split(',').map((genre) => genre.trim());
+                setProject((prevProject) => ({
+                  ...prevProject,
+                  genres: genres,
+                }));
+              }}
+            />
+          </div>
+          </div>
+          <div className="publishing-project-summary">
+            <h4>Summary</h4>
+            <textarea
+              placeholder="Enter Project Summary"
+              className="publishing-textarea"
+              value={project ? project.summary : ''}
+              onChange={(e) =>
+                setProject({ ...project, summary: e.target.value })
+              }
+            />
+          </div>
+          
+         
+          <div className="publishing-project-cover">
+            <h4>Cover Picture</h4>
+            <input
+              type="file"
+              accept="image/*"
+              className="publishing-input-file"
+              onChange={handleCoverPictureChange}
+            />
+           
+          </div>
+          <div className="publishing-publish-button" onClick={createPublishing}>
+            {'Publish'}
+          </div>
+        </div>
+        <div style={{display:"flex", flexDirection:"column"}}>
+        <div style={{fontFamily:"sans-serif", fontSize:"20px", fontWeight:"500"}}> Cover Photo Preview</div>
+        {(
+              <div className="cover-picture-preview">
+                <img 
+                  src={coverPicture ? (typeof coverPicture === 'string' ? `http://localhost:5001/uploads/${coverPicture}` : URL.createObjectURL(coverPicture)) : ""}
+                  alt="Cover" 
+                  className="cover-picture-image" 
+                />
+              </div>
+            ) }
+        </div>
+
+        {/* Collaborators Section */}
+        <div className="publishing-left-sidepanel" style={{marginTop:"19%", marginRight:"8%"}}>
+          <div className="publishing-left-sidepanel-title">Collaborators</div>
+          <div className="publishing-project-collaborators">
+            {project &&
+              project.collaborators?.map((collaborator) => (
                 <div className="publishing-collaborator-container" key={collaborator.id}>
-                    <div className="publishing-collaborator-image">
-                    <img src={profileIcon} alt="publishing-profile" className="publishing-profile-icon" />
-                    </div>
-                    <div className="publishing-collaborator-text">
-                    {collaborator.name}
-                    </div>
+                  <div className="publishing-collaborator-image">
+                    <img
+                      src={collaborator.image || profileIcon}
+                      alt="publishing-profile"
+                      className="publishing-collaborator-icon"
+                    />
+                  </div>
+                  <div className="publishing-collaborator-text">
+                    {collaborator.email}
+                  </div>
                 </div>
-                ))}
-            </div>
+              ))}
+          </div>
         </div>
-        <div className="publishing-publish-a-work"></div>
       </div>
     </div>
   );

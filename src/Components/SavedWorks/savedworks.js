@@ -1,341 +1,280 @@
-import React, { useState } from 'react';
-import './savedworks.css';
-import menuIcon from '../Images/Logo-V.png';
-import profileIcon from '../Images/generic-user-profile-picture.png';
-import searchIcon from '../Images/Search.png';
-import recentImg from '../Images/Recent.png';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import {useNavigate } from 'react-router-dom';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
-import journalIcon from '../Images/journal.png';
-import botIcon from "../Images/Bot.png";
+import './savedworks.css';
+import profileIcon from '../Images/generic-user-profile-picture.png';
+import recentImg from '../Images/Recent.png';
+import {
+  Box,
+  TextField,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+} from '@mui/material';
+import Header from '../Header/header';
+
 
 
 
 function SavedWorks() {
-
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [Collabprojects, setCollabProjects] = useState([]);
 
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [showSearch, setShowSearch] = useState(true);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
 
-    const stories = [
-        "Whispers of the Forgotten Stars",
-        "The Silent Echo of Midnight",
-        "Beneath the Moon's Shadow",
-        "The Keeper of Lost Dreams",
-        "Echoes of a Broken Tomorrow",
-        "The Secret Garden of Dusk",
-        "Beyond the Veil of Twilight",
-        "The Clockmaker's Last Promise",
-        "Windswept Ashes of Avalon",
-        "The Enigma in the Crystal Forest"
-    ];
+        const response = await axios.get('http://localhost:5001/api/users/profile', {
+          headers: { 'x-auth-token': token },
+        });
 
-    const novels = [
-        "The Edge of Infinity",
-        "Shadows Beneath the Horizon",
-        "Where the Rivers Never Sleep",
-        "Through the Eyes of Eternity",
-        "The Lantern's Guiding Flame",
-        "When Darkness Meets the Sea",
-        "The Last Song of a Dying Sun",
-        "The Forgotten Isles of Emberfall",
-        "A Journey Through Midnight Skies",
-        "The Heart of the Celestial Path"
-    ];
-
-
-  // Urdu stories/novels
-  const urduStories = [
-    "شام کے بعد",
-    "زخموں کا مرہم",
-    "خوابوں کا مسافر",
-    "دریا کے پار",
-    "دل کے ارمان",
-  ];
-
-    const filteredStories = stories.filter(story => story.toLowerCase().includes(searchQuery.toLowerCase()));
-    const filteredNovels = novels.filter(novel => novel.toLowerCase().includes(searchQuery.toLowerCase()));
-    const filteredUrdu = urduStories.filter(urdu => urdu.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    const renderThumb = ({ style, ...props }) => {
-        const thumbStyle = {
-            backgroundColor: '#F47D4B',
-            borderRadius: '10px',
-            opacity: 0, // Initially hide the scrollbar
-        };
-        return <div style={{ ...style, ...thumbStyle }} {...props} />;
+        setUser(response.data);
+        console.log(response.data.fullname);
+        fetchUserProjects(response.data.email);
+        fetchUserCollabProjects(response.data.email);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load user data');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const renderTrack = ({ style, ...props }) => {
-        const trackStyle = {
-            backgroundColor: '#191B30',
-            borderRadius: '10px',
-            opacity: 0, // Initially hide the track
-        };
-        return <div style={{ ...style, ...trackStyle }} {...props} />;
-    };
+    fetchUserData();
+  }, [navigate]);
 
-    const handleScrollStart = () => {
-        // Show the scrollbar when scrolling starts
-        const thumb = document.querySelector('.custom-thumb');
-        const track = document.querySelector('.custom-track');
-        if (thumb) thumb.style.opacity = 1;
-        if (track) track.style.opacity = 1;
-    };
-
-    const handleScrollStop = () => {
-        // Hide the scrollbar after scrolling stops
-        const thumb = document.querySelector('.custom-thumb');
-        const track = document.querySelector('.custom-track');
-        if (thumb) thumb.style.opacity = 0;
-        if (track) track.style.opacity = 0;
-    };
-
-    const handleHomepageClick = () => {
-      navigate('/Homepage'); // Assuming your profile page route is '/profile'
-    };
+  const fetchUserProjects = async (email) => {
+    try {
+      const [storiesResponse, novelsResponse, urduResponse] = await Promise.all([
+        axios.get(`http://localhost:5001/api/stories/user/${email}`),
+        axios.get(`http://localhost:5001/api/novels/user/${email}`),
+        axios.get(`http://localhost:5001/api/urdu/user/${email}`),
+      ]);
   
-    const handleProjectsClick = () => {
-      navigate('/Saved'); // Assuming your profile page route is '/profile'
-    };
+      const combinedProjects = [
+        ...storiesResponse.data.map(project => ({ ...project, projectType: 'Storyboard' })),
+        ...novelsResponse.data.map(project => ({ ...project, projectType: 'Novelboard' })),
+        ...urduResponse.data.map(project => ({ ...project, projectType: 'Urduboard' })),
+      ];
   
-    const handleFavoriteClick = () => {
-      navigate('/Favorites'); 
-    };
-  
-    const handleNotificationClick = () => {
-      navigate('/Notification'); // Assuming your profile page route is '/profile'
-    };
-
-    
-  const handleChatbotClick = () => {
-    navigate('/Chatbot'); // Assuming your profile page route is '/profile'
+      setProjects(combinedProjects);
+    } catch (err) {
+      console.error('Failed to load projects:', err);
+    }
   };
 
+  const fetchUserCollabProjects = async (email) => {
+    try {
+      const [storiesResponse, novelsResponse, urduResponse] = await Promise.all([
+        axios.get(`http://localhost:5001/api/stories/collaborator/${email}`),
+        axios.get(`http://localhost:5001/api/novels/collaborator/${email}`),
+        axios.get(`http://localhost:5001/api/urdu/collaborator/${email}`)
+      ]);
   
-    const handleSettingClick = () => {
-      navigate('/Setting'); // Assuming your profile page route is '/profile'
-    };
+      const combinedCollabProjects = [
+        ...storiesResponse.data.map(project => ({ ...project, projectType: 'Storyboard' })),
+        ...novelsResponse.data.map(project => ({ ...project, projectType: 'Novelboard' })),
+        ...urduResponse.data.map(project => ({ ...project, projectType: 'Urduboard' }))
+      ];
   
-    const handleProfileClick = () => {
-      navigate('/Profile'); // Assuming your profile page route is '/profile'
-    };
+      setCollabProjects(combinedCollabProjects);
+    } catch (err) {
+      console.error('Failed to load collaborator projects:', err);
+    }
+  };
 
-    const handleNovelClick = () => {
-      navigate('/Novelboard'); // Assuming your profile page route is '/profile'
+  const renderThumb = ({ style, ...props }) => {
+    const thumbStyle = {
+      backgroundColor: '#F47D4B',
+      borderRadius: '10px',
+      opacity: 0,
     };
+    return <div style={{ ...style, ...thumbStyle }} {...props} />;
+  };
 
-    const handleStoryClick = () => {
-      navigate('/Storyboard'); // Assuming your profile page route is '/profile'
+  const renderTrack = ({ style, ...props }) => {
+    const trackStyle = {
+      backgroundColor: '#191B30',
+      borderRadius: '10px',
+      opacity: 0,
     };
+    return <div style={{ ...style, ...trackStyle }} {...props} />;
+  };
 
-    const handleUrduClick = () => {
-      navigate('/Urduboard'); // Assuming your profile page route is '/profile'
-    };
+  const handleScrollStart = () => {
+    const thumb = document.querySelector('.custom-thumb');
+    const track = document.querySelector('.custom-track');
+    if (thumb) thumb.style.opacity = 1;
+    if (track) track.style.opacity = 1;
+  };
 
+  const handleScrollStop = () => {
+    const thumb = document.querySelector('.custom-thumb');
+    const track = document.querySelector('.custom-track');
+    if (thumb) thumb.style.opacity = 0;
+    if (track) track.style.opacity = 0;
+  };
+
+
+  const handleNovelClick = (projectId) => navigate(`/ReadNovelProject/${projectId}`);
+  const handleStoryClick = (projectId) =>     navigate(`/ReadStoryProject/${projectId}`);
+  const handleUrduClick = (projectId) => navigate(`/ReadUrduProject/${projectId}`);
+
+  const getFilteredProjects = (type) => {
+    const allProjects = [...projects, ...Collabprojects];
+    return allProjects
+      .filter(project => project.projectType === type)
+      .filter(project => project.title?.toLowerCase().includes(searchQuery.toLowerCase()));
+  };
 
     
-  
 
-   
-  
 
-    return (
-        <div className="saved-container">
+
+
+
+
+  return (
+    <div className="saved-container">
+         <Header />
+
+      <div className="savedworks-dashboard">
         
-        <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img src={menuIcon} alt="Menu" className="homepage-menu-icon"  />
-          <div className="homepage-app-title" onClick={handleHomepageClick} >VerseCraft</div>
-          <nav>
-            <ul>
-            <li className="homepage-Plot" onClick={handleProjectsClick}>
-                <img src={journalIcon} alt="Character" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick}>
-                <img src={favIcon} alt="Character" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              
-              <li className="homepage-Published" onClick={handleNotificationClick} >
-                <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick} >
-                <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick}>
-                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                John Doe
-              </li>
-            </ul>
-          </nav>
-        </header>
+      <div className="saved-search-bar-container">
+        <div className="saved-Search-bar">
+          <input
+            type="text"
+            className="saved-search-input"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            />
+        </div>
+
+
+        <div className="saved-search-type">
+          <select>
+            <option value="all">All</option>
+            <option value="private">Private</option>
+            <option value="public">Public</option>
+            <option value="collab">Collab</option>
+          </select>
+        </div>
+
+        <div className="saved-search-sort">
+          <select>
+            <option value="latest">latest</option>
+            <option value="oldest">oldest</option>
+          </select>
+        </div>
       </div>
 
-      
-
-
-
-    <div className="savedworks-dashboard">
-
-   
-            <div className="saved-heading">
-                <h1>My Projects</h1>
-            </div>
-
-            <div className="saved-Search-bar">
-                    {showSearch && (
-                        <>
-                            <input
-                                type="text"
-                                className="saved-search-input"
-                                placeholder="Search..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            
-                        </>
-                    )}
-                </div>
-
-            <div className="saved-Works">
-
-
-                <div className="saved-Stories">
-                    <h1>Stories</h1>
-                    <Scrollbars
-                        renderThumbVertical={renderThumb}
-                        renderTrackVertical={renderTrack}
-                        onScrollStart={handleScrollStart}
-                        onScrollStop={handleScrollStop}
-                        style={{ height: '174px', overflowX: 'hidden' }}
-                    >
-                        <ul>
-                            {filteredStories.map((story, index) => (
-                                <li onClick={handleStoryClick} key={index}>{story} </li>
-                            ))}
-                        </ul>
-                    </Scrollbars>
-                </div>
-
-               
-
-                <div className="saved-Novels">
-                    <h2>Novels</h2>
-                    <Scrollbars
-                        renderThumbVertical={renderThumb}
-                        renderTrackVertical={renderTrack}
-                        onScrollStart={handleScrollStart}
-                        onScrollStop={handleScrollStop}
-                        style={{ height: '174px' }}
-                    >
-                        <ul>
-                            {filteredNovels.map((novel, index) => (
-                                <li onClick={handleNovelClick}  key={index}>{novel} </li>
-                            ))}
-                        </ul>
-                    </Scrollbars>
-                </div>
-
-
-                   {/* Urdu Section */}
-                  <div className="saved-Urdu">
-                    <h2>Urdu Stories</h2>
-                    <Scrollbars
-                      renderThumbVertical={renderThumb}
-                      renderTrackVertical={renderTrack}
-                      onScrollStart={handleScrollStart}
-                      onScrollStop={handleScrollStop}
-                      style={{ height: '174px' }}
-                    >
-                      <ul>
-                        {filteredUrdu.map((urdu, index) => (
-                          <li onClick={handleUrduClick} key={index}>{urdu} </li>
-                        ))}
-                      </ul>
-                    </Scrollbars>
-                  </div>
-            </div>
-
-            <div className="saved-recents">
-                <h1>Recents</h1>
-                <Scrollbars
-                    renderThumbHorizontal={renderThumb}
-                    renderTrackHorizontal={renderTrack}
-                    onScrollStart={handleScrollStart}
-                    onScrollStop={handleScrollStop}
-                    style={{ height: '200px', overflowY: 'hidden' }} // Adjust height as needed
-                >
-                    <div className="saved-recents-container">
-                        <div className="saved-recents-scroll">
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 1</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 2</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 3</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 4</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 5</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 6</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 1</p>
-                            </div>
-                            <div className="saved-item">
-                            <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 2</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 3</p>
-                            </div>
-                            <div className="saved-item">
-                            <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 4</p>
-                            </div>
-                            <div className="saved-item">
-                                <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 5</p>
-                            </div>
-                            <div className="saved-item">
-                            <img src={recentImg} alt="Recent" className="saved-recent-icon" />
-                                <p>Title of Work 6</p>
-                            </div>
-                        </div>
-                    </div>
-                </Scrollbars>
-            </div>
-
-            </div>
+      <div className="saved-profile-info">
+        <div className="saved-profile-pic">
+          <img src={user?.profileImage ? `http://localhost:5001/${user.profileImage}` : profileIcon}
+                  alt="Profile"
+                  className="savedworks-profile-icon-major"
+                />
         </div>
-    );
+        <div className="saved-profile-name">
+          <span className="savedworks-profile-name-major">{user ? user.fullname : 'Guest'}</span>
+        </div>
+        
+        <div className="saved-profile-followers">
+          <div className="saved-follower-icon"></div>
+          <div className="saved-follower-count">24</div>
+          <div className="saved-follower-text">Followers</div>
+
+          <div className="saved-following-icon"></div>
+          <div className="saved-following-count">56</div>
+          <div className="saved-following-text">Following</div>
+        </div>
+      </div>
+
+    <Box className="saved-Works">
+      <Box className="saved-Stories" sx={{ mb: 2 }}>
+        <Typography variant="h1">Stories</Typography>
+        <List sx={{ maxHeight: 174, overflowY: 'auto' }}>
+          {getFilteredProjects('Storyboard').map((project, index) => (
+            <ListItem
+              key={project._id || index}
+              onClick={() => handleStoryClick(project._id)}
+            >
+              <ListItemText primary={project.title} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+
+      <Box className="saved-Novels" sx={{ mb: 2 }}>
+        <Typography variant="h2">Novels</Typography>
+        <List sx={{ maxHeight: 174, overflowY: 'auto' }}>
+          {getFilteredProjects('Novelboard').map((project, index) => (
+            <ListItem
+              key={project._id || index}
+              onClick={() => handleNovelClick(project._id)}
+            >
+              <ListItemText primary={project.title} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+
+      <Box className="saved-Urdu">
+        <Typography variant="h2">Urdu works</Typography>
+        <List sx={{ maxHeight: 174, overflowY: 'auto' }}>
+          {getFilteredProjects('Urduboard').map((project, index) => (
+            <ListItem
+              key={project._id || index}
+              onClick={() => handleUrduClick(project._id)}
+            >
+              <ListItemText primary={project.title} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Box>
+
+        <div className="saved-recents">
+          <h1>Recents</h1>
+          <Scrollbars
+            renderThumbHorizontal={renderThumb}
+            renderTrackHorizontal={renderTrack}
+            onScrollStart={handleScrollStart}
+            onScrollStop={handleScrollStop}
+            style={{ height: '150px', overflowY: 'hidden' }}
+          >
+            <div className="saved-recents-container">
+              <div className="saved-recents-scroll">
+                {[...projects, ...Collabprojects]
+                  .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                  .slice(0, 12)
+                  .map((project, index) => (
+                    <div key={project._id || index} className="saved-item">
+                      <img src={recentImg} alt="Recent" className="saved-recent-icon" />
+                      <p>{project.title}</p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </Scrollbars>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default SavedWorks;

@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+// src/components/Adminpenal/NovelManagement.js
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaTrash, FaEdit, FaSave, FaTimes } from 'react-icons/fa';
+//import './NovelManagement.css'; // Import the corresponding CSS file
 
 const NovelManagement = () => {
   const [novels, setNovels] = useState([]);
@@ -8,20 +10,29 @@ const NovelManagement = () => {
   const [error, setError] = useState('');
   const [editNovelId, setEditNovelId] = useState(null);
   const [editNovelData, setEditNovelData] = useState({});
+  const [newNovel, setNewNovel] = useState({
+    shortId: '',
+    title: '',
+    description: '',
+    genres: [],
+    tags: [],
+    authorEmail: '',
+    textfileId: '',
+    collaborators: [],
+  });
 
   useEffect(() => {
-    fetchAdminData();
+    fetchNovels();
   }, []);
 
-  const fetchAdminData = async () => {
+  const fetchNovels = async () => {
     try {
-      setLoading(true);
-      const novelsRes = await axios.get('http://localhost:5001/api/admin/novels');
-      setNovels(novelsRes.data);
-      setLoading(false);
+      const response = await axios.get('http://localhost:5001/api/admin/novels');
+      setNovels(response.data);
     } catch (err) {
       console.error(err);
-      setError('Failed to fetch data. Please try again later.');
+      setError('Failed to fetch novels. Please try again later.');
+    } finally {
       setLoading(false);
     }
   };
@@ -39,7 +50,12 @@ const NovelManagement = () => {
 
   const handleEditNovel = (novel) => {
     setEditNovelId(novel._id);
-    setEditNovelData({ ...novel });
+    setEditNovelData({
+      ...novel,
+      genres: novel.genres || [],
+      tags: novel.tags || [],
+      collaborators: novel.collaborators || [],
+    });
   };
 
   const handleCancelEditNovel = () => {
@@ -49,13 +65,11 @@ const NovelManagement = () => {
 
   const handleSaveNovel = async (id) => {
     try {
-      await axios.put(
+      const response = await axios.put(
         `http://localhost:5001/api/admin/novels/${id}`,
         editNovelData
       );
-      setNovels(
-        novels.map((novel) => (novel._id === id ? editNovelData : novel))
-      );
+      setNovels(novels.map((novel) => (novel._id === id ? response.data : novel)));
       setEditNovelId(null);
       setEditNovelData({});
     } catch (err) {
@@ -64,189 +78,326 @@ const NovelManagement = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div style={{ textAlign: 'center', padding: '20px' }}>
-        <p style={{ fontSize: '18px' }}>Loading...</p>
-      </div>
-    );
-  }
+  const handleChange = (e, field) => {
+    setEditNovelData({
+      ...editNovelData,
+      [field]: e.target.value,
+    });
+  };
 
-  if (error) {
-    return (
-      <div style={{ textAlign: 'center', color: 'red', padding: '20px' }}>
-        <p style={{ fontSize: '18px' }}>{error}</p>
-      </div>
-    );
+  const handleAddNovel = async () => {
+    try {
+      const { shortId, title, description, authorEmail } = newNovel;
+      if (!shortId || !title || !description || !authorEmail) {
+        setError('Please fill all required fields before adding a new novel.');
+        return;
+      }
+
+      const response = await axios.post('http://localhost:5001/api/admin/novels', newNovel);
+      setNovels([...novels, response.data]);
+      setNewNovel({
+        shortId: '',
+        title: '',
+        description: '',
+        genres: [],
+        tags: [],
+        authorEmail: '',
+        textfileId: '',
+        collaborators: [],
+      });
+      setError('');
+    } catch (err) {
+      console.error(err);
+      setError('Failed to add new novel.');
+    }
+  };
+
+  if (loading) {
+    return <div className="adminNovelManagement-loading">Loading...</div>;
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: 'auto' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Manage Novels</h2>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f2f2f2' }}>
-              <th style={thStyle}>Short ID</th>
-              <th style={thStyle}>Title</th>
-              <th style={thStyle}>Description</th>
-              <th style={thStyle}>Genres</th>
-              <th style={thStyle}>Tags</th>
-              <th style={thStyle}>Author Email</th>
-              <th style={thStyle}>Textfile ID</th>
-              <th style={thStyle}>Collaborators</th>
-              <th style={thStyle}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {novels.map((novel) => (
-              <tr key={novel._id} style={{ borderBottom: '1px solid #ddd' }}>
-                <td style={tdStyle}>{novel.shortId}</td>
-                <td style={tdStyle}>
-                  {editNovelId === novel._id ? (
-                    <input
-                      type="text"
-                      value={editNovelData.title}
-                      onChange={(e) =>
-                        setEditNovelData({
-                          ...editNovelData,
-                          title: e.target.value,
-                        })
-                      }
-                      style={inputStyle}
-                    />
-                  ) : (
-                    novel.title
-                  )}
-                </td>
-                <td style={tdStyle}>
-                  {editNovelId === novel._id ? (
-                    <textarea
-                      value={editNovelData.description}
-                      onChange={(e) =>
-                        setEditNovelData({
-                          ...editNovelData,
-                          description: e.target.value,
-                        })
-                      }
-                      style={{ ...inputStyle, height: '60px' }}
-                    />
-                  ) : (
-                    novel.description
-                  )}
-                </td>
-                <td style={tdStyle}>
-                  {editNovelId === novel._id ? (
-                    <input
-                      type="text"
-                      value={editNovelData.genres.join(', ')}
-                      onChange={(e) =>
-                        setEditNovelData({
-                          ...editNovelData,
-                          genres: e.target.value.split(',').map((g) => g.trim()),
-                        })
-                      }
-                      style={inputStyle}
-                    />
-                  ) : (
-                    novel.genres.join(', ')
-                  )}
-                </td>
-                <td style={tdStyle}>
-                  {editNovelId === novel._id ? (
-                    <input
-                      type="text"
-                      value={editNovelData.tags.join(', ')}
-                      onChange={(e) =>
-                        setEditNovelData({
-                          ...editNovelData,
-                          tags: e.target.value.split(',').map((t) => t.trim()),
-                        })
-                      }
-                      style={inputStyle}
-                    />
-                  ) : (
-                    novel.tags.join(', ')
-                  )}
-                </td>
-                <td style={tdStyle}>{novel.authorEmail}</td>
-                <td style={tdStyle}>{novel.textfileId || 'N/A'}</td>
-                <td style={tdStyle}>
-                  {novel.collaborators && novel.collaborators.length > 0 ? (
-                    novel.collaborators.map((collab) => collab.email).join(', ')
-                  ) : (
-                    'N/A'
-                  )}
-                </td>
-                <td style={tdStyle}>
-                  {editNovelId === novel._id ? (
-                    <>
-                      <button
-                        onClick={() => handleSaveNovel(novel._id)}
-                        style={buttonStyle}
-                      >
-                        <FaSave />
-                      </button>
-                      <button
-                        onClick={handleCancelEditNovel}
-                        style={{ ...buttonStyle, backgroundColor: '#d9534f' }}
-                      >
-                        <FaTimes />
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => handleEditNovel(novel)}
-                        style={{ ...buttonStyle, backgroundColor: '#5bc0de' }}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteNovel(novel._id)}
-                        style={{ ...buttonStyle, backgroundColor: '#d9534f' }}
-                      >
-                        <FaTrash />
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="adminNovelManagement-container">
+      <h2 className="adminNovelManagement-title">Manage Novels</h2>
+
+      {error && <div className="adminNovelManagement-error">{error}</div>}
+
+      {/* Form for creating a new novel */}
+      <div className="adminNovelManagement-form-section">
+        <h3 className="adminNovelManagement-subtitle">Create a New Novel</h3>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="shortId">Short ID (required):</label>
+          <input
+            type="text"
+            id="shortId"
+            value={newNovel.shortId}
+            onChange={(e) => setNewNovel({ ...newNovel, shortId: e.target.value })}
+            className="adminNovelManagement-input"
+            placeholder="Enter Short ID"
+          />
+        </div>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="title">Title (required):</label>
+          <input
+            type="text"
+            id="title"
+            value={newNovel.title}
+            onChange={(e) => setNewNovel({ ...newNovel, title: e.target.value })}
+            className="adminNovelManagement-input"
+            placeholder="Enter Title"
+          />
+        </div>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="description">Description (required):</label>
+          <textarea
+            id="description"
+            value={newNovel.description}
+            onChange={(e) => setNewNovel({ ...newNovel, description: e.target.value })}
+            className="adminNovelManagement-textarea"
+            placeholder="Enter Description"
+          />
+        </div>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="genres">Genres (comma-separated):</label>
+          <input
+            type="text"
+            id="genres"
+            value={newNovel.genres.join(', ')}
+            onChange={(e) =>
+              setNewNovel({
+                ...newNovel,
+                genres: e.target.value
+                  ? e.target.value.split(',').map((g) => g.trim())
+                  : [],
+              })
+            }
+            className="adminNovelManagement-input"
+            placeholder="e.g., Fantasy, Adventure"
+          />
+        </div>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="tags">Tags (comma-separated):</label>
+          <input
+            type="text"
+            id="tags"
+            value={newNovel.tags.join(', ')}
+            onChange={(e) =>
+              setNewNovel({
+                ...newNovel,
+                tags: e.target.value
+                  ? e.target.value.split(',').map((t) => t.trim())
+                  : [],
+              })
+            }
+            className="adminNovelManagement-input"
+            placeholder="e.g., Epic, Bestseller"
+          />
+        </div>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="authorEmail">Author Email (required):</label>
+          <input
+            type="email"
+            id="authorEmail"
+            value={newNovel.authorEmail}
+            onChange={(e) => setNewNovel({ ...newNovel, authorEmail: e.target.value })}
+            className="adminNovelManagement-input"
+            placeholder="Enter Author Email"
+          />
+        </div>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="textfileId">Textfile ID:</label>
+          <input
+            type="text"
+            id="textfileId"
+            value={newNovel.textfileId}
+            onChange={(e) => setNewNovel({ ...newNovel, textfileId: e.target.value })}
+            className="adminNovelManagement-input"
+            placeholder="Enter Textfile ID"
+          />
+        </div>
+        <div className="adminNovelManagement-form-group">
+          <label htmlFor="collaborators">Collaborators' Emails (comma-separated):</label>
+          <input
+            type="text"
+            id="collaborators"
+            value={newNovel.collaborators.map(collab => collab.email).join(', ')}
+            onChange={(e) =>
+              setNewNovel({
+                ...newNovel,
+                collaborators: e.target.value
+                  ? e.target.value.split(',').map((email) => ({ email: email.trim() }))
+                  : [],
+              })
+            }
+            className="adminNovelManagement-input"
+            placeholder="e.g., collaborator1@example.com, collaborator2@example.com"
+          />
+        </div>
+
+        <button onClick={handleAddNovel} className="adminNovelManagement-button add">
+          Add Novel
+        </button>
+      </div>
+
+      {/* Novels List */}
+      <div className="adminNovelManagement-list">
+        {novels.map((novel) => (
+          <div className="adminNovelManagement-novel-card" key={novel._id}>
+            {editNovelId === novel._id ? (
+              <div className="adminNovelManagement-edit-mode">
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`shortId-${novel._id}`}>Short ID:</label>
+                  <input
+                    type="text"
+                    id={`shortId-${novel._id}`}
+                    value={editNovelData.shortId || ''}
+                    onChange={(e) => handleChange(e, 'shortId')}
+                    className="adminNovelManagement-input"
+                  />
+                </div>
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`title-${novel._id}`}>Title:</label>
+                  <input
+                    type="text"
+                    id={`title-${novel._id}`}
+                    value={editNovelData.title || ''}
+                    onChange={(e) => handleChange(e, 'title')}
+                    className="adminNovelManagement-input"
+                  />
+                </div>
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`description-${novel._id}`}>Description:</label>
+                  <textarea
+                    id={`description-${novel._id}`}
+                    value={editNovelData.description || ''}
+                    onChange={(e) => handleChange(e, 'description')}
+                    className="adminNovelManagement-textarea"
+                  />
+                </div>
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`genres-${novel._id}`}>Genres (comma-separated):</label>
+                  <input
+                    type="text"
+                    id={`genres-${novel._id}`}
+                    value={(editNovelData.genres || []).join(', ')}
+                    onChange={(e) =>
+                      setEditNovelData({
+                        ...editNovelData,
+                        genres: e.target.value
+                          ? e.target.value.split(',').map((g) => g.trim())
+                          : [],
+                      })
+                    }
+                    className="adminNovelManagement-input"
+                  />
+                </div>
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`tags-${novel._id}`}>Tags (comma-separated):</label>
+                  <input
+                    type="text"
+                    id={`tags-${novel._id}`}
+                    value={(editNovelData.tags || []).join(', ')}
+                    onChange={(e) =>
+                      setEditNovelData({
+                        ...editNovelData,
+                        tags: e.target.value
+                          ? e.target.value.split(',').map((t) => t.trim())
+                          : [],
+                      })
+                    }
+                    className="adminNovelManagement-input"
+                  />
+                </div>
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`authorEmail-${novel._id}`}>Author Email:</label>
+                  <input
+                    type="email"
+                    id={`authorEmail-${novel._id}`}
+                    value={editNovelData.authorEmail || ''}
+                    onChange={(e) => handleChange(e, 'authorEmail')}
+                    className="adminNovelManagement-input"
+                  />
+                </div>
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`textfileId-${novel._id}`}>Textfile ID:</label>
+                  <input
+                    type="text"
+                    id={`textfileId-${novel._id}`}
+                    value={editNovelData.textfileId || ''}
+                    onChange={(e) => handleChange(e, 'textfileId')}
+                    className="adminNovelManagement-input"
+                  />
+                </div>
+                <div className="adminNovelManagement-form-group">
+                  <label htmlFor={`collaborators-${novel._id}`}>Collaborators' Emails (comma-separated):</label>
+                  <input
+                    type="text"
+                    id={`collaborators-${novel._id}`}
+                    value={
+                      (editNovelData.collaborators || []).map(collab => collab.email).join(', ')
+                    }
+                    onChange={(e) =>
+                      setEditNovelData({
+                        ...editNovelData,
+                        collaborators: e.target.value
+                          ? e.target.value.split(',').map((email) => ({ email: email.trim() }))
+                          : [],
+                      })
+                    }
+                    className="adminNovelManagement-input"
+                  />
+                </div>
+
+                <div className="adminNovelManagement-actions">
+                  <button onClick={() => handleSaveNovel(novel._id)} className="adminNovelManagement-button save">
+                    <FaSave /> Save
+                  </button>
+                  <button onClick={handleCancelEditNovel} className="adminNovelManagement-button cancel">
+                    <FaTimes /> Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="adminNovelManagement-novel-content">
+                <h3 className="adminNovelManagement-novel-title">{novel.title}</h3>
+                <p className="adminNovelManagement-novel-shortId">
+                  <strong>Short ID:</strong> {novel.shortId}
+                </p>
+                <p className="adminNovelManagement-novel-description">{novel.description}</p>
+                <p className="adminNovelManagement-novel-genres">
+                  <strong>Genres:</strong> {(novel.genres || []).join(', ') || 'N/A'}
+                </p>
+                <p className="adminNovelManagement-novel-tags">
+                  <strong>Tags:</strong> {(novel.tags || []).join(', ') || 'N/A'}
+                </p>
+                <p className="adminNovelManagement-novel-authorEmail">
+                  <strong>Author Email:</strong> {novel.authorEmail}
+                </p>
+                <p className="adminNovelManagement-novel-textfileId">
+                  <strong>Textfile ID:</strong> {novel.textfileId || 'N/A'}
+                </p>
+                <p className="adminNovelManagement-novel-collaborators">
+                  <strong>Collaborators:</strong>{' '}
+                  {novel.collaborators && novel.collaborators.length > 0
+                    ? novel.collaborators.map(collab => collab.email).join(', ')
+                    : 'N/A'}
+                </p>
+
+                <div className="adminNovelManagement-actions">
+                  <button onClick={() => handleEditNovel(novel)} className="adminNovelManagement-button edit">
+                    <FaEdit /> Edit
+                  </button>
+                  <button onClick={() => handleDeleteNovel(novel._id)} className="adminNovelManagement-button delete">
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
-};
-
-const thStyle = {
-  padding: '12px',
-  textAlign: 'left',
-  backgroundColor: '#f8f8f8',
-  borderBottom: '1px solid #ddd',
-  fontWeight: 'bold',
-};
-
-const tdStyle = {
-  padding: '12px',
-  textAlign: 'left',
-};
-
-const inputStyle = {
-  width: '100%',
-  padding: '8px',
-  boxSizing: 'border-box',
-};
-
-const buttonStyle = {
-  margin: '5px',
-  padding: '8px',
-  backgroundColor: '#5cb85c',
-  color: '#fff',
-  border: 'none',
-  cursor: 'pointer',
-  borderRadius: '4px',
 };
 
 export default NovelManagement;

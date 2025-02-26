@@ -1,128 +1,24 @@
 .homepage-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background-color:white;
-
+  background-color: white;
+  overflow-y:auto;
 }
 
-.homepage-header {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(135deg, #1F2247 85%, white 15%);
-  color: white;
-  justify-content: space-between;
-  z-index: 4; /* Ensure it's higher than other overlapping elements */
-  height: 50px;
-}
-
-.homepage-header-item{
-  display: flex;
-  align-items: center;
-  background-color: linear-gradient(135deg, #1F2247 85%, #FF4500 15%);
-  color: white;
-  justify-content: space-between;
-  z-index: 4; /* Ensure it's higher than other overlapping elements */
-  height: 50px;
-
-}
-
-/* App Title */
-.homepage-app-title {
-  font-size: 25px;
-  font-weight: bold;
-  font-family: 'Kanit', sans-serif;
-  margin-left: -40px;
-  cursor: pointer;
-}
-
-/* Navigation styles */
-nav {
-  flex-grow: 1; /* Allow nav to grow and take available space */
-  margin-left: 20px; /* Space between app title and nav */
-}
-
-nav ul {
-  list-style-type: none;
-  display: flex;
-  justify-content: flex-start; /* Align items to the start */
-  margin: 0;
-  padding: 0;
-}
-
-nav ul li {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 10px 15px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-  color: white;
-  font-family: 'Kanit', sans-serif;
-  margin-right: 15px; /* Space between each nav item */
-}
-
-/* Icons styles */
-.homepage-dashboard-icon,
-.homepage-plot-icon,
-.homepage-character-icon,
-.homepage-publish-icon,
-.homepage-chatbot-icon,
-.homepage-bot-icon,
-.homepage-profile-icon,
-.homepage-dropdown-icon {
-  width: 20px; /* Consistent width for all icons */
-  height: 20px; /* Consistent height for all icons */
-  margin-right: 0.5rem; /* Space between icon and text */
-}
-
-.homepage-menu-icon {
-  width: 80px; /* Menu icon size */
-  height: 80px;
-  margin-right: 40px; /* Space to the right of the menu icon */
-  margin-top: 10px;
-  margin-left: -10px;
-}
-
-/* Additional styles for specific icons */
-.homepage-profile-icon {
-  border-radius: 50%; /* Circular icon */
-  border: 2px solid #191B30; /* Border color */
-}
-
-nav ul li:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Slight highlight on hover */
-}
-
-.homepage-Novelboard,
-.homepage-Plot,
-.homepage-Character,
-.homepage-Published,
-.homepage-inspire-bot,
-.homepage-Chatbot {
-  color: white;
-  font-weight: 400;
-  font-family: 'Kanit', sans-serif;
-  margin-left: 40px;
-}
-
-.homepage-Profile{
-  margin-left: 200px;
-  color: #191B30;
-  font-weight: bold;
-}
 
 
 
 .homepage-sidebar {
   position: fixed; /* Sidebar should be fixed so that it can overlap other content */
-  top: 0;
+ 
   left: 0;
   height: 100vh;
   width: 30px; /* Collapsed width */
-  background:#1F2247;
+  background:black;
   padding: 10px;
   z-index: 10;
   transition: width 0.3s ease; /* Smooth transition for opening/closing */
@@ -131,6 +27,7 @@ nav ul li:hover {
   color: white;
   font-size: 20px;
   font-family: sans-serif;
+  margin-top: -9px;
   
 }
 
@@ -166,6 +63,7 @@ nav ul li:hover {
   padding-left: 10px; /* Indentation for better visual spacing */
   width: 100%; /* Ensures each item takes full width */
   transition: opacity 0.3s ease; /* Smooth transition for opacity */
+  cursor: pointer;
 }
 
 /* Maintain fixed width for items when sidebar is collapsed */
@@ -181,6 +79,7 @@ nav ul li:hover {
   padding:10px;
   font-size: 15px;
   border-bottom:2px solid #FF4500;
+  cursor: pointer;
   
 }
 
@@ -200,6 +99,7 @@ nav ul li:hover {
   width: 20px;
   height: 20px;
   margin-right: 20px; /* Space between icon and text */
+  cursor: pointer;
   
 }
 
@@ -212,6 +112,7 @@ nav ul li:hover {
 .homepage-sidebar.open .homepage-communities,
 .homepage-sidebar.open .homepage-settings {
   justify-content: flex-start; /* Align items when expanded */
+  cursor: pointer;
 }
 
 /* Label for the icons when the sidebar expands */
@@ -232,10 +133,11 @@ nav ul li:hover {
   overflow-y: scroll; /* Ensure scrolling is enabled */
   scrollbar-width: none; /* Hide scrollbar in Firefox */
   width: 100%;
+  height: 100vh;
   position: relative;
   overflow-x:hidden ;
-  background-color: #fafcffff; /* Solid white background */
- 
+  background-color:  white; /* Solid white background */
+  overflow-y:auto;
 
 }
 
@@ -244,103 +146,171 @@ nav ul li:hover {
   display: none; /* Hide scrollbar in Chrome, Safari, and Edge */
 }
 
-.homepage-banner {
-  background: linear-gradient(90deg, #FF8C00, #FFD700); /* Gradient from dark orange to gold for a warm and vibrant look */
-  height: 100px;
+.homepage-row-one{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start !important;
+  margin-top:1%;
+  
+  
+}
+
+
+.homepage-welcome-section{
+ display: flex;
+ flex-direction: row;
+ justify-content: flex-start;
+ align-items: center;
+ margin-left: 4%;
+
+}
+
+
+.homepage-welcome-text{
+  font-size: 30px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+
+  margin-bottom: 5%;
+  
+}
+.carousel-container {
+  position: relative;
+  width:auto;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 3px;
+  border: 1px solid black;
+  margin-left: 4%;
+  margin-top: 3%;
+  margin-right: 4.5%;
+  
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
   width: 100%;
-  position: relative; /* Set position to relative to contain absolutely positioned particles */
-  overflow: hidden; /* Hide particles that might overflow the banner */
-  border-bottom:3px solid #191B30;
+  height: 100%;
 }
 
-@keyframes particles {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-200px);
-    opacity: 0;
-  }
+.carousel-image {
+  width: 100%;
+  flex-shrink: 0;
 }
 
-.homepage-particle {
+.carousel-button {
   position: absolute;
-  bottom: 0; /* Start at the bottom of the banner */
-  width: 5px;
-  height: 5px;
-  background-color: rgba(255, 255, 255, 0.8); /* Light color for particles */
-  border-radius: 50%;
-  animation: particles 3s ease-in-out infinite; /* Longer duration with ease-in-out easing */
-  will-change: transform, opacity;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 24px;
+  border-radius: 5px;
 }
 
+.carousel-button.left {
+  left: 10px;
+}
 
-.homepage-banner-text {
-  color: #1F2247; /* Dark navy blue to create a high contrast against the bright gradient */
-  font-size: 80px; /* Adjusted size */
-  font-weight: 700; /* Make the text weight bold for more emphasis */
-  font-family: 'Times New Roman', Times, serif;
-  -webkit-font-smoothing: antialiased; /* Font smoothing */
-  -moz-osx-font-smoothing: grayscale; /* Font smoothing */
-  margin-top: 0px; /* Adjust margin to properly align in the hero section */
+.carousel-button.right {
+  right: 10px;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin: 5px;
+  background: #aaa;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.dot.active {
+  background: white;
 }
 
 .hompage-create-new-work-container{
-  
-  width:92%;
-  height: 200px;
+
+  width:fit-content;
+  height: fit-content;
   text-align: left;
-  margin-top: 50px;
-  margin-left: 60px;
   
- 
-  
-
-}
-
-.homepagecreate-new-work-title{
-  color: #191B30; /* Dark color for the title */
-  font-size: 25px; /* Font size */
-  font-family: sans-serif; /* Font family */
-  text-decoration: underline; /* Adds underline to the title */
-  margin-bottom: 0px; /* Space below the title */
 
 }
 
 /* New Project container */
 .homepage-new-project {
-  margin-top: 20px; /* Space above the project section */
-  padding: 15px;
+  
+  width: fit-content;
+  height: fit-content;
   background-color: #ffffff; /* White background */
   border-radius: 5px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
   border:1px solid #191B30 ;
+
 }
 
 /* New Project Title styling */
 .homepage-new-project-title {
-  color: #333333; /* Slightly lighter than black */
+  color: #191B30; /* Slightly lighter than black */
   font-size: 20px; /* Font size */
-  font-weight: bold; /* Make it bold */
+  font-weight: 500; /* Make it bold */
   margin-bottom: 10px; /* Space below the project title */
+  text-align: center;
 }
 
 /* Button styling */
 .homepagecreate-new-work-button {
-  padding: 10px 20px; /* Padding around the button */
-  background-color: #191B30; /* Green background */
+  padding: 10px 10px; /* Padding around the button */
+  background-color: #1e272eff; /* Green background */
   color: white; /* White text */
   border: none; /* No border */
-  border-radius: 5px; /* Slightly rounded corners */
+  border-radius: 2px; /* Slightly rounded corners */
   font-size: 16px; /* Font size */
   cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth transition on hover */
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+  display: flex;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap:10%;
+  height: 5%;
+  width: 100%;
+  font-weight: 400;
+ 
 }
 
-.homepagecreate-new-work-button:hover {
-  background-color: #FF4500; /* Darker green on hover */
+/* Icon styling */
+.homepagecreate-new-work-button .create-icon {
+  width: 20%;
+  height: 20%;
+  transition: transform 0.3s ease; /* Smooth transition for icon */
 }
+
+/* Hover Effects */
+.homepagecreate-new-work-button:hover {
+  transform: scale(1.10); /* Slightly enlarge the button */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  background-color: #ffffff;
+  color: #000000;
+  transition: transform 0.3s ease; /* Smooth transition for icon */
+}
+
 
 /* Modal Overlay */
 .homepage-modal-overlay {
@@ -421,41 +391,120 @@ nav ul li:hover {
   background-color: #FF4500;
 }
 
-.homepage-my-projects{
-  background-color: white;
-  width: 91%;
-  height: auto;
-  border-radius: 5px;
-  margin-left: 60px;
-  padding:10px;
-  margin-top: -70px;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
-  border:1px solid #191B30 ;
-}
 
-.homepage-my-projects-title{
-  margin-left: -1220px;
-  font-size: 18px;
-  margin-top: 4px;
-  font-weight: bold;
-  color: #191B30;
-}
 
-.homepage-my-projects-add-project{
-  width:fit-content;
+
+
+.homepage-projects-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: start;
   height: fit-content;
-  margin-top: -15px;
-  margin-left: 1300px;
+  position: absolute;
+  width: 96%;
+  top: 80%;
+  margin-left: 1.5%;
+  overflow: hidden;
+}
+
+.homepage-recent-projects-title{
+  font-size:25px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  margin-left: 2%;
+  text-decoration: underline;
+  color: #000000;
+  
+}
+
+
+.homepage-my-projects-recent{
+  background-color:none;
+  border-radius: 5px;
+  padding:20px;
+  height: fit-content;
+  width:auto;  
+  text-align: right;
+ 
+}
+
+.homepage-my-projects-add-project-text{
+  
+  font-weight: bold;
+  color: black;
+  font-size: 15px;
+  margin-right: 2%;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+}
+
+.homepage-my-projects-add-project:hover{
+  background-color: #a5a6aa;
+  color: black;
+}
+
+
+/* My Projects Container */
+.homepage-my-projects-container {
   display: flex;
   flex-direction: row;
+  scroll-behavior: smooth; /* Smooth scrolling effect */
+  scroll-behavior: none;
+  gap: 0px; /* Space between items */
+  height: 200px;
+  overflow-x:auto;
+  margin-left:1%;
+  width: 100%;
+
+}
+
+.homepage-my-projects-container {
+  /* Existing styles */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+}
+
+.homepage-my-projects-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+
+
+
+.homepage-my-projects-collab{
+  background: linear-gradient(to right, #ff4500, #ffb400);
+  border-radius: 5px;
+  padding:10px;
+  height: fit-content;
+  width:auto;  
+  text-align: right;
+ 
+}
+
+.homepage-no-collabs{
+  color: white;
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 10;
+  align-self: center;
+  justify-content: center;
+  text-align: right;
+}
+
+.homepage-my-projects-view-collab{
+  
   font-weight: bold;
   color: white;
-  background-color: #1F2247;
-  padding:10px;
-  border-radius: 5px;
+  font-size: 15px;
   cursor: pointer;
-  margin-bottom: 2%;
 }
+
+
+
 
 .homepage-project-plus-icon{
   width:25px;
@@ -464,64 +513,151 @@ nav ul li:hover {
 
 
 
-/* My Projects Container */
-.homepage-my-projects-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
-  gap: 20px; /* Space between items */
-  margin-top: -10px;
-  padding: 10px;
-  height: auto;
-}
-
 .homepage-my-projects-item {
   background-color: #ffffff;
-  border-radius: 10px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  border: 2px solid #191B30;
-  margin-top: -10px;
+  border: 0.5px solid #a6a6ac;
+
+  width: 23.5%;
+  min-width: 23.5%;
+  border-radius: 0 !important;
   height: auto; /* Adjust height to fit content */
-  display: flex;
-  flex-direction: column; /* Ensure items stack vertically */
+  margin: 10px;
+  
 }
 
 /* Hover effect */
 .homepage-my-projects-item:hover {
-  transform: scale(1.05);
+  transform: scale(1.10);
+  border: 0.5px solid #a6a6ac;
+
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+ 
 }
 
-/* Project Item Image */
-.homepage-my-projects-item-image {
-  width: 100%; /* Full width */
-  height: 150px; /* Adjusted height for better visibility */
-  background-size: cover;
-  background-position: center;
-  border-bottom: 2px solid #191B30;
+
+.homepage-my-project-item-detail-container{
+  display: flex;
+  flex-direction: row; /* Ensure items stack vertically */
+  width: 100%;
 }
+
+.homepage-my-project-item-cover{
+  width: 100%;
+  height: 110%;
+}
+
+.homepage-my-project-item-detail-container-header{
+  display: flex;
+  flex-direction: row; /* Ensure items stack vertically */
+  width:100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
 
 /* Project Item Name */
 .homepage-my-projects-item-name {
-  padding: 15px; /* Spacing around text */
-  font-size: 18px;
-  font-weight: bold;
+  padding: 10px; /* Spacing around text */
+  font-size: 15px;
+  font-weight: 500;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  color: #191B30;
-  background-color: #f0f0f0;
-  margin-top: 0; /* No extra margin between image and text */
+  color: black;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+
+}
+
+.homepage-my-project-item-type{
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #000000;
+  border-bottom-left-radius: 20%;
+  width: 24px;
+  height: 25px;
+  font-weight: 600;
+  margin-left: auto;
+  margin-right: 3%;
+  color: white;
+  padding: 3px;
+  
+}
+
+.homepage-my-project-item-summary{
+  width: 150px;
+  height: 73px;
+  max-height: 73px;
+  padding:2%;
+  font-size:10px ;
+  text-align:justify;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 10px;
+}
+
+.homepage-my-project-item-author{
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-left: 10px;
+  font-size: 12px;
+  
+}
+
+.homepage-my-project-item-auther-name{
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.homepage-row-two{
+
+  background-color:white;
+  border-radius: 5px;
+  height: fit-content;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius:0px ;
+  border: 2px solid #1F2247;
 }
 
 
 
-/* Container styling for the to-do list */
+.homepage-no-own-projects-text-msg{
+  color: black;
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 10;
+  align-self: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Search Input */
+.hompage-search-input {
+  padding: 10px; /* Space inside the input */
+  font-size: 16px; /* Font size */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 2px; /* Rounded corners */
+  width: 400px; /* Width of the input */
+  margin-top: 20px;
+}
+
+
+
 .homepage-todo-list-container {
-  width: 100%;
-  max-width: 500px;
+  position: absolute;
+  top: 110px;
+  left: 840px;
+  width: 30%;
   margin: 20px auto;
-  margin-left: 60px;
   border: 1px solid #191B30;
   background-color: white;
   padding: 10px;
@@ -531,30 +667,35 @@ nav ul li:hover {
   overflow-y: auto;
 }
 
-/* Hide scrollbar for Chrome, Safari, and newer versions of Edge */
-.homepage-todo-list-container::-webkit-scrollbar {
-  display: none;
+/* Hide scrollbar */
+.homepage-todo-list-container {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
-/* Hide scrollbar for IE, Edge, and Firefox */
-.homepage-todo-list-container {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+.homepage-todo-list-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and newer versions of Edge */
 }
 
 /* Header of the to-do list */
+
 .homepage-todo-list-container-header {
   margin-bottom: 15px;
   text-align: center;
-  margin-top: -20px;
-}
+  position: absolute;
+  top: 70px;
+  left:1000px;
 
+ 
+}
 .homepage-todo-list-container-header h2 {
-  font-size: 24px;
+  font-size: 20px;
   color: #333;
+  font-weight: 500;
 }
 
 /* Add task input and button container */
+
 .homepage-todo-add-task {
   display: flex;
   align-items: center;
@@ -587,141 +728,178 @@ nav ul li:hover {
 }
 
 /* Task list container */
+
 .homepage-todo-task-list {
   display: flex;
   flex-direction: column;
   margin-top: -10px;
- 
-  
 }
 
 /* Individual task item */
-.hompage-todo-task-item {
+
+.homepage-todo-task-item {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 10px;
-  
+  text-align: center;
+  border-top:1px solid black ;
+  overflow: auto;
+
+
+}
+
+.homepage-todo-list-item-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  overflow: auto;
+  padding: 5px;
+  width: 100%; /* Ensure the container takes up the full width of its parent */
 }
 
 .homepage-todo-checkbox {
-  margin-right: 10px;
   width: 20px;
   height: 20px;
   cursor: pointer;
+  margin-left: auto; /* Pushes the checkbox to the far right */
+  align-self: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
-/* Task text styling */
 .homepage-todo-task-text {
   font-size: 16px;
+  width: 100%; /* Ensure it takes up available space */
   color: #333;
+  text-align: left;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide the overflow */
+  text-overflow: ellipsis; /* Show ellipsis when overflow occurs */
 }
-
 .homepage-todo-task-text.completed {
   text-decoration: line-through;
   color: #888;
 }
 
-
-
+.homepage-featured-projects-title{
+  font-size:25px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  margin-top:3% ;
+  margin-left: 2%;
+  text-overflow: ellipsis;
+  text-decoration: underline;
+}
 
 /* Featured Works Container */
 .homepage-featured-works-container {
-  background: white;
-  position: fixed;
-  height: 180px;
-  position: relative;
-  width: 55.5%;
-  margin-top: -220px;
-  border-radius: 5px;
-  padding: 10px; /* Add padding for a better layout */
+  background: linear-gradient(to right, #061c51, #3658b6, #3e77f3);
+  height: 25%;
+  width: auto;
+  border-radius: 10px;
+  margin-top:1%;
+  padding: 2%; /* Add padding for a better layout */
   overflow: hidden; /* Hide overflowing items */
-  margin-left: 600px;
-  border:1px solid #191B30 ;
-  margin-bottom: 50px;
+  border: 1px solid black;
+  padding-top:2%;
+  padding-bottom:2%;
+  padding-right:2%;
+  padding-left:2%;
+ 
 }
-
-/* Searchbar Styling */
-.homepage-searchbar {
-  display: flex; /* Align input and button in a row */
-  justify-content: center; /* Center the items */
-  align-items: center; /* Vertically center the items */
-  width: 100%; /* Adjust width as needed */
-  height: 50px; /* Set a height for visibility */
-  background: #1F2247; /* Dark navy blue gradient with semi-transparency */
-  margin-left: auto; /* Center it horizontally */
-  margin-right: auto; /* Center it horizontally */
-  z-index: 10; /* Ensure it appears above other elements */
-
-
-}
-
-/* Search Input */
-.hompage-search-input {
-  padding: 10px; /* Space inside the input */
-  font-size: 16px; /* Font size */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 5px; /* Rounded corners */
-  width: 400px; /* Width of the input */
-  margin-top: 20px;
-}
-
-
 
 
 
 /* Featured Works Section */
 .homepage-features-works {
-  margin-top: 20px;
+  
   width: 100%;
-  height: 170px;
   position: relative; /* Ensure positioning relative to the container */
-}
-
-/* Featured Works Heading */
-.homepage-featured-works-heading {
- 
-  font-size: 25px;
-  margin-top: 4px;
-  font-weight: bold;
-  color: #191B30;
+  
 }
 
 /* Featured Works Items Container */
 .homepage-features-works-items {
-  display: flex; /* Use flexbox for alignment */
-  align-items: center; /* Center items vertically */
-  justify-content: flex-start; /* Start from the left */
-  overflow: hidden; /* Prevent items from overflowing */
-  position: relative; /* Relative positioning for animation */
-  animation: slide-in 20s linear infinite; /* Smooth sliding animation */
-  gap: 20px; /* Space between each item */
-  margin-top: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: visible; /* Allow items to extend outside the container */
+  position: relative;
+  animation: slide-in 20s linear infinite;
+  gap: 20px;
+  width: fit-content;
+  height: fit-content;
+  transition: transform 0.3s ease, padding 0.3s ease;
 }
 
-/* Featured Work Item Container */
+/* Adjust the container when hovered */
+.homepage-features-works-container:hover .homepage-features-works-items {
+  transform: scale(1.05); /* Scale up smoothly */
+  padding: 10px; /* Add padding to prevent clipping */
+}
+
+
 .homepage-features-works-image-container {
-  display: flex; /* Use flexbox to stack image and title */
-  flex-direction: column; /* Stack items vertically */
-  align-items: center; /* Center items horizontally */
-  margin-left: 20px; /* Margin to the left */
+  width: 30%;
+    border-radius: 10px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Featured Works Images */
-.homepage-features-works-images {
-  width: 200px; /* Width of the image */
-  height: 100px; /* Height of the image */
-  background: url("../Images/rectangle_92.png") no-repeat center center; /* Set the background image */
-  background-size: cover; /* Ensure the image covers the entire area */
-  border-radius: 10px; /* Rounded corners */
-  border: 2px solid #191B30; /* Border color */
+.homepage-features-works-image-container:hover {
+  transform: scale(1.05); /* Slightly enlarges the element */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Adds depth */
 }
 
-/* Title of Featured Works */
+
 .homepage-features-works-title {
-  margin-top: 10px; /* Space above the title */
-  font-size: 15px; /* Font size */
-  color:#191B30; /* Title color */
-  text-align: center; /* Center the text */
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: black;
+  text-align: center; /* Center the title */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 90%;
+  height: 25px;
+}
+
+.homepage-features-works-details {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Make sure the details container takes full width */
+  margin-bottom: 15px;
+}
+
+.homepage-features-works-genre,
+.homepage-features-works-pages {
+  font-size: 15px;
+  color: #000000;
+  flex: 1; /* Each item takes equal space in the row */
+  text-align: center; /* Center the text in each item */
+}
+
+.homepage-features-works-rating{
+  font-size: 15px;
+  color: red;
+  flex: 1; /* Each item takes equal space in the row */
+  text-align: center; /* Center the text in each item */
+}
+
+.homepage-features-works-summary {
+  font-size: 13px;
+  color: #000000;
+  text-align: left;
+  margin-top: 10px;
+  height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Keyframes for Sliding Animation */
@@ -740,3 +918,180 @@ nav ul li:hover {
   position: relative; /* Ensure child elements are positioned correctly */
   width: 100%; /* Full width */
 }
+
+/* Responsive styling for smaller screens */
+@media screen and (max-width: 1200px) {
+  .homepage-dashboard {
+    padding: 10px;
+  }
+
+  .homepage-sidebar {
+    width: 50px;
+  }
+
+  .homepage-sidebar.open {
+    width: 200px;
+  }
+
+  .homepage-my-projects-container {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+  }
+
+  .homepage-banner-text {
+    font-size: 60px; /* Adjust for smaller screens */
+  }
+
+  .homepage-featured-works-container {
+    width: 90%; /* Reduce width on smaller screens */
+    margin-left: auto;
+    margin-right: auto; /* Center it */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .homepage-header {
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;
+    height: auto;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .homepage-sidebar {
+    width: 30px;
+  }
+
+  .homepage-sidebar.open {
+    width: 100px;
+  }
+
+  .homepage-my-projects-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
+  }
+
+  .homepage-banner-text {
+    font-size: 40px; /* Smaller font size */
+  }
+
+  .homepage-create-new-work-container {
+    width: 100%;
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .homepage-featured-works-container {
+    width: 100%; /* Full width on small screens */
+  }
+
+  .homepage-my-projects-add-project {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .homepage-banner-text {
+    font-size: 30px; /* Even smaller font size */
+  }
+
+  .homepage-my-projects-container {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+  }
+
+  .homepage-sidebar {
+    width: 20px;
+  }
+
+  .homepage-sidebar.open {
+    width: 80px;
+  }
+
+  .homepage-create-new-work-container,
+  .homepage-featured-works-container {
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .homepage-featured-works-items {
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px;
+  }
+
+  .homepage-todo-list-container {
+    width: 100%;
+    max-width: 100%; /* Ensure it spans the full width */
+  }
+}
+
+
+.homepage-challenges-container{
+  margin-top: 1%;
+  margin-left:2%;
+  width: 50%;
+  height: fit-content;
+  border: 1px solid black;
+}
+
+.homepage-challenges-image{
+  width: 50%;
+  height: 20%;
+}
+
+.homepage-challenges-heading{
+
+  padding:20px;
+  font-size: 25px;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 600;
+  
+}
+
+
+
+.homepage-challenges-description{
+  width: 300px;
+  margin-left: 7%;
+}
+
+.homepage-challenge-start-button{
+  padding:10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 5%;
+  margin-bottom: 2%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+
+.hover-modal {
+  position: absolute;
+  
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 15px;
+  width: 300px;
+  z-index: 9999; /* Ensure it's above everything */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.hover-modal-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.hover-modal-content {
+  padding: 10px;
+}
+
+
+

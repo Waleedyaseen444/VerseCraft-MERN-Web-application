@@ -1,83 +1,84 @@
-import React, { useState } from 'react';
+// src/components/Notifications.js
+
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './notifications.css';
 import verticalOptionIcon from '../Images/vertical-options.png';
-import Modal from 'react-modal';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import {useNavigate } from 'react-router-dom';
-import menuIcon from '../Images/Logo-V.png';
-import profileIcon from '../Images/generic-user-profile-picture.png';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
-import journalIcon from '../Images/journal.png';
-import calIcon from "../Images/Calander.png";
-import botIcon from "../Images/Bot.png";
+import animationData from '../Images/mail-animation01.json';
+import welcomeanimation from '../Images/mail-animation02.json'; // Ensure correct path
+import Lottie from 'react-lottie';
+import Header from '../Header/header';
 
+// Material-UI Imports
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    IconButton,
+    Typography,
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 function Notifications() {
+    const navigate = useNavigate();
+
+    // State variables for user data
+    const [user, setUser] = useState(null); // User object
+    const [loading, setLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
+
+    // State for notifications
+    const [notifications, setNotifications] = useState([]);
+
+    // State for modal visibility and selected notification
     const [visible, setVisible] = useState(false);
-    const [selectedNotificationIndex, setSelectedNotificationIndex] = useState(null);
+    const [selectedNotification, setSelectedNotification] = useState(null);
 
-    const [notifications, setNotifications] = useState([
-        // Add your notifications here
-        {
-            title: "Labor Day Sale",
-            date: "2024-08-31",
-            description: "Get 30% off all lifetime module purchases by using code LABORDAY24 at checkout. Offer expires September 2nd, so don't delay!"
-        },
-        {
-            title: "New Feature Release",
-            date: "2024-09-01",
-            description: "Introducing our latest feature to enhance your user experience. Check it out now!"
-        },
-        {
-            title: "Maintenance Update",
-            date: "2024-09-02",
-            description: "Scheduled maintenance update tonight from 2 AM to 4 AM. Please save your work and log out before this period."
-        },
-        {
-            title: "Weekly Highlights",
-            date: "2024-09-03",
-            description: "Here are the highlights of this week: New updates, features, and more!"
-        },
-        {
-            title: "System Downtime Alert",
-            date: "2024-09-04",
-            description: "Our system will be down for maintenance from 12 AM to 3 AM tomorrow. We apologize for any inconvenience."
-        },
-        {
-            title: "Special Offer",
-            date: "2024-09-05",
-            description: "Exclusive offer: 20% off on all premium subscriptions. Use code PREMIUM20 at checkout."
-        },
-        {
-            title: "Event Reminder",
-            date: "2024-09-06",
-            description: "Don't miss our upcoming event on September 10th. Register now to secure your spot."
-        },
-        {
-            title: "Update Notification",
-            date: "2024-09-07",
-            description: "We've released a new update with performance improvements. Restart the app to apply changes."
-        },
-        {
-            title: "Security Patch Released",
-            date: "2024-09-08",
-            description: "A critical security patch has been applied to protect your data. Please update your application."
-        },
-        {
-            title: "Service Enhancement",
-            date: "2024-09-09",
-            description: "We're enhancing our service to improve speed and reliability. Thank you for your patience."
-        }
-    ]);
+    // Fetch user data and notifications on component mount
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
 
-    const [searchQuery, setSearchQuery] = useState('');
+                const userResponse = await axios.get('/api/users/profile', {
+                    headers: {
+                        'x-auth-token': token,
+                    },
+                });
 
-    const filteredStories = notifications.filter(notification =>
-        notification.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+                setUser(userResponse.data);
+
+                // Fetch notifications for the user
+                const notificationsResponse = await axios.get('/api/notifications/user-notifications', {
+                    headers: {
+                        'x-auth-token': token,
+                    },
+                });
+
+                setNotifications(notificationsResponse.data.notifications);
+                console.log('Fetched Notifications:', notificationsResponse.data.notifications); // Debug log
+            } catch (err) {
+                console.error(err);
+                setError('Failed to load data.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, [navigate]);
+
+    // No search functionality; display all notifications directly
+    const filteredNotifications = notifications; // No filtering applied
 
     const handleScrollStart = () => {
         const thumb = document.querySelector('.custom-thumb');
@@ -93,21 +94,97 @@ function Notifications() {
         if (track) track.style.opacity = 0;
     };
 
-    const handleNotificationAction = (action) => {
-        if (selectedNotificationIndex !== null) {
-            if (action === 'delete') {
-                setNotifications(notifications.filter((_, index) => index !== selectedNotificationIndex));
-            } 
-            setSelectedNotificationIndex(null);
-            setVisible(false);
+    // Handle notification actions like delete, accept, reject
+    const handleNotificationAction = async (action) => {
+        if (selectedNotification) {
+            const { notificationId, projectId, projectType } = selectedNotification;
+            const token = localStorage.getItem('token');
+
+            console.log(`Action: ${action}`, selectedNotification); // Debug log
+
+            try {
+                if (action === 'delete') {
+                    await axios.delete(`/api/notifications/${notificationId}`, {
+                        headers: {
+                            'x-auth-token': token,
+                        },
+                    });
+                    setNotifications(notifications.filter((n) => n.notificationId !== notificationId));
+                } else if (action === 'accept') {
+                    // Validate projectType before sending
+                    if (!projectType) {
+                        setError('Project type is missing.');
+                        return;
+                    }
+
+                    // Call the accept-invite endpoint
+                    await axios.post('/api/notifications/accept-invite', {
+                        projectId,
+                        projectType, // Ensure projectType is available
+                        notificationId, // Pass notificationId
+                    }, {
+                        headers: {
+                            'x-auth-token': token,
+                        },
+                    });
+
+                    // Remove the notification from the list
+                    setNotifications(notifications.filter((n) => n.notificationId !== notificationId));
+                } else if (action === 'reject') {
+                    // Update the notification status to 'rejected'
+                    await axios.patch(`/api/notifications/${notificationId}/status`, {
+                        status: 'rejected',
+                    }, {
+                        headers: {
+                            'x-auth-token': token,
+                        },
+                    });
+
+                    // Remove the notification from the list
+                    setNotifications(notifications.filter((n) => n.notificationId !== notificationId));
+                }
+
+                setSelectedNotification(null);
+                setVisible(false);
+                setError(null); // Clear any existing errors
+            } catch (err) {
+                console.error('Action Failed:', err.response ? err.response.data : err);
+                // Display server-provided error message if available
+                if (err.response && err.response.data && err.response.data.error) {
+                    setError(err.response.data.error);
+                } else {
+                    setError('Failed to perform the action.');
+                }
+            }
         }
     };
 
+    
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData, // Existing login animation
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
+  const welcomeOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: welcomeanimation, // New welcome animation
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
+    // Custom scrollbar styles
     const renderThumb = ({ style, ...props }) => {
         const thumbStyle = {
             backgroundColor: '#F47D4B',
             borderRadius: '10px',
             opacity: 0,
+            transition: 'opacity 0.3s',
         };
         return <div style={{ ...style, ...thumbStyle }} {...props} />;
     };
@@ -117,149 +194,181 @@ function Notifications() {
             backgroundColor: '#191B30',
             borderRadius: '10px',
             opacity: 0,
+            transition: 'opacity 0.3s',
         };
         return <div style={{ ...style, ...trackStyle }} {...props} />;
     };
 
-    const navigate = useNavigate();
-    const handleHomepageClick = () => {
-      navigate('/Homepage'); // Assuming your profile page route is '/profile'
-    };
+   
   
-    const handleProjectsClick = () => {
-      navigate('/Saved'); // Assuming your profile page route is '/profile'
+    // Close modal when clicking outside the content
+    const closeModal = (event) => {
+        if (event.target.closest('.notification-modal-content')) {
+            return;
+        }
+        setVisible(false);
     };
-  
-    const handleFavoriteClick = () => {
-      navigate('/Favorite'); 
-    };
-  
-    const handleNotificationClick = () => {
-      navigate('/Notification'); // Assuming your profile page route is '/profile'
-    };
-  
-    const handleSettingClick = () => {
-      navigate('/Setting'); // Assuming your profile page route is '/profile'
-    };
-  
-    const handleProfileClick = () => {
-      navigate('/Profile'); // Assuming your profile page route is '/profile'
-    };
-    const handleChatbotClick = () => {
-        navigate('/Chatbot'); // Assuming your profile page route is '/profile'
-      };
-  
-  const closeModal = (event) => {
-    // Prevent closing when clicking inside the modal content
-    if (event.target.closest('.notification-modal-content')) {
-        return;
-    }
-    setVisible(false);
-};
-
-
 
     return (
         <div className="container">
-           <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img src={menuIcon} alt="Menu" className="homepage-menu-icon"  />
-          <div className="homepage-app-title" onClick={handleHomepageClick} >VerseCraft</div>
-          <nav>
-            <ul>
-            <li className="homepage-Plot" onClick={handleProjectsClick}>
-                <img src={journalIcon} alt="Character" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick}>
-                <img src={favIcon} alt="Character" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              <li className="homepage-Published" onClick={handleNotificationClick} >
-                <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick} >
-                <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick}>
-                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                John Doe
-              </li>
-            </ul>
-          </nav>
-        </header>
-      </div>
-
+           <Header/>
             <div className='notification-second-container'>
                 <div className="Notifications-container">
-                    <div className="notification-Background"></div>
-                    <div className='notification-Profile-image'></div>
-                    <div className="notification-bar1"></div>
-                    <div className='notification-Profile-info'>
-                        <h1 className='notification-Name'>John Doe</h1>
-                        <h2 className='notification-Username'>@johndoe1234</h2>
-                        <div className='notification-Join-date'>
-                            <img src={calIcon} alt="calendar" className="notification-cal-icon" />
-                            <h1>3rd October 2024</h1>
-                        </div>
+                    <div className="notification-animation-container-01">
+                         {/* Removed Typography components and added Welcome Animation */}
+                    <Lottie 
+                        className="notification-animation-01"
+                        options={welcomeOptions}
+                         // Ensures responsiveness
+                    />
                     </div>
+                 
 
                     <div className='notification-content'>
                         <h1>Notifications</h1>
-
-                        <Scrollbars
-                            renderThumbVertical={renderThumb}
-                            renderTrackVertical={renderTrack}
-                            onScrollStart={handleScrollStart}
-                            onScrollStop={handleScrollStop}
-                            style={{ height: '100%', overflowX: 'hidden' }}
-                        >
-                            <div className="notification-content-container">
-                                <ul>
-                                    {filteredStories.map((notification, index) => (
-                                        <li key={index}>
-                                            <div className="notification-notification-item">
-                                                <div className="notification-notification-date">{notification.date}</div>
-                                                <div className="notification-options">
-                                                    <img
-                                                        src={verticalOptionIcon}
-                                                        alt="vert"
-                                                        className="notification-vert-icon"
-                                                        onClick={() => {
-                                                            setSelectedNotificationIndex(index);
-                                                            setVisible(true);
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className="notification-notification-title">{notification.title}</div>
-                                                <div className="notification-notification-description">{notification.description}</div>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </Scrollbars>
+                        <div className="notification-content-part">
+                        {/* Removed search input */}
+                        
+                        {loading ? (
+                            <p>Loading notifications...</p>
+                        ) : error ? (
+                            <p className="error">{error}</p>
+                        ) : (
+                            <Scrollbars
+                                renderThumbVertical={renderThumb}
+                                renderTrackVertical={renderTrack}
+                                onScrollStart={handleScrollStart}
+                                onScrollStop={handleScrollStop}
+                                style={{ height: '100%', overflowX: 'hidden' }}
+                            >
+                                <div className="notification-content-container">
+                                    {notifications.length === 0 ? (
+                                        <p>No notifications available.</p>
+                                    ) : (
+                                        <ul>
+                                            {filteredNotifications.map((notification) => (
+                                                <li key={notification.notificationId}>
+                                                    <div className="notification-notification-item">
+                                                        <div className="notification-notification-date">
+                                                            {new Date(notification.createdAt).toLocaleDateString()}
+                                                        </div>
+                                                        <div className="notification-options">
+                                                            <img
+                                                                src={verticalOptionIcon}
+                                                                alt="Options"
+                                                                className="notification-vert-icon"
+                                                                onClick={() => {
+                                                                    setSelectedNotification(notification);
+                                                                    setVisible(true);
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        {/* Displaying 'notificationType' as title */}
+                                                        <div className="notification-notification-title">
+                                                            {notification.notificationType || 'Notification'}
+                                                        </div>
+                                                        <div className="notification-notification-description">
+                                                            {notification.description}
+                                                        </div>
+                                                        {/* Indicate if it's an invite */}
+                                                        {notification.notificationType === 'Invite' && (
+                                                            <span className="invite-badge">Invite</span>
+                                                        )}
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            </Scrollbars>
+                        )}
                     </div>
+                </div>
+                <div className="notification-animation-container-02">
+                {/* Removed Typography components and added Welcome Animation */}
+                <Lottie 
+                className="notification-animation-02"
+                        options={defaultOptions}
+                    />
+                </div>
                 </div>
             </div>
 
-            <Modal
-                className="notification-modal"
-                isOpen={visible}
-                onRequestClose={() => setVisible(false)}
-                onClick={closeModal} 
+            {/* Modal for Notification Actions */}
+            <Dialog
+                open={visible}
+                onClose={() => setVisible(false)}
+                aria-labelledby="notification-dialog-title"
+                aria-describedby="notification-dialog-description"
             >
-                <div className="notification-modal-content" onClick={(e) => e.stopPropagation()}>
-                    <button onClick={() => handleNotificationAction('delete')}>Delete Note</button>
-                   
-                </div>
-            </Modal>
+                <DialogTitle id="notification-dialog-title" sx={{ m: 0, p: 2 }}>
+                    Notification Actions
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => setVisible(false)}
+                        sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent dividers>
+                    {selectedNotification?.notificationType === 'Invite' ? (
+                        <Typography gutterBottom>
+                            What would you like to do with this invite?
+                        </Typography>
+                    ) : (
+                        <Typography gutterBottom>
+                            Would you like to delete this notification?
+                        </Typography>
+                    )}
+                    {error && (
+                        <Typography color="error" variant="body2">
+                            {error}
+                        </Typography>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    {selectedNotification?.notificationType === 'Invite' ? (
+                        <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => handleNotificationAction('accept')}
+                            >
+                                Accept
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={() => handleNotificationAction('reject')}
+                            >
+                                Reject
+                            </Button>
+                            <Button
+                                variant="text"
+                                color="error"
+                                onClick={() => handleNotificationAction('delete')}
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    ) : (
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => handleNotificationAction('delete')}
+                        >
+                            Delete Notification
+                        </Button>
+                    )}
+                </DialogActions>
+            </Dialog>
+
         </div>
     );
 }

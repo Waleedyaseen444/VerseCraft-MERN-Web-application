@@ -1,213 +1,1328 @@
-:root {
-  --primary-color: #191b30;
-  --secondary-color: #f47d4b;
-  --background-color: #f4f6f8;
-  --table-header-bg: #34365a;
-  --table-row-hover: #f47d4b;
-  --text-color: #ffffff;
-  --secondary-text-color: #f0f0f0;
-  --error-color: #f44336;
-  --success-color: #4caf50;
-  --warning-color: #f47d4b;
+/* src/components/AdminPanel.css */
+
+/* Global Styles */
+.adminpenal-container {
+  display: flex;
+  height: 100vh;
+  background-color: #171717ff; /* Main dark background */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
-.Admin-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background-color);
-  color: var(--primary-color);
-}
-
-.admin-panel-container {
+/* Sidebar Styles */
+.adminpenal-sidebar {
+  width: 250px;
+  background-color: #1e272eff; /* Dark sidebar background */
+  color: #ffffff;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 2rem;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  position: relative;
 }
 
-.admin-panel-title {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
+.adminpenal-sidebar.closed {
+  width: 70px;
 }
 
-/* Admin Profile Section */
-.admin-panel-profile-container {
+.adminpenal-sidebar-header {
   display: flex;
   align-items: center;
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-  gap: 2rem;
-  width: 100%;
+  justify-content: space-between;
+  padding: 20px;
+  background: linear-gradient(135deg, #ef8307, #ff9f00); /* Gradient for header */
 }
 
-.admin-panel-profile-image {
-  width: 80px;
-  height: 80px;
+.adminpenal-sidebar-title {
+  font-size: 20px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+}
+
+.adminpenal-sidebar-toggle-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.adminpenal-sidebar-toggle-btn:hover {
+  transform: rotate(90deg);
+}
+
+.adminpenal-sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+.adminpenal-sidebar-menu li {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+.adminpenal-sidebar-menu li:hover {
+  background-color: #ef8307; /* Hover background */
+  color: #171717ff; /* Hover text color */
+}
+
+.adminpenal-sidebar-menu li.active {
+  background-color: #ff9f00; /* Active background */
+  color: #171717ff; /* Active text color */
+}
+
+.adminpenal-menu-icon {
+  margin-right: 15px;
+  font-size: 18px;
+}
+
+.adminpenal-menu-text {
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.adminpenal-sidebar.closed .adminpenal-menu-text {
+  opacity: 0;
+}
+
+/* Tooltip for Collapsed Sidebar */
+.adminpenal-sidebar.closed .adminpenal-sidebar-menu li::after {
+  content: attr(title);
+  position: absolute;
+  left: 70px;
+  background-color: #1e272eff; /* Same as sidebar background */
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-50%);
+  top: 50%;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.adminpenal-sidebar.closed .adminpenal-sidebar-menu li:hover::after {
+  opacity: 1;
+}
+
+/* Logout Specific Styling */
+.adminpenal-sidebar-menu li.adminpenal-logout {
+  margin-top: auto;
+  border-top: 1px solid #1e2226ff; /* Border color */
+}
+
+/* Main Content Styles */
+.adminpenal-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e2226ff; /* Secondary dark background */
+  color: #ffffff;
+}
+
+/* Top Navigation Bar */
+.adminpenal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2b343bff; /* Topbar background */
+  padding: 10px 20px;
+  border-bottom: 1px solid #1e2226ff; /* Border color */
+  position: sticky;
+  top: 0;
+  z-index: 500;
+}
+
+.adminpenal-header-toggle-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  display: none; /* Hidden on larger screens */
+}
+
+.adminpenal-header-toggle-btn:hover {
+  color: #ef8307; /* Hover color */
+}
+
+.adminpenal-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.adminpenal-notification-icon {
+  position: relative;
+  margin-right: 20px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #ffffff;
+}
+
+.adminpenal-notification-icon:hover {
+  color: #ef8307; /* Hover color */
+}
+
+.adminpenal-notification-count {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: red;
+  color: #ffffff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.adminpenal-profile {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.adminpenal-profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ef8307; /* Orange border */
+  object-fit: cover;
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+.adminpenal-profile-icon:hover {
+  transform: scale(1.05);
+}
+
+.adminpenal-profile-details h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #ef8307; /* Highlighted name */
+}
+
+.adminpenal-profile-details p {
+  margin: 0;
+  font-size: 12px;
+  color: #cccccc; /* Muted email */
+}
+
+/* Content Section */
+.adminpenal-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.adminpenal-content h2 {
+  color: #ef8307; /* Section title color */
+  margin-bottom: 20px;
+}
+
+.adminpenal-content .adminpenal-section-content {
+  background-color: #2b343bff; /* Content card background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.adminpenal-content .adminpenal-section-content:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .adminpenal-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    transform: translateX(0);
+    z-index: 1000;
+  }
+
+  .adminpenal-main-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .adminpenal-sidebar-header {
+    padding: 15px;
+  }
+
+  .adminpenal-sidebar-title {
+    font-size: 18px;
+  }
+
+  .adminpenal-menu-icon {
+    font-size: 16px;
+  }
+
+  .adminpenal-menu-text {
+    font-size: 14px;
+  }
+
+  .adminpenal-header {
+    padding: 10px;
+  }
+
+  .adminpenal-header-toggle-btn {
+    display: block;
+  }
+
+  .adminpenal-sidebar.closed {
+    transform: translateX(-100%);
+  }
+
+  .adminpenal-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .adminpenal-main-content {
+    margin-left: 0;
+  }
+
+  .adminpenal-content {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .adminpenal-profile-details h3 {
+    font-size: 14px;
+  }
+
+  .adminpenal-profile-details p {
+    font-size: 10px;
+  }
+
+  .adminpenal-notification-icon {
+    margin-right: 10px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* src/components/UserManagement.css */
+
+/* Container Styles */
+.adminusermange-container {
+  padding: 20px;
+  background-color: #1e2226ff; /* Secondary dark background */
+  color: #ffffff;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.adminusermange-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ef8307; /* Primary orange for title */
+  font-size: 24px;
+}
+
+/* Table Container */
+.adminusermange-table-container {
+  overflow-x: auto;
+}
+
+/* Table Styles */
+.adminusermange-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border: 1px solid #2b343bff; /* Border color */
+}
+
+.adminusermange-table-header {
+  padding: 10px;
+  background-color: #2b343bff; /* Header background */
+  border-bottom: 1px solid #2b343bff;
+  text-align: left;
+  color: #ffffff;
+}
+
+.adminusermange-table-row:nth-child(even) {
+  background-color: #1e272eff; /* Even row background */
+}
+
+.adminusermange-table-row:hover {
+  background-color: #2b343bff; /* Hover background */
+}
+
+.adminusermange-table-cell {
+  padding: 10px;
+  border-bottom: 1px solid #2b343bff;
+  vertical-align: top;
+}
+
+/* Input Styles */
+.adminusermange-input,
+.adminusermange-select,
+.adminusermange-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444444ff;
+  border-radius: 4px;
+  background-color: #2b343bff;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.adminusermange-input:focus,
+.adminusermange-select:focus,
+.adminusermange-textarea:focus {
+  outline: none;
+  border-color: #ef8307;
+  box-shadow: 0 0 5px rgba(239, 131, 7, 0.5);
+}
+
+/* Profile Image Styles */
+.adminusermange-profile-image {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.admin-panel-profile-details {
+.adminusermange-no-image {
+  color: #cccccc;
+}
+
+/* Action Buttons */
+.adminusermange-actions {
   display: flex;
-  flex-direction: column;
+  gap: 10px;
 }
 
-.admin-panel-profile-name {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--primary-color);
-}
-
-.admin-panel-profile-email,
-.admin-panel-profile-description {
-  font-size: 1rem;
-  color: #333; /* Updated color to improve contrast */
-  font-weight: 500; /* Increased font weight for better visibility */
-}
-
-
-/* Search Bars Section */
-.admin-panel-search-container {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.admin-panel-search-bar {
+.adminusermange-button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.admin-panel-search-input {
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 250px;
-  box-sizing: border-box;
-}
-
-.admin-panel-search-button {
-  background-color: var(--secondary-color);
-  color: var(--text-color);
+  justify-content: center;
+  padding: 6px 10px;
   border: none;
-  padding: 0.8rem 1rem;
   border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
+  color: #ffffff;
+  font-size: 14px;
   transition: background-color 0.3s ease;
 }
 
-.admin-panel-search-button:hover {
-  background-color: var(--table-row-hover);
+.adminusermange-button.edit {
+  background-color: #ffc107; /* Edit button color */
 }
 
-.admin-panel-navigation {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+.adminusermange-button.edit:hover {
+  background-color: #e0a800;
 }
 
-.admin-panel-button {
-  background-color: var(--table-header-bg);
-  color: var(--text-color);
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
+.adminusermange-button.delete {
+  background-color: #dc3545; /* Delete button color */
 }
 
-.admin-panel-button:hover {
-  background-color: var(--table-row-hover);
+.adminusermange-button.delete:hover {
+  background-color: #c82333;
 }
 
-.admin-panel-section {
-  width: 90%;
-  min-height: 300px;
-  max-height: 600px;
-  margin-bottom: 2rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+.adminusermange-button.save {
+  background-color: #28a745; /* Save button color */
+}
+
+.adminusermange-button.save:hover {
+  background-color: #218838;
+}
+
+.adminusermange-button.cancel {
+  background-color: #6c757d; /* Cancel button color */
+}
+
+.adminusermange-button.cancel:hover {
+  background-color: #5a6268;
+}
+
+/* Loading and Error States */
+.adminusermange-loading,
+.adminusermange-error {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+}
+
+.adminusermange-error {
+  color: #dc3545; /* Error text color */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .adminusermange-table-header {
+    font-size: 14px;
+  }
+
+  .adminusermange-input,
+  .adminusermange-select,
+  .adminusermange-textarea {
+    font-size: 12px;
+  }
+
+  .adminusermange-button {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* src/components/StoryManagement.css */
+
+/* Container & Titles */
+.adminStoryManagemente-container {
+  padding: 20px;
+  background-color: #1e2226ff; /* Secondary dark background */
+  color: #ffffff;
+  height: 100%;
   overflow-y: auto;
-  align-self: center;
 }
 
-.admin-panel-close-button {
-  position: relative;
-  top: 1rem;
-  right: 1rem;
-  background-color: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--error-color);
-  cursor: pointer;
+.adminStoryManagemente-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ef8307; /* Primary orange */
+  font-size: 24px;
 }
 
-/* Graphs Styling */
-.admin-panel-graphs-container {
-  display: flex;
-  gap: 2rem;
-  width: 100%;
-  margin-bottom: 2rem;
+/* Error Message */
+.adminStoryManagemente-error {
+  text-align: center;
+  padding: 10px;
+  background-color: #dc3545;
+  border-radius: 4px;
+  margin-bottom: 20px;
 }
 
-.admin-panel-graph-section {
+/* Loading State */
+.adminStoryManagemente-loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #ef8307;
+}
+
+/* Form Section for Adding a Story */
+.adminStoryManagemente-form-section {
+  background-color: #2b343bff; /* Card background */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.adminStoryManagemente-subtitle {
+  color: #ef8307;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.adminStoryManagemente-form-group {
+  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 
-.admin-panel-graph {
-  background-color: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
+.adminStoryManagemente-form-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #ffffff;
 }
 
-/* Activity Log Styling */
-.admin-panel-activity-log {
-  width: 80%;
-  margin: 0 auto; /* Center the activity log section */
-  background-color: white;
+/* Inputs & Textarea Styles */
+.adminStoryManagemente-input,
+.adminStoryManagemente-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444444;
+  border-radius: 4px;
+  background-color: #1e272eff;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.adminStoryManagemente-input:focus,
+.adminStoryManagemente-textarea:focus {
+  outline: none;
+  border-color: #ef8307;
+  box-shadow: 0 0 5px rgba(239, 131, 7, 0.5);
+}
+
+.adminStoryManagemente-textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+.adminStoryManagemente-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #ffffff;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.adminStoryManagemente-button:hover {
+  opacity: 0.9;
+}
+
+/* Button Colors */
+.adminStoryManagemente-button.add {
+  background-color: #28a745;
+}
+
+.adminStoryManagemente-button.edit {
+  background-color: #ffc107;
+}
+
+.adminStoryManagemente-button.delete {
+  background-color: #dc3545;
+}
+
+.adminStoryManagemente-button.save {
+  background-color: #28a745;
+}
+
+.adminStoryManagemente-button.cancel {
+  background-color: #6c757d;
+}
+
+/* Stories List */
+.adminStoryManagemente-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.adminStoryManagemente-story-card {
+  background-color: #2b343bff; /* Card background */
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  margin-bottom: 2rem;
+}
+
+.adminStoryManagemente-story-content h3,
+.adminStoryManagemente-edit-mode h3 {
+  color: #ef8307;
+  margin-bottom: 10px;
+}
+
+.adminStoryManagemente-story-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.adminStoryManagemente-story-author {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 10px;
+}
+
+.adminStoryManagemente-story-description {
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+/* Actions Container */
+.adminStoryManagemente-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* Edit Mode Form */
+.adminStoryManagemente-edit-mode .adminStoryManagemente-form-group {
+  margin-bottom: 15px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* src/components/Adminpenal/NovelManagement.css */
+/* src/components/Adminpenal/NovelManagement.css */
+
+/* Container & Titles */
+.adminNovelManagement-container {
+  padding: 20px;
+  background-color: #1e2226ff; /* Secondary dark background */
+  color: #ffffff;
+  height: 100%;
   overflow-y: auto;
-  max-height: 400px; /* Increased height for better display */
 }
 
-.admin-panel-activity-log h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+.adminNovelManagement-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ef8307; /* Primary orange */
+  font-size: 24px;
 }
 
-.admin-panel-activity-log ul {
-  list-style-type: none;
-  padding-left: 0;
+/* Error Message */
+.adminNovelManagement-error {
+  text-align: center;
+  padding: 10px;
+  background-color: #dc3545; /* Bootstrap Danger */
+  border-radius: 4px;
+  margin-bottom: 20px;
+  color: #ffffff;
 }
 
-.admin-panel-activity-log li {
-  padding: 1rem 0;
-  border-bottom: 1px solid #ddd;
-  color: var(--primary-color);
+/* Loading State */
+.adminNovelManagement-loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #ef8307;
 }
 
-.admin-panel-activity-log .activity-time {
-  font-size: 0.9rem;
-  color: #777;
-  margin-top: 0.2rem;
+/* Form Section for Adding a Novel */
+.adminNovelManagement-form-section {
+  background-color: #2b343bff; /* Card background */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.adminNovelManagement-subtitle {
+  color: #ef8307;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.adminNovelManagement-form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.adminNovelManagement-form-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+
+/* Inputs & Textarea Styles */
+.adminNovelManagement-input,
+.adminNovelManagement-select,
+.adminNovelManagement-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444444ff;
+  border-radius: 4px;
+  background-color: #1e272eff;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.adminNovelManagement-input:focus,
+.adminNovelManagement-select:focus,
+.adminNovelManagement-textarea:focus {
+  outline: none;
+  border-color: #ef8307;
+  box-shadow: 0 0 5px rgba(239, 131, 7, 0.5);
+}
+
+.adminNovelManagement-textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+.adminNovelManagement-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #ffffff;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.adminNovelManagement-button:hover {
+  opacity: 0.9;
+}
+
+/* Button Colors */
+.adminNovelManagement-button.add {
+  background-color: #28a745; /* Bootstrap Success */
+}
+
+.adminNovelManagement-button.edit {
+  background-color: #ffc107; /* Bootstrap Warning */
+}
+
+.adminNovelManagement-button.delete {
+  background-color: #dc3545; /* Bootstrap Danger */
+}
+
+.adminNovelManagement-button.save {
+  background-color: #28a745; /* Bootstrap Success */
+}
+
+.adminNovelManagement-button.cancel {
+  background-color: #6c757d; /* Bootstrap Secondary */
+}
+
+/* Novels List */
+.adminNovelManagement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Novel Card */
+.adminNovelManagement-novel-card {
+  background-color: #2b343bff; /* Card background */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Novel Content */
+.adminNovelManagement-novel-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.adminNovelManagement-novel-title {
+  color: #ef8307;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.adminNovelManagement-novel-shortId,
+.adminNovelManagement-novel-authorEmail,
+.adminNovelManagement-novel-textfileId,
+.adminNovelManagement-novel-collaborators {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 5px;
+}
+
+.adminNovelManagement-novel-description {
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+/* Actions Container */
+.adminNovelManagement-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Edit Mode Form */
+.adminNovelManagement-edit-mode .adminNovelManagement-form-group {
+  margin-bottom: 15px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .adminNovelManagement-title {
+    font-size: 20px;
+  }
+
+  .adminNovelManagement-button {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .adminNovelManagement-input,
+  .adminNovelManagement-select,
+  .adminNovelManagement-textarea {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* src/components/Adminpenal/UrduManagement.css */
+
+/* Container & Titles */
+.adminUrduManagement-container {
+  padding: 20px;
+  background-color: #1e2226ff; /* Secondary dark background */
+  color: #ffffff;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.adminUrduManagement-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ef8307; /* Primary orange */
+  font-size: 24px;
+}
+
+/* Error Message */
+.adminUrduManagement-error {
+  text-align: center;
+  padding: 10px;
+  background-color: #dc3545; /* Bootstrap Danger */
+  border-radius: 4px;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+/* Loading State */
+.adminUrduManagement-loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #ef8307;
+}
+
+/* Form Section for Adding an Urdu Project */
+.adminUrduManagement-form-section {
+  background-color: #2b343bff; /* Card background */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.adminUrduManagement-subtitle {
+  color: #ef8307;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.adminUrduManagement-form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.adminUrduManagement-form-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+
+/* Inputs & Textarea Styles */
+.adminUrduManagement-input,
+.adminUrduManagement-select,
+.adminUrduManagement-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444444ff;
+  border-radius: 4px;
+  background-color: #1e272eff;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.adminUrduManagement-input:focus,
+.adminUrduManagement-select:focus,
+.adminUrduManagement-textarea:focus {
+  outline: none;
+  border-color: #ef8307;
+  box-shadow: 0 0 5px rgba(239, 131, 7, 0.5);
+}
+
+.adminUrduManagement-textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+.adminUrduManagement-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #ffffff;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.adminUrduManagement-button:hover {
+  opacity: 0.9;
+}
+
+/* Button Colors */
+.adminUrduManagement-button.add {
+  background-color: #28a745; /* Bootstrap Success */
+}
+
+.adminUrduManagement-button.edit {
+  background-color: #ffc107; /* Bootstrap Warning */
+}
+
+.adminUrduManagement-button.delete {
+  background-color: #dc3545; /* Bootstrap Danger */
+}
+
+.adminUrduManagement-button.save {
+  background-color: #28a745; /* Bootstrap Success */
+}
+
+.adminUrduManagement-button.cancel {
+  background-color: #6c757d; /* Bootstrap Secondary */
+}
+
+/* Urdu Projects List */
+.adminUrduManagement-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Urdu Item */
+.adminUrduManagement-item {
+  background-color: #2b343bff; /* Card background */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Edit Form */
+.adminUrduManagement-edit-form {
+  background-color: #3a444cff; /* Slightly lighter dark background */
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.adminUrduManagement-edit-form h3 {
+  color: #ef8307;
+  margin-bottom: 10px;
+}
+
+/* Urdu Content */
+.adminUrduManagement-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.adminUrduManagement-item-title {
+  color: #ef8307;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.adminUrduManagement-item-description {
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.adminUrduManagement-item-genres,
+.adminUrduManagement-item-author,
+.adminUrduManagement-item-collaborators {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 5px;
+}
+
+/* Actions Container */
+.adminUrduManagement-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .adminUrduManagement-title {
+    font-size: 20px;
+  }
+
+  .adminUrduManagement-button {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .adminUrduManagement-input,
+  .adminUrduManagement-select,
+  .adminUrduManagement-textarea {
+    font-size: 12px;
+    padding: 6px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* src/components/AdminPanel/NotifyUsers.css */
+
+/* Container & Titles */
+.adminNotifyUsers-container {
+  padding: 20px;
+  background-color: #1e2226ff; /* Secondary dark background */
+  color: #ffffff;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.adminNotifyUsers-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ef8307; /* Primary orange */
+  font-size: 24px;
+}
+
+/* Error Message */
+.adminNotifyUsers-error {
+  text-align: center;
+  padding: 10px;
+  background-color: #dc3545; /* Bootstrap Danger */
+  border-radius: 4px;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+/* Form Styling */
+.adminNotifyUsers-form {
+  background-color: #2b343bff; /* Card background */
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.adminNotifyUsers-form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.adminNotifyUsers-form-group label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+
+/* Inputs, Selects & Textarea Styles */
+.adminNotifyUsers-input,
+.adminNotifyUsers-select,
+.adminNotifyUsers-textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444444ff;
+  border-radius: 4px;
+  background-color: #1e272eff;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.adminNotifyUsers-input:focus,
+.adminNotifyUsers-select:focus,
+.adminNotifyUsers-textarea:focus {
+  outline: none;
+  border-color: #ef8307;
+  box-shadow: 0 0 5px rgba(239, 131, 7, 0.5);
+}
+
+.adminNotifyUsers-textarea {
+  resize: vertical;
+}
+
+/* Buttons */
+.adminNotifyUsers-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+.adminNotifyUsers-button:hover {
+  opacity: 0.9;
+}
+
+/* Send Button Color */
+.adminNotifyUsers-button.send {
+  background-color: #28a745; /* Bootstrap Success */
+}
+
+/* Disabled Button */
+.adminNotifyUsers-button:disabled {
+  background-color: #6c757d; /* Bootstrap Secondary */
+  cursor: not-allowed;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .adminNotifyUsers-title {
+    font-size: 20px;
+  }
+
+  .adminNotifyUsers-button {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .adminNotifyUsers-input,
+  .adminNotifyUsers-select,
+  .adminNotifyUsers-textarea {
+    font-size: 12px;
+    padding: 6px;
+  }
 }

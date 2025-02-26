@@ -31,6 +31,10 @@ const chapterSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  summary: {
+     type: String, 
+     default: '' 
+    },
   updatedAt: {
     type: Date,
     default: Date.now,

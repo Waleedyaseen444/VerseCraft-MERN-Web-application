@@ -15,9 +15,8 @@ function Sidebar({ chapters, addChapter, handleChapterClick }) {
     const id = chapter.title.replace(/\s+/g, '');
     return (
       <li key={chapter._id} onClick={() => handleChapterClick(index)}>
-        <a href={`#${id}`}>
-          {chapter.title}
-        </a>
+        <a href={`#${id}`}>{chapter.title}</a>
+        <span className="chapter-text">{chapter.title}</span>
       </li>
     );
   };
@@ -25,7 +24,6 @@ function Sidebar({ chapters, addChapter, handleChapterClick }) {
   return (
     <div className="novelside-sidebar">
       <h3>Chapters</h3>
-
       <div className="novelside-add-chapter">
         <input
           type="text"
@@ -40,6 +38,7 @@ function Sidebar({ chapters, addChapter, handleChapterClick }) {
 
       <ul>
         {chapters.map((chapter, index) => renderChapter(chapter, index))}
+        
       </ul>
     </div>
   );

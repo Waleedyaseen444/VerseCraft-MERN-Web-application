@@ -1,19 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import './homepage.css'; 
-import profileIcon from '../Images/generic-user-profile-picture.png';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
-import journalIcon from '../Images/journal.png';
 import featuredImage1 from '../Images/rectangle_92.png'; 
 import featuredImage2 from '../Images/rectangle_92.png'; 
 import featuredImage3 from '../Images/rectangle_92.png'; 
-import logoIcon from '../Images/Logo-V.png';
-import botIcon from "../Images/Bot.png";
+import createIcon from "../Images/create-item.png";
+import Header from '../Header/header';
+import Footer from '../footer/footer';
+import profileIcon from '../Images/generic-user-profile-picture.png';
+import coverpic from '../Images/cover01.jpg'
+import ad from '../Images/ad01.png';
+import ad02 from '../Images/ad02.png';
 import axios from 'axios'; // Ensure axios is imported
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+  Box,
+} from '@mui/material';
+
+import { IconButton } from "@mui/material";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import challengeImage from "../Images/challenge.png";
+
+
 
 const Homepage = () => {
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [animationPaused, setAnimationPaused] = useState(false);
   const [animationClass, setAnimationClass] = useState('sliding-in');
@@ -23,9 +43,74 @@ const Homepage = () => {
   //const [projectType, setProjectType] = useState('Storyboard'); // Default to Storyboard
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]); // State to hold user projects
+  const [Collabprojects, setCollabProjects] = useState([]); // State to hold user projects
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projectName, setProjectName] = useState('');
   const [projectType, setProjectType] = useState('Storyboard'); // Default to Storyboard
+
+ // Combine fetch functions into one for efficiency
+ const fetchProjects = async (email) => {
+  try {
+    const [storiesResponse, novelsResponse, urduResponse, collabStories, collabNovels, collabUrdu] = await Promise.all([
+      axios.get(`http://localhost:5001/api/stories/user/${email}`),
+      axios.get(`http://localhost:5001/api/novels/user/${email}`),
+      axios.get(`http://localhost:5001/api/urdu/user/${email}`),
+      axios.get(`http://localhost:5001/api/stories/collaborator/${email}`), // Collab stories
+      axios.get(`http://localhost:5001/api/novels/collaborator/${email}`), // Collab novels
+      axios.get(`http://localhost:5001/api/urdu/collaborator/${email}`) // Collab urdu
+
+    ]);
+
+    const combinedProjects = [
+      ...storiesResponse.data.map(project => ({ ...project, projectType: 'Storyboard' })),
+      ...novelsResponse.data.map(project => ({ ...project, projectType: 'Novelboard' })),
+      ...urduResponse.data.map(project => ({ ...project, projectType: 'Urduboard' })),
+    ];
+
+    const combinedCollabProjects = [
+      ...collabStories.data.map(project => ({ ...project, projectType: 'Storyboard' })),
+      ...collabNovels.data.map(project => ({ ...project, projectType: 'Novelboard' })),
+      ...collabUrdu.data.map(project => ({ ...project, projectType: 'Urduboard' })),
+    ];
+
+    setProjects(combinedProjects);
+    setCollabProjects(combinedCollabProjects);
+
+  } catch (err) {
+    console.error('Failed to load projects:', err);
+  }
+};
+  const scrollContainerRef = useRef(null);
+  const itemRef = useRef(null);
+  const [itemWidth, setItemWidth] = useState(300); // Default width per item
+
+  // Calculate item width on mount
+  useEffect(() => {
+      if (itemRef.current) {
+          setItemWidth(itemRef.current.offsetWidth); // Get the real width of an item
+      }
+  }, []);
+
+  // Scroll Left Function (3 items at a time)
+  const scrollLeft = () => {
+      if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollBy({
+              left: -itemWidth * 3, // Move by 3 items
+              behavior: "smooth"
+          });
+      }
+  };
+
+  // Scroll Right Function (3 items at a time)
+  const scrollRight = () => {
+      if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollBy({
+              left: itemWidth * 3, // Move by 3 items
+              behavior: "smooth"
+          });
+      }
+  };
 
 
 
@@ -44,7 +129,13 @@ const Homepage = () => {
       });
 
       setUser(response.data);
+      // if(user.fullname =='admin'){
+      //   navigate('Admin');
+      // }
+      
       fetchUserProjects(response.data.email); // Fetch user projects
+      fetchUserCollabProjects(response.data.email); // Fetch user projects
+
     } catch (err) {
       console.error(err);
       setError('Failed to load user data');
@@ -52,6 +143,8 @@ const Homepage = () => {
       setLoading(false);
     }
   };
+
+  
 
   const fetchUserProjects = async (email) => {
     try {
@@ -74,6 +167,32 @@ const Homepage = () => {
   };
   
 
+
+  const fetchUserCollabProjects = async (email) => {
+    try {
+      // Fetch stories, novels, and Urdu projects where the user is a collaborator
+      const [storiesResponse, novelsResponse, urduResponse] = await Promise.all([
+        axios.get(`http://localhost:5001/api/stories/collaborator/${email}`),
+        axios.get(`http://localhost:5001/api/novels/collaborator/${email}`),
+        axios.get(`http://localhost:5001/api/urdu/collaborator/${email}`)
+      ]);
+  
+      // Combine the projects, adding a projectType to distinguish them
+      const combinedCollabProjects = [
+        ...storiesResponse.data.map(project => ({ ...project, projectType: 'Storyboard' })),
+        ...novelsResponse.data.map(project => ({ ...project, projectType: 'Novelboard' })),
+        ...urduResponse.data.map(project => ({ ...project, projectType: 'Urduboard' }))
+      ];
+  
+      // Update state with the merged list
+      setCollabProjects(combinedCollabProjects);
+    } catch (err) {
+      console.error('Failed to load projects:', err);
+    }
+  };
+  
+
+
   fetchUserData();
 }, [navigate]);
 
@@ -87,52 +206,62 @@ const handleItemClick = (projectId, projectType) => {
   }
 };
 
-  
-  const handleHomepageClick = () => {
-    navigate('/Homepage'); // Assuming your profile page route is '/profile'
-  };
-
-  const handleProjectsClick = () => {
-    navigate('/Saved'); // Assuming your profile page route is '/profile'
-  };
-
-  const handleFavoriteClick = () => {
-    navigate('/Favorite'); 
-  };
-
-  const handleChatbotClick = () => {
-    navigate('/Chatbot'); 
-  };
-
-
-  const handleNotificationClick = () => {
-    navigate('/Notification'); // Assuming your profile page route is '/profile'
-  };
-
-  const handleSettingClick = () => {
-    navigate('/Setting'); // Assuming your profile page route is '/profile'
-  };
-
-  const handleProfileClick = () => {
-    navigate('/Profile'); // Assuming your profile page route is '/profile'
-  };
-
 
   const handleVersionClick = () => {
     navigate('/Version'); 
   };
 
+ 
+
   const featuredWorks = [
-    { title: 'Featured Work 1', imageUrl: featuredImage1 },
-    { title: 'Featured Work 2', imageUrl: featuredImage2 },
-    { title: 'Featured Work 3', imageUrl: featuredImage3 },
-    { title: 'Featured Work 4', imageUrl: featuredImage1 },
-    { title: 'Featured Work 5', imageUrl: featuredImage2 },
-    { title: 'Featured Work 6', imageUrl: featuredImage3 },
-    { title: 'Featured Work 7', imageUrl: featuredImage1 },
-    { title: 'Featured Work 8', imageUrl: featuredImage2 },
-    { title: 'Featured Work 9', imageUrl: featuredImage3 },
+    {
+      id: 1,
+      title: "Tale of Two: Beginning",
+      genre: "Fiction",
+      rating: "★★★★☆",
+      pages: 350,
+      author: "John Doe",
+      coverImage: coverpic,
+      summary: "A thrilling tale of mystery and adventure, following a detective solving a complex case.",
+      longSummary: "In a world of intrigue, Detective Alex must navigate through lies and deception to uncover a hidden truth that could change everything.",
+    },
+    {
+      id: 2,
+      title: "The Pharaoh’s Plague",
+      genre: "Fiction",
+      rating: "★★★★☆",
+      pages: 420,
+      author: "Sarah King",
+      coverImage: coverpic,
+      summary: "A historical novel exploring the mysteries of ancient Egypt.",
+      longSummary: "A gripping journey through the pyramids and tombs, unraveling a lost civilization's greatest secrets.",
+    },
+    {
+      id: 3,
+      title: "Pulp Fiction",
+      genre: "Crime",
+      rating: "★★★★★",
+      pages: 290,
+      author: "Quentin Blake",
+      coverImage: coverpic,
+      summary: "A stylish crime drama filled with twists and turns.",
+      longSummary: "A web of criminals, hitmen, and a mysterious briefcase makes this a thrilling ride from start to finish.",
+    },
+    {
+      id: 4,
+      title: "Alexandria - The Legacy",
+      genre: "Non-fiction",
+      rating: "★★★☆☆",
+      pages: 310,
+      author: "Emily Carter",
+      coverImage:coverpic,
+      summary: "A deep dive into the cultural and historical significance of the Library of Alexandria.",
+      longSummary: "Exploring one of the greatest intellectual centers of the ancient world and its enduring impact on modern knowledge.",
+    }
   ];
+  
+
+  
 
   
 
@@ -142,7 +271,7 @@ const handleItemClick = (projectId, projectType) => {
       if (!animationPaused) { // Only change index if animation is not paused
         setCurrentIndex((prevIndex) => (prevIndex + 1) % featuredWorks.length);
       }
-    }, 1000); // Change slide every second
+    }, 2000); // Change slide every second
 
     return () => clearInterval(interval);
   }, [featuredWorks.length, animationPaused]); // Dependency on animationPaused
@@ -158,7 +287,7 @@ const handleItemClick = (projectId, projectType) => {
         void itemsContainer.offsetHeight; // Trigger reflow
         itemsContainer.classList.add(animationClass); // Add it back to trigger animation
       }
-    }, 20000); // Duration of the slide animation
+    }, 30000); // Duration of the slide animation
 
     return () => clearInterval(intervalId);
   }, [animationClass]);
@@ -176,41 +305,31 @@ const handleItemClick = (projectId, projectType) => {
   };
 
 
-  
-  const [particlesArray, setParticlesArray] = useState([]);
+  const [hoveredWork, setHoveredWork] = useState(null);
+const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
-  useEffect(() => {
-    generateParticles();
+const handlefeatureMouseEnter = (e, work) => {
+  const target = e?.currentTarget;
+  if (!target) return; // Ensure target exists
 
-    // Interval to generate new particles after the previous set has finished moving
-    const interval = setInterval(() => {
-      generateParticles();
-    }, 10000); // Match the duration of the particle animation (10s)
+  const rect = target.getBoundingClientRect();
+  setHoveredWork(work);
+  setModalPosition({
+    top: rect.top + window.scrollY -50,
+    left: rect.left + window.scrollX+300,
+    width: rect.width,
+  });
+};
 
-    return () => clearInterval(interval);
-  }, []);
 
-  const generateParticles = () => {
-    const newParticles = Array.from({ length: 80 }).map((_, index) => (
-      <div
-        key={index}
-        className="homepage-particle"
-        style={{
-          left: `${Math.random() * 100}%`,
-          animationDelay: `${index * 0.5}s`, // Uniform incremental delay for smoother particle generation
-        }}
-      ></div>
-    ));
-    setParticlesArray(newParticles);
-  };
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+const handlefeatureMouseLeave = () => {
+  setHoveredWork(null);
+};
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar state
-  };
 
- 
+
+
 
 
     // Initial list of tasks as an array of objects
@@ -232,13 +351,9 @@ const handleItemClick = (projectId, projectType) => {
     setNewTask(''); // Clear input field
   };
 
-  // Function to handle task completion
-  const toggleTaskCompletion = (taskId) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
-    );
+  const handleTaskCompletion = (taskId) => {
+    // Filter out the completed task
+    setTasks(tasks.filter((task) => task.id !== taskId));
   };
   
 
@@ -293,255 +408,528 @@ const handleItemClick = (projectId, projectType) => {
         headers: { 'x-auth-token': token },
       });
   
+
+
       alert('Project created successfully!');
       setIsModalOpen(false); // Close the modal after creation
+      fetchProjects(user.email); // Refresh
       navigate('/Homepage'); // Redirect to projects page
     } catch (error) {
       console.error('Error creating project:', error);
       alert('Failed to create project');
     }
   };
-  
+
+  const images = [
+    ad ,ad02,ad ,ad02,ad
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Auto-slide every 3 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+  const prevImage = () => {
+    setIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+  };
+
+  const nextImage = () => {
+    setIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
 
 
   return (
+
     <div className="homepage-container">
-      <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img src={logoIcon} alt="Menu" className="homepage-menu-icon"  />
-          <div className="homepage-app-title" onClick={handleHomepageClick} >VerseCraft</div>
-          <nav>
-            <ul>
-            <li className="homepage-Plot" onClick={handleProjectsClick}>
-                <img src={journalIcon} alt="Character" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick}>
-                <img src={favIcon} alt="Character" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              <li className="homepage-Published" onClick={handleNotificationClick} >
-                <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick} >
-                <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick}>
-                  <img
-                           src={user?.profileImage ? `http://localhost:5001/${user.profileImage}` : profileIcon}
-                           alt="Profile"
-                           className="homepage-profile-icon"
-                       />
-                             <span>{user ? user.fullname : 'Guest'}</span>
-              </li>
-            </ul>
-          </nav>
-        </header>
+
+      <Header />
+
+
+      {/* Dashboard Html code*/}
+      <div className="homepage-dashboard">
+
+        <div className="homepage-row-one">
+
+       
+
+        <div className="homepage-welcome-section">
+          
+          <div style={{display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
+            <div className="homepage-welcome-text">Welcome back, {user ? user.fullname : 'Guest'}</div>
+            {/*Homepage create a new work*/}
+            <div className="hompage-create-new-work-container">
+              <div className="homepage-new-project">
+                <button
+                  className="homepagecreate-new-work-button"
+                  onClick={handleCreateNewClick}
+                >
+                  <img src={createIcon} alt="Create New Item" className="create-icon" />
+                  Create Manuscript
+                </button>
+              </div>
+                {/* Modal */}
+                <Dialog open={isModalOpen} onClose={handleModalClose} fullWidth maxWidth="sm">
+                  <DialogTitle>Create New Project</DialogTitle>
+                    <form onSubmit={handleSubmit}>
+                      <DialogContent>
+                        <Box mb={2}>
+                          <TextField
+                            label="Name your project"
+                            variant="outlined"
+                            fullWidth
+                            id="projectName"
+                            value={projectName}
+                            onChange={(e) => setProjectName(e.target.value)}
+                            required
+                          />
+                        </Box>
+                        <Box mb={2}>
+                          <FormControl variant="outlined" fullWidth required>
+                            <InputLabel id="projectType-label">Project Type</InputLabel>
+                            <Select
+                              labelId="projectType-label"
+                              id="projectType"
+                              value={projectType}
+                              onChange={(e) => setProjectType(e.target.value)}
+                              label="Project Type"
+                            >
+                              <MenuItem value="">
+                                <em>Select Project Type</em>
+                              </MenuItem>
+                              <MenuItem value="Novelboard">Novelboard</MenuItem>
+                              <MenuItem value="Storyboard">Storyboard</MenuItem>
+                              <MenuItem value="Urduboard">Urduboard</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Box>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button type="submit" variant="contained" color="primary">
+                          Create Project
+                        </Button>
+                        <Button onClick={handleModalClose} variant="outlined" color="secondary">
+                          Cancel
+                        </Button>
+                    </DialogActions>
+                  </form>
+                </Dialog>
+            </div>
+          </div>
+        </div>
+
+      
+        <div className="carousel-container">
+      {/* Image Wrapper */}
+      <div className="carousel-track" style={{ transform: `translateX(-${index * 100}%)` }}>
+        {images.map((img, i) => (
+          <img key={i} src={img} alt={`Slide ${i + 1}`} className="carousel-image" />
+        ))}
       </div>
 
+      {/* Navigation Buttons */}
+      <button className="carousel-button left" onClick={prevImage}>‹</button>
+      <button className="carousel-button right" onClick={nextImage}>›</button>
 
+      {/* Indicator Dots */}
+      <div className="carousel-indicators">
+        {images.map((_, i) => (
+          <span
+            key={i}
+            className={`dot ${i === index ? "active" : ""}`}
+            onClick={() => setIndex(i)}
+          ></span>
+        ))}
+      </div>
+    </div>
+        
 
-
-      <div className="homepage-dashboard">
-        <div className="homepage-banner">
-          <div className="homepage-banner-text">Write - Create - Inspire</div>
-          {particlesArray}
          
         </div>
 
-        <div className="homepage-searchbar">
-              <input
-                type="text"
-                placeholder="Search works..."
-                className="hompage-search-input"
-              />
-              
+       
+       
+       
+        <div className="homepage-projects-container">
+        
+        <div className="homepage-recent-projects-title">Continue from where you left of</div>
+        <div className="homepage-my-projects-recent">
+          <div className="homepage-my-projects-add-project-text" onClick={handleVersionClick}>View All</div>
+          <div style={{display:'flex', flexDirection:'row'}}>
+          {projects.length > 4 && (
+          <IconButton 
+          onClick={scrollLeft} 
+          sx={{
+              position: "absolute", // Ensure it stays in place
+              left: 0, // Align with the left edge
+              transform: "translateY(-50%)",
+              backgroundColor: "white",
+              mt: "6.5%",
+              ml:"0.4%",
+              zIndex: 100,
+              color: "black",
+              boxShadow: "0px 4px 10px rgba(24, 24, 26, 0.3)", // Increase opacity slightly
+              "&:hover": {
+                  backgroundColor: "rgba(234, 236, 240)",
+              },
+              "&::after": { // Creates a subtle overlay behind the button
+                  content: '""',
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(255, 255, 255, 0.6)", // Light white overlay
+                  borderRadius: "50%",
+                  zIndex: -1, // Place it behind the button
+                  boxShadow: "0px 2px 6px rgba(24, 24, 26, 0.3)", // Persistent shadow
+              },
+              width: 50, 
+              height: 50,
+              borderRadius: "50%",
+              transition: "all 0.3s ease-in-out"
+          }}
+      >
+          <ArrowBackIos sx={{ fontSize: 30, color: "black", alignSelf: "center", ml: "30%" }} />
+      </IconButton>
+      
+          )}
+
+            <div
+                className="homepage-my-projects-container" ref={scrollContainerRef}
+            >
+                {projects.length > 0 ? (
+                    projects.map((project) => (
+                        <div
+                            key={project._id}
+                            className="homepage-my-projects-item"
+                           
+                            onClick={() => handleItemClick(project._id, project.projectType)}
+                            
+                        >
+                          <div className="homepage-my-project-item-detail-container">
+                              <div style={{width:'35%'  }}>
+                              <img src={coverpic} alt="Project Cover" className="homepage-my-project-item-cover"/>
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column' ,width:'65%' ,height:'100%'}}>
+                                  <div className="homepage-my-project-item-detail-container-header">
+                                    <div className="homepage-my-projects-item-name">
+                                        {project.title || 'Untitled Project'} 
+                                    </div>
+                                    <div className="homepage-my-project-item-type">S</div>
+                                  </div>
+                                  <div className="homepage-my-project-item-summary">In a post pocalyptic Hyrule, Link awakens from a deep sleep with no memory of his past. Guided by a mysterious voice, he sets out to defeat Calamity Ganon, who has destroyed the kingdom and imprisoned Princess Zelda.</div>
+                                <div className="homepage-my-project-item-author"> Auther: 
+                                  <div className="homepage-my-project-item-auther-name"> {user ? user.fullname : 'Guest'}</div>
+                                </div>
+                              </div>
+                          </div>
+
+                          
+                        </div>
+                       
+                    ))
+                ) : (
+                    <div className="homepage-no-own-projects-text-msg">No Projects Found 
+                     
+                    </div>
+                    
+                )}
+            </div>
+            {projects.length > 4 && (
+            <IconButton 
+            onClick={scrollRight} 
+            sx={{
+                position: "absolute",
+                right: 0, // Align with the right edge
+                transform: "translateY(-50%)",
+                backgroundColor: "white",
+                mr:"0.2%",
+                mt: "6.5%",
+                zIndex: 100,
+                color: "black",
+                boxShadow: "0px 4px 10px rgba(24, 24, 26, 0.3)", // Increased opacity slightly
+                "&:hover": {
+                    backgroundColor: "rgba(234, 236, 240)",
+                },
+                "&::after": { // Creates a subtle overlay behind the button
+                    content: '""',
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    
+                    width: "100%",
+                    height: "100%",
+                    background: "rgba(255, 255, 255, 0.6)", // Light white overlay
+                    borderRadius: "50%",
+                    zIndex: -1, // Place it behind the button
+                    boxShadow: "0px 2px 6px rgba(24, 24, 26, 0.3)", // Persistent shadow
+                },
+                width: 50, 
+                height: 50,
+                borderRadius: "50%",
+                transition: "all 0.3s ease-in-out"
+            }}
+        >
+            <ArrowForwardIos sx={{ fontSize: 30, color: "black", alignSelf: "center", ml: "15%" }} />
+        </IconButton>
+        
+            )}
+            </div>
+        </div>
+        
+        <div className="homepage-recent-projects-title" style={{marginBottom:'2%', marginTop:'1%'}}>Recent Collaborations</div>
+        <div className="homepage-my-projects-collab">
+        
+          <div className="homepage-my-projects-view-collab" onClick={handleVersionClick}>View All</div>
+          <div style={{display:'flex', flexDirection:'row'}}>
+          {projects.length > 4 && (
+          <IconButton 
+          onClick={scrollLeft} 
+          sx={{
+              position: "absolute", // Ensure it stays in place
+              left: 0, // Align with the left edge
+              transform: "translateY(-50%)",
+              backgroundColor: "white",
+              mt: "6.5%",
+              ml:"0.4%",
+              zIndex: 100,
+              color: "black",
+              boxShadow: "0px 4px 10px rgba(24, 24, 26, 0.3)", // Increase opacity slightly
+              "&:hover": {
+                  backgroundColor: "rgba(234, 236, 240)",
+              },
+              "&::after": { // Creates a subtle overlay behind the button
+                  content: '""',
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  width: "100%",
+                  height: "100%",
+                  background: "rgba(255, 255, 255, 0.6)", // Light white overlay
+                  borderRadius: "50%",
+                  zIndex: -1, // Place it behind the button
+                  boxShadow: "0px 2px 6px rgba(24, 24, 26, 0.3)", // Persistent shadow
+              },
+              width: 50, 
+              height: 50,
+              borderRadius: "50%",
+              transition: "all 0.3s ease-in-out"
+          }}
+      >
+          <ArrowBackIos sx={{ fontSize: 30, color: "black", alignSelf: "center", ml: "30%" }} />
+      </IconButton>
+      
+          )}
+            <div
+                className="homepage-my-projects-container"
+               
+            >
+                {Collabprojects.length > 0 ? (
+                    Collabprojects.map((project) => (
+                        <div
+                            key={project._id}
+                            className="homepage-my-projects-item"
+                            
+                            onClick={() => handleItemClick(project._id, project.projectType)}
+                        >
+                           
+                           <div className="homepage-my-project-item-detail-container">
+                           <div style={{width:'35%'  }}>
+                              <img src={coverpic} alt="Project Cover" className="homepage-my-project-item-cover"/>
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column' ,width:'65%' ,height:'100%'}}>
+                                  <div className="homepage-my-project-item-detail-container-header">
+                                    <div className="homepage-my-projects-item-name">
+                                        {project.title || 'Untitled Project'} 
+                                    </div>
+                                    <div className="homepage-my-project-item-type">S</div>
+                                  </div>
+                                  <div className="homepage-my-project-item-summary">In a post pocalyptic Hyrule, Link awakens from a deep sleep with no memory of his past. Guided by a mysterious voice, he sets out to defeat Calamity Ganon, who has destroyed the kingdom and imprisoned Princess Zelda.</div>
+                                <div className="homepage-my-project-item-author"> Auther: 
+                                  <div className="homepage-my-project-item-auther-name"> {user ? user.fullname : 'Guest'}</div>
+                                </div>
+                              </div>
+
+                          </div>
+
+                            
+                        </div>
+                    ))
+                ) : (
+                    <h1 className="homepage-no-collabs">No projects found</h1>
+                )}
             </div>
 
-        <div className="hompage-create-new-work-container">
-          
-          <div className="homepage-new-project">
-            <div className="homepage-new-project-title" >Create a New Project</div>
-            <button className="homepagecreate-new-work-button" onClick={handleCreateNewClick}>
-              Create New
-            </button>
-          </div>
-            {/* Modal */}
-            {isModalOpen && (
-              <div className="homepage-modal-overlay">
-                <div className="homepage-modal-content">
-                  <h3>Create New Project</h3>
-                  <form onSubmit={handleSubmit}>
-                    <div className="homepage-modal-input-group">
-                      <label htmlFor="projectName">Name your project</label>
-                      <input
-                        type="text"
-                        id="projectName"
-                        value={projectName}
-                        onChange={(e) => setProjectName(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className="homepage-modal-input-group">
-                      <label htmlFor="projectType">Project Type</label>
-                      <select
-                        id="projectType"
-                        value={projectType}
-                        onChange={(e) => setProjectType(e.target.value)}
-                        required
-                      >
-                        <option value="">Select Project Type</option>
-                        <option value="Novelboard">Novelboard</option>
-                        <option value="Storyboard">Storyboard</option>
-                        <option value="Urduboard">Urduboard</option>
-                      </select>
-                    </div>
-
-                    <button type="submit" className="homepage-modal-submit-btn">
-                      Create Project
-                    </button>
-                    <button
-                      type="button"
-                      className="homepage-modal-close-btn"
-                      onClick={handleModalClose}
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                </div>
-              </div>
-            )}
-        </div>
-
-        <div className="homepage-my-projects"> 
-          <div className="homepage-my-projects-title">Recent Projects</div>
-          <div className="homepage-my-projects-add-project" onClick={handleVersionClick}>
-            View All 
-          </div>
-
-
-
-          <div
-  className="homepage-my-projects-container"
-  style={{ display: 'flex', overflowX: 'auto', gap: '10px', padding: '10px' }}
->
-  {projects.length > 0 ? (
-    projects.map((project) => (
-      <div
-        key={project._id}
-        className="homepage-my-projects-item"
-        style={{
-          minWidth: '200px',
-          flexShrink: 0,
-          border: '1px solid #ddd',
-          borderRadius: '8px',
-          overflow: 'hidden',
-        }}
-
-
-        
-        onClick={() => handleItemClick(project._id, project.projectType)}
-
-      >
-        <div
-          className="homepage-my-projects-item-image"
-          style={{
-            backgroundImage: `url(${project.imageUrl || featuredImage3})`,
-            width: '100%',
-            height: '150px',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        ></div>
-        <div
-          className="homepage-my-projects-item-name"
-          style={{
-            textAlign: 'center',
-            padding: '10px 0',
-            backgroundColor: '#f8f8f8',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            borderTop: '1px solid #ddd',
-          }}
+            {projects.length > 4 && (
+            <IconButton 
+            onClick={scrollRight} 
+            sx={{
+                position: "absolute",
+                right: 0, // Align with the right edge
+                transform: "translateY(-50%)",
+                backgroundColor: "white",
+                mr:"0.2%",
+                mt: "6.5%",
+                zIndex: 100,
+                color: "black",
+                boxShadow: "0px 4px 10px rgba(24, 24, 26, 0.3)", // Increased opacity slightly
+                "&:hover": {
+                    backgroundColor: "rgba(234, 236, 240)",
+                },
+                "&::after": { // Creates a subtle overlay behind the button
+                    content: '""',
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    
+                    width: "100%",
+                    height: "100%",
+                    background: "rgba(255, 255, 255, 0.6)", // Light white overlay
+                    borderRadius: "50%",
+                    zIndex: -1, // Place it behind the button
+                    boxShadow: "0px 2px 6px rgba(24, 24, 26, 0.3)", // Persistent shadow
+                },
+                width: 50, 
+                height: 50,
+                borderRadius: "50%",
+                transition: "all 0.3s ease-in-out"
+            }}
         >
-          {project.title || 'Untitled Project'}  {/* Fallback in case title is missing */}
-        </div>
-      </div>
-    ))
-  ) : (
-    <div>No projects found for this user.</div>
-  )}
-</div>
+            <ArrowForwardIos sx={{ fontSize: 30, color: "black", alignSelf: "center", ml: "15%" }} />
+        </IconButton>
+        
+            )}
+           </div>
+
+           </div>
 
 
 
-        </div>
 
-        <div className="homepage-todo-list-container">
-          <div className="homepage-todo-list-container-header">
-            <h2>Your To-Do List</h2>
-          </div>
 
-          <div className="homepage-todo-add-task">
-            <input
-              type="text"
-              value={newTask}
-              onChange={(e) => setNewTask(e.target.value)}
-              placeholder="Add a new task..."
-              className="homepage-todo-input"
-            />
-            <button className="homepage-todo-add-button" onClick={handleAddTask}>Add Task</button>
-          </div>
-          <div className="homepage-todo-task-list">
-            {tasks.map((task) => (
-              <div key={task.id} className="hompage-todo-task-item">
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => toggleTaskCompletion(task.id)}
-                  className="homepage-todo-checkbox"
-                />
-                <label className={`homepage-todo-task-text ${task.completed ? 'completed' : ''}`}>
-                  {task.text}
-                </label>
+
+
+
+           
+        <div className="homepage-featured-projects-title">Featured Works</div>
+        <div className="homepage-featured-works-container"
+         >
+          <div className="homepage-featured-works">
+            
+            <div className="homepage-features-works-items">
+            {featuredWorks.map((work, index) => (
+              <div 
+                key={index} 
+                className="homepage-features-works-image-container"
+                onMouseEnter={(e) => handlefeatureMouseEnter(e,work)}
+                onMouseLeave={handlefeatureMouseLeave}
+              >
+                <div className="homepage-features-works-title">{work.title}</div>
+                <div className="homepage-features-works-details">
+                  <div className="homepage-features-works-genre">Genre: {work.genre}</div>
+                  <div className="homepage-features-works-rating">Rating: {work.rating}</div>
+                  <div className="homepage-features-works-pages">Pages: {work.pages}</div>
+                </div>
+                <div className="homepage-features-works-summary">{work.summary}</div>
               </div>
             ))}
-          </div>
+
+              
+
+          
+        </div>
+        </div>
         </div>
 
+        <div className="homepage-featured-projects-title">Challenges & Writing Contests</div>
+        <div className="homepage-challenges-container" style={{display:'flex', flexDirection:'row'}}>
+          <div className="homepage-challenges-image">
+          <img src={challengeImage} alt="Challenge Banner" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
+          <div style={{display:'flex', flexDirection:'column', width:"50%"}}>
+            <div className='homepage-challenges-heading'> VerseCraft Challenge No.1</div>
+            <div className="homepage-challenges-description">Unleash your creativity in VerseCraft Challenge No.1! Craft a compelling story or poem based on a unique prompt. Compete with fellow writers, showcase your talent, and claim the top spot in this exciting literary challenge!</div>   
+            <div className="homepage-challenge-start-button">Compete Now</div>
+          </div>       
+
+        </div>
         
 
-
-        <div className="homepage-featured-works-container">
-          
+        <div className="homepage-featured-projects-title">Trending & Popular Stories:</div>
+        <div className="homepage-featured-works-container" style={{marginBottom:"100px" ,     background: "linear-gradient(to right, #9b00e8, #00c896, #1e90ff)"}}>
           <div className="homepage-featured-works">
-            <p className="homepage-featured-works-heading">Featured Works</p>
+            
             <div className="homepage-features-works-items">
               <div className="homepage-features-works-image-container">
-                <div
-                  className="homepage-features-works-images"
-                  style={{ backgroundImage: `url(${featuredImage1})` }}
-                ></div>
-                <div className="homepage-features-works-title">Featured Work 1</div>
+                <div className="homepage-features-works-title">Starting Nexus</div>
+                <div className="homepage-features-works-details">
+                  <div className="homepage-features-works-genre">Genre: Fiction</div>
+                  <div className="homepage-features-works-rating">Rating: ★★★★☆</div>
+                  <div className="homepage-features-works-pages">Pages: 350</div>
+                </div>
+                <div className="homepage-features-works-summary">
+                  A thrilling tale of mystery and adventure, following a detective solving a complex case.
+                </div>
               </div>
               <div className="homepage-features-works-image-container">
-                <div
-                  className="homepage-features-works-images"
-                  style={{ backgroundImage: `url(${featuredImage2})` }}
-                ></div>
-                <div className="homepage-features-works-title">Featured Work 2</div>
+                <div className="homepage-features-works-title">Trading Lives</div>
+                <div className="homepage-features-works-details">
+                  <div className="homepage-features-works-genre">Genre: Non-fiction</div>
+                  <div className="homepage-features-works-rating">Rating: ★★★☆☆</div>
+                  <div className="homepage-features-works-pages">Pages: 200</div>
+                </div>
+                <div className="homepage-features-works-summary">
+                  An insightful exploration of history, focusing on the key events of the 20th century.
+                </div>
+              </div>
+              <div className="homepage-features-works-image-container">
+                <div className="homepage-features-works-title">Lionel Messi- The Goat</div>
+                <div className="homepage-features-works-details">
+                  <div className="homepage-features-works-genre">Genre: Non-fiction</div>
+                  <div className="homepage-features-works-rating">Rating: ★★★☆☆</div>
+                  <div className="homepage-features-works-pages">Pages: 200</div>
+                </div>
+                <div className="homepage-features-works-summary">
+                  An insightful exploration of history, focusing on the key events of the 20th century.
+                </div>
+              </div>
+              <div className="homepage-features-works-image-container">
+                <div className="homepage-features-works-title">Beyond time</div>
+                <div className="homepage-features-works-details">
+                  <div className="homepage-features-works-genre">Genre: Non-fiction</div>
+                  <div className="homepage-features-works-rating">Rating: ★★★☆☆</div>
+                  <div className="homepage-features-works-pages">Pages: 200</div>
+                </div>
+                <div className="homepage-features-works-summary">
+                  An insightful exploration of history, focusing on the key events of the 20th century.
+                </div>
               </div>
             </div>
           </div>
         </div>
+   </div>
+      <Footer/>
       </div>
+      {hoveredWork && (
+                <div 
+                  className="hover-modal" 
+                  style={{ top: modalPosition.top, left: modalPosition.left }}
+                >
+                  <img src={hoveredWork.coverImage} alt={hoveredWork.title} className="hover-modal-image" style={{height:"100px"}}/>
+                  <div className="hover-modal-content">
+                    <h2>{hoveredWork.title}</h2>
+                    <p><strong>Author:</strong> {hoveredWork.author}</p>
+                    <p><strong>Rating:</strong> {hoveredWork.rating}</p>
+                    <p><strong>Summary:</strong> {hoveredWork.longSummary}</p>
+                  </div>
+                </div>
+              )}
+
     </div>
   );
 };

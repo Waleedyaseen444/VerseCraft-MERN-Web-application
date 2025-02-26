@@ -5,11 +5,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Novel = require('../models/Novel');
 
-// Middleware for admin authentication (disabled for now)
-// const adminAuth = require('../middleware/adminAuth');
 
-// Apply admin authentication middleware to all routes (disabled for now)
-// router.use(adminAuth);
 
 // Get all users
 router.get('/users', async (req, res) => {

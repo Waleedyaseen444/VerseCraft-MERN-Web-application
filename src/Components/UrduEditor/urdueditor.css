@@ -6,11 +6,12 @@
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background-color:hsl(0, 0%, 96%);
+  background-color:white;
   width: 100%;
 
   
 }
+
 
 
 
@@ -34,7 +35,7 @@
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  margin-left:40px ;
+ 
 }
 
 .urdu-theme::after,
@@ -106,12 +107,16 @@
 
                                                   /* Urdu Editor Toolbar */
 .urdu-toolbar {
-  height: 60px;
+  height: 50px;
   background: linear-gradient(45deg, #F0F0F0, #FFFFFF, #F0F0F0);
-  border-top: 3px solid ,#ff7043; /* Bold separator */
+  border: 1px solid ,#191B30; /* Bold separator */
+  border-bottom: none;
   padding: 5px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  margin-left: 45px;
+  margin-left: 90px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-right: 10px;
+
   
 }
 
@@ -124,19 +129,26 @@
 
 .urdu-toolbar-container{
   position: absolute;
-  margin-left: 560px;
+  margin-left: 500px;
   display: flex;
+  margin-top: 5px;
+  height: 50px;
+  z-index: 10;
+  
 }
 
-.urdu-toolbar-container .urdu-toolbar-btn {
-  margin-right: 8px;
-  margin-top: -30px;
+.urdu-toolbar-btn {
+  margin-right: 8px !important;
   border-radius: 3px;
-  border: 1px solid,#191B30;
-  background-color: #191B30;
+  border: 1px solid,#191B30 !important;
+  background-color: #191B30 !important;
   color:white;
   transition: transform 0.3s ease, background-color 0.3s ease;
   padding: 8px;
+  z-index: 11;
+  width: 45px;
+  height: 45px;
+
 }
 
 .urdu-toolbar-btn:hover {
@@ -157,7 +169,7 @@
   width: 100px; 
   height: 40px; 
   font-size: 14px; 
-  top: 55px;
+  margin-left: 40px;
   background: transparent; 
   border: none; 
   color: #f0f0f0; 
@@ -223,34 +235,45 @@
 
                                                   /* Main Urdu Editor Area */
 .urdu-editor-panel {
-  background: linear-gradient(45deg, #F0F0F0, #FFFFFF, #F0F0F0);
+  background: #fefefe;
   padding: 10px;
-  margin-top:10px;
-  margin-left:10px;
-  border-radius: 10px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  margin-top:0px;
+  margin: 0px;
   width:100%;
+  border: 1px solid #191B30;
   
   
 }
 
-.urdu-editor-panel h2 {
-  color:#191B30;
-  text-align: center;
-  font-size: 18px;
-  margin-bottom: 10px;
-  font-family: "Kanit",sans-serif;
-  font-weight: bold;
-}
+
 
 .urdu-editor-area {
   border: 2px solid #191B30; /* Darker border to define text area */
   border-radius: 10px;
-  background-color:whitesmoke; /* Light, soothing yellow */
+  background-color: whitesmoke; /* Light, soothing yellow */
   padding: 15px;
-  height: 284px;
+  height: 200px;
   overflow-y: auto;
   transition: all 0.3s ease;
+}
+
+.urdu-editor-area::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.urdu-editor-area::-webkit-scrollbar-thumb {
+  background-color: #191B30;
+  border-radius: 10px;
+}
+
+.urdu-editor-area::-webkit-scrollbar-thumb:hover {
+  background-color: #111;
+}
+
+.urdu-editor-area::-webkit-scrollbar-track {
+  background-color: whitesmoke;
+  border-radius: 10px;
 }
 
 .urdu-editor-area textarea {
@@ -275,18 +298,17 @@
 
                                       /* Right Panel (Goals, Streaks, Notes) */
 .urdu-right-panel {                           
-  width: 300px;
+  width: 15% !important;
   padding: 10px;
-  max-width: 300px;
-  background-color: #191B30; 
-  border-left: 4px solid #ff6d00; 
-  margin-left: 10px;
+  background-color: #f9f6f2; 
+  border-left: 1px solid #b89981; 
+ 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 
 .urdu-right-panel h4 {
-  color:white;
+  color:black;
   font-size: 18px;
   margin-bottom: 10px;
   font-family: "kanit",sans-serif;
@@ -294,12 +316,12 @@
 }
 
 .urdu-right-panel h5 {
-  color: whitesmoke;
+  color: black;
   font-size: 18px;
 }
 
 .urdu-right-panel .goal-tracker {
-  background-color:#ff7043;
+  background-color:#191B30;
   padding: 15px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -740,18 +762,20 @@ h5 {
 
 
 .word-count {
-
-  color: #333;
-  margin-left: 1300px;
-  margin-top:-25px;
-  font-size: 25px;
+  position: absolute;
+  left: 1300px;
+  color: #191B30;
+  font-size: 20px;
+  font-weight: 300;
 }
 
 /* Main Content Styles */
 .urdu-main-content {
   display: flex;
   flex: 1;
- 
+  margin-left: 90px;
+  margin-right: 10px;
+  border: 1px solid #766250;
 
  
 }
@@ -762,6 +786,8 @@ h5 {
     margin-left: 0;
     margin-right: 0;
     padding: 20px;
+  
+    
   }
 
 
@@ -770,24 +796,33 @@ h5 {
     width: 100%;
     border: none;
     position: static;
+  
   }
 
+
   .urdu-toggle-left-panel {
-    margin: 10px;
+    margin: 0px
   }
 }
 
 .urdu-left-panel {
   width: 300px;
-  background-color: #fff;
+  background-color: #e1dbd6;
   border-right: 1px solid #ddd;
-  padding: 20px;
+  padding: 10px;
   overflow-y: auto;
-  margin-left: 50px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #a18e75;
+  justify-content: flex-start;
+  
+  
 }
 
 .urdu-left-panel h4 {
   margin-bottom: 10px;
+  margin-top: 0px;
+
 }
 
 .urdu-chapter-btn {
@@ -814,7 +849,7 @@ h5 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f8f9fa;
+  background-color: white;
   padding: 8px;
   border-radius: 4px;
   margin-bottom: 5px;
@@ -833,14 +868,15 @@ h5 {
 }
 
 .urdu-toggle-left-panel {
-  background-color: #191B30;
-  color: white;
+  background-color: #a18e75;
+  color: #191B30;
   border: none;
   padding: 8px;
   cursor: pointer;
-  border-radius: 4px;
-  margin: 20px 10px 0 10px;
+  margin: 0px;
+  border-radius: 0px;
   transition: background-color 0.2s ease;
+  z-index: 10px;
 }
 
 .urdu-toggle-left-panel:hover {
@@ -850,16 +886,6 @@ h5 {
 
 
 
-.urdu-toggle-left-panel{
-  background-color: #191B30;
-  border: none;
-  align-items: center;
-  padding:3px;
-  margin-left: 50px;
-  width: 20px;
-  height: 100vh;
-  
-}
 
 
 .urdu-toggle-left-panel:hover{
@@ -984,10 +1010,11 @@ h5 {
   justify-content: center;
   color: white;
   font-weight: bold;
+  text-align: center !important;
 }
 
 .urdu-btn {
-  background-color: #17a2b8;
+  background-color: #191B30;
   color: white;
   border: none;
   border-radius: 4px;
@@ -1019,6 +1046,23 @@ h5 {
 
 .urdu-notes-section::-webkit-scrollbar-thumb {
   background: transparent;
+}
+
+.urdu-save-note-button{
+  background-color: #191B30;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+  border: 1px solid black;
+
+}
+
+.urdu-save-note-button:hover{
+  background-color: white;
+  color:black;
 }
 
 .urdu-note-box {

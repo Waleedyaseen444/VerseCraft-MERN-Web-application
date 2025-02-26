@@ -1,7 +1,24 @@
+
 import React, { useState } from 'react';
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Box,
+  Alert,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './signup.css';
+import Lottie from 'react-lottie';
+import signupAnimationData from '../Images/signup-animation.json'; // Optional: Add a signup animation
+import joinAnimation from "../Images/join-animation.json"
+import logo from "../Images/Logo-V.png"
+import './signup.css'; // Import the CSS file
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +35,7 @@ const Signup = () => {
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   // Handle input changes for form fields
   const handleChange = (e) => {
@@ -27,6 +45,11 @@ const Signup = () => {
       [name]: type === 'file' ? files[0] : value,
     }));
   };
+
+    // Capitalize the first letter of a string
+    const capitalizeFirstLetter = (string) => {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    };
 
   const validateForm = () => {
     const formErrors = {};
@@ -80,144 +103,341 @@ const Signup = () => {
     }
   };
 
+  
+  // Lottie animation options (optional)
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: signupAnimationData, // Optional: Add a signup animation JSON
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
+  // Lottie animation options (optional)
+  const defaultOptions02 = {
+    loop: true,
+    autoplay: true,
+    animationData: joinAnimation, // Optional: Add a signup animation JSON
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
+
   return (
     <div className="container-signup">
-      <div className="signup-container-signup">
-        <h2 className="h2-signup">Signup</h2>
-        {errors.apiError && <p className="error-signup">{errors.apiError}</p>}
-        <form onSubmit={handleSubmit} className="signup-form-signup">
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="fullname">Full Name</label>
-            <input
-              className="input-signup"
-              type="text"
-              id="fullname"
-              name="fullname"
-              value={formData.fullname}
-              onChange={handleChange}
-              required
-            />
-            {errors.fullname && <p className="error-signup">{errors.fullname}</p>}
-          </div>
+      {/* Background Circles */}
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="email">Email</label>
-            <input
-              className="input-signup"
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            {errors.email && <p className="error-signup">{errors.email}</p>}
-          </div>
+      <div className="signup-logo-container">
+        <img src={logo} alt="sign-up-logo" className="signup-logo-image" />
+        <div className="signup-logo-text">
+          VerseCraft
+        </div>
+      </div>
+      <div className="background-circle circle1"></div>
+      <div className="background-circle circle2"></div>
+      <div className="background-circle circle3"></div>
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="password">Password</label>
-            <input
-              className="input-signup"
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            {errors.password && <p className="error-signup">{errors.password}</p>}
-          </div>
+      <Box
+      display="flex"
+      justifyContent="top" // Horizontal centering
+      alignItems="start"    // Vertical centering
+      height="100vh"         // Full viewport height
+      width="100%"
+      marginTop={"-100px"}
+      Left={"10%"}
+      position={"absolute"}
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              className="input-signup"
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-            {errors.confirmPassword && <p className="error-signup">{errors.confirmPassword}</p>}
-          </div>
+    >
+      <Lottie
+        options={defaultOptions02}
+        height={200}
+        width={200}
+        aria-label="Join Animation"
+        role="img"
+      />
+    </Box>
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="age">Age</label>
-            <input
-              className="input-signup"
-              type="number"
-              id="age"
-              name="age"
-              value={formData.age}
-              onChange={handleChange}
-              required
-            />
-            {errors.age && <p className="error-signup">{errors.age}</p>}
-          </div>
+      <Lottie
+          options={defaultOptions}
+          height={550}
+          width={800}
+          style={{ marginBottom: '10px' }}
+          aria-label="Signup Animation"
+          role="img"
+        /> 
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="gender">Gender</label>
-            <select
-              className="input-signup"
-              id="gender"
+      <Box className="signup-container-signup" right="5%" width="50%">
+        {/* Optional: Add a Lottie animation for signup */}
+       
+
+        <Typography fontSize="20px" variant="h6" className="h2-signup" top={"-10px"} marginTop={"-30px"}>
+          Signup
+        </Typography>
+        {errors.apiError && <Alert severity="error">{errors.apiError}</Alert>}
+
+        <Box  component="form" onSubmit={handleSubmit} className="signup-form-signup" noValidate>
+          {/* Full Name */}
+          <TextField
+            label="Full Name"
+            name="fullname"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={formData.fullname}
+            onChange={handleChange}
+            error={Boolean(errors.fullname)}
+            helperText={errors.fullname}
+            required
+            size="small"
+            marginTop="-20px"
+
+            sx={{
+              
+              '& .MuiInputBase-root': {
+               
+                fontSize: '0.8rem', // Adjust font size
+                height: '35px', // Adjust height
+                padding: '4px 10px', // Adjust padding
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.8rem', // Adjust label font size
+              },
+            }}
+
+          />
+
+          {/* Email */}
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={formData.email}
+            onChange={handleChange}
+            error={Boolean(errors.email)}
+            helperText={errors.email}
+            required
+            size="small"
+
+            sx={{
+              '& .MuiInputBase-root': {
+                fontSize: '0.8rem', // Adjust font size
+                height: '35px', // Adjust height
+                padding: '4px 10px', // Adjust padding
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.8rem', // Adjust label font size
+              },
+            }}
+          />
+
+          {/* Password */}
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={formData.password}
+            onChange={handleChange}
+            error={Boolean(errors.password)}
+            helperText={errors.password}
+            required
+            size="small"
+
+            sx={{
+              '& .MuiInputBase-root': {
+                fontSize: '0.8rem', // Adjust font size
+                height: '35px', // Adjust height
+                padding: '4px 10px', // Adjust padding
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.8rem', // Adjust label font size
+              },
+            }}
+          />
+
+          {/* Confirm Password */}
+          <TextField
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            error={Boolean(errors.confirmPassword)}
+            helperText={errors.confirmPassword}
+            required
+            size="small"
+
+            sx={{
+              '& .MuiInputBase-root': {
+                fontSize: '0.8rem', // Adjust font size
+                height: '35px', // Adjust height
+                padding: '4px 10px', // Adjust padding
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.8rem', // Adjust label font size
+              },
+            }}
+          />
+
+          {/* Age */}
+          <TextField
+            label="Age"
+            name="age"
+            type="number"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={formData.age}
+            onChange={handleChange}
+            error={Boolean(errors.age)}
+            helperText={errors.age}
+            required
+            size="small"
+
+            sx={{
+              '& .MuiInputBase-root': {
+                fontSize: '0.8rem', // Adjust font size
+                height: '35px', // Adjust height
+                padding: '4px 10px', // Adjust padding
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.8rem', // Adjust label font size
+              },
+            }}
+          />
+
+          {/* Gender */}
+          <FormControl variant="outlined" fullWidth margin="normal" required
+          
+          sx={{
+            '& .MuiInputBase-root': {
+              fontSize: '0.8rem', // Adjust font size
+              height: '35px', // Adjust height
+              padding: '4px 10px', // Adjust padding
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '0.8rem', // Adjust label font size
+            },
+          }}
+          >
+            <InputLabel id="gender-label">Gender</InputLabel>
+            <Select
+              labelId="gender-label"
+              label="Gender"
               name="gender"
               value={formData.gender}
               onChange={handleChange}
-              required
             >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-            {errors.gender && <p className="error-signup">{errors.gender}</p>}
-          </div>
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+          </FormControl>
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="phone">Phone Number</label>
-            <input
-              className="input-signup"
-              type="text"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-            />
-            {errors.phone && <p className="error-signup">{errors.phone}</p>}
-          </div>
+          {/* Phone Number */}
+          <TextField
+            label="Phone Number"
+            name="phone"
+            type="text"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={formData.phone}
+            onChange={handleChange}
+            error={Boolean(errors.phone)}
+            helperText={errors.phone}
+            required
+            sx={{
+              '& .MuiInputBase-root': {
+                fontSize: '0.8rem', // Adjust font size
+                height: '40px', // Adjust height
+                padding: '5px 10px', // Adjust padding
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.8rem', // Adjust label font size
+                textAlign:"center",
+              },
+            }}
+          />
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="description">Short Intro</label>
-            <textarea
-              className="input-signup"
-              id="description"
-              name="description"
-              rows="4"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Tell us something about yourself..."
-            />
-          </div>
+          {/* Short Intro */}
+          <TextField
+            label="Short Intro"
+            name="description"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            multiline
+            rows={4}
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Tell us something about yourself..."
+            sx={{
+              '& .MuiInputBase-root': {
+                fontSize: '0.8rem', // Adjust font size
+                height: '70px', // Adjust height
+                padding: '4px 8px', // Adjust padding
+              },
+              '& .MuiInputLabel-root': {
+                fontSize: '0.8rem', // Adjust label font size
+                textAlign:"center",
+              },
+            }}
+          />
 
-          <div className="input-group-signup">
-            <label className="label-signup" htmlFor="profile">Upload Profile Picture</label>
-            <input
-              className="input-signup"
-              type="file"
-              id="profile"
-              name="profile"
-              accept="image/*"
-              onChange={handleChange}
-            />
-          </div>
+          {/* Upload Profile Picture */}
+          <Box marginY={2}>
+            <Button variant="contained" component="label" fullWidth>
+              Upload Profile Picture
+              <input
+                type="file"
+                hidden
+                name="profile"
+                accept="image/*"
+                onChange={handleChange}
+              />
+            </Button>
+            {formData.profile && (
+              <Typography variant="body2" color="textSecondary" align="center" marginTop={1}>
+                Selected File: {formData.profile.name}
+              </Typography>
+            )}
+          </Box>
 
-          <button type="submit" className="signup-btn-signup">Sign Up</button>
-        </form>
-        <p className="p-signup">
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            className="signup-btn-signup"
+            disabled={isLoading}
+            sx={{
+              padding: '4px 4px', // Adjust padding
+              fontSize: '0.75rem', // Adjust font size
+              minWidth: '100px', // Adjust minimum width
+            }}
+            
+          >
+            {isLoading ? 'Signing up...' : 'Sign Up'}
+
+          </Button>
+        </Box>
+
+        <Typography variant="body2" className="p-signup">
           Already have an account? <Link to="/login">Login</Link>
-        </p>
-      </div>
+        </Typography>
+      </Box>
     </div>
   );
 };

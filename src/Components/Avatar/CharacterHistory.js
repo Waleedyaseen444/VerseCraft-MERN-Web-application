@@ -8,7 +8,7 @@ const CharacterHistory = ({ history }) => {
       <ul>
         {history.map((character, index) => (
           <li key={index}>
-            <strong>{character.name}</strong>: {character.appearance}, {character.backstory}, {character.role}, {character.genre}, {character.theme}
+            <strong>{character.characterData.name}</strong>: {character.characterData.appearance}, {character.characterData.backstory}, {character.characterData.role}, {character.characterData.genre}, {character.characterData.theme}
           </li>
         ))}
       </ul>

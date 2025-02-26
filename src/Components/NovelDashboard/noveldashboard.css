@@ -10,6 +10,8 @@
     width: 100%;
 }
 
+      
+
 .noveldashboard-Add-plot-icon{
   width:20px;
   height: 20px;
@@ -52,62 +54,122 @@
 
 
 .noveldashboard-dashboard{
-
-  width:100%;
-  height: 100%;
-  background-color: #fafcffff;
-  border: 1px solid #1F2247;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  width:93%;
+  height: 90vh;
+  background-color: white;
+  margin-left: 90px;
+  padding:10px;
+  border-radius: 10px;
+  margin-top: -10px;
+
 }
 
 
 
 .noveldashboard-sidebar{
   position: relative;
-  width: 200px;
-  margin-left: 49px;
+  width: 15%;
+  height: 90vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  z-index:1;
+ 
 }
 
   /* Left sidebar styling */
   .novelside-sidebar {
     width: 100%;
     height: 100vh;
-    background-color: #191B30; /* Dark grey for sidebar background */
-    padding: 10px;
+    background-color: #e1dbd6; /* Dark grey for sidebar background */
     overflow-y: auto;
-    border-right:4px solid #F47D4B;
+    padding:10px;
+    display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-top-left-radius: 5px;
+  border:1px solid rgb(122, 118, 112);
+  overflow-x: hidden;
+   
     
   }
   
   .novelside-sidebar h3 {
-    color: white;
+    color: black;
     font-size: 1.2rem;
-    margin-bottom: 20px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .novelside-add-chapter input{
+    border-radius:10px;
+    width: 90%;
+    padding:10px;
+    margin-bottom: 10px;
   }
   
   .novelside-sidebar ul {
     list-style: none;
     color: #191B30;
     padding: 0;
-  }
-  
-  .novelside-sidebar li {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-bottom: 1px solid #f46f36;
+    width: 100%;
+    margin-left:10px;
+    overflow: auto;
   }
 
-  .novelside-sidebar li:hover {
-    background-color: #1F2247;
+
+  .novelside-sidebar li {
+    margin-bottom: 10px;
+    width: 90%;
+    height: 30px;
+    padding: 5px;
+    border: 1px solid #f46f36;
+    border-radius: 10px;
+    background-color: white;
+    transition: all 0.2s ease-in-out; /* added transition */
     overflow: hidden;
+  }
+  
+  .novelside-sidebar li:hover {
+    background-color: #ffffff;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* added box-shadow */
+    transform: translateY(-2px); /* added transform */
+  }
+
+  .chapter-text {
+    position: relative;
+    margin-left: 200px;
+    margin-top: -50px;
+    font-size: 14px;
+    color: #000000;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 30;
+    pointer-events: none; /* add this to prevent hover events from triggering on the text */
+  }
+  
+  .novelside-sidebar li:hover .chapter-text {
+    opacity: 1;
   }
 
   .novelside-sidebar a {
-    color: white; /* Slightly lighter text color */
+    color: black;/* Slightly lighter text color */
     text-decoration: none;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px;
     font-size: 1rem;
     border-radius: 10px;
     white-space: normal; /* Allow text to wrap */
@@ -115,14 +177,13 @@
     text-overflow: clip; /* Do not clip the text */
     word-wrap: break-word; /* Ensure long words are broken onto the next line */
     display: block; /* Makes sure it takes full width and height */
- 
 }
 
 .novelside-sidebar a:hover {
-    background-color: #1F2247;
+    background-color:   #ffffff;
     z-index: 1; /* Ensures the element is above others */
     position: relative; /* Stacks it on top when hovered */
-    padding: 10px;
+    padding: 5px;
 }
 
 
@@ -150,126 +211,50 @@
 
 
 
-
 .noveldashboard-editor{
-  position: absolute;
-  width: 650px;
-  background-color: #ffffff;
-  height: 100%;
-  left:273px;
-  overflow:auto;
+ width: 65%;
+ height: 100vh;
+ 
+
 }
 
 
-.noveldashboard-chatbot{
-
-  position:absolute;
-  width: 363px;
+.editor{
+  width:100%;
   height: 100vh;
-  
-  background-color: #ffffff;
-  border-left:4px solid #F47D4B;
-  left:924px;
-}
-
-
-
-/* Chatbot styles */
-.chatbot {
-
-  height: 100%;
-  background-color: #191B30;
-  color: #ffffff;
-}
-
-.chatbox {
-  height: 550px;
-  padding: 10px;
-  overflow-y: auto;
-
-}
-
-.message {
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  max-width: 70%;
-}
-
-.user-message {
-  background-color: rgb(252, 184, 111);
-  margin-left: auto;
-  color: #191B30;
-}
-
-.bot-message {
-  background-color: white;
-  color:black;
-}
-
-.chat-input {
-
-  padding: 10px;
-  position: absolute;
-  width: 95%;
-  display: flex;
-  flex-direction: row;
-  margin-top: 10px;
-  background-color: #1F2247;
-
-}
-
-
-
-.chat-text-box{
-  width: 75%;
-  height: auto;
- 
- 
-}
-
-.novelchat-button{
-  background-color: #fafcffff;
-  color: #191B30;
-  border: #191B30;
-  border-radius: 5px;
-  cursor: pointer;
-  width:20%;
-  margin-left: 10px;
-  height: 35px;
-
-
-  
-}
-.novelchat-button:hover {
-  background-color: #f46f36;
+  overflow: auto;
 }
 
 
 
 
 .noveldashboard-notes{
-    position: absolute;
-    width: 232px;
-    height: 100vh;
     
-    background-color: #1F2247;
-    border-left:4px solid #F47D4B;
-    left:1291px;
+    width: 20%;
+    height: 100vh;
+    background-color: #f9f6f2;
+    border:1px solid #c7c1bc;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    color:black;
+    
+ 
 
 }
 
 
 .noveldashboard-notes-section {
     width: 90%;
-    background-color: #191B30;
+    background-color: #f9f6f2;
     padding: 10px; /* Remove bottom padding or adjust as needed */
     display: flex;
     flex-direction: column;
     justify-content: flex-start; /* Align items to the start (top) of the container */
     font-family: 'Kanit', sans-serif;
     height:70%;
-    border: 2px solid #F47D4B;
     border-bottom-right-radius: 10px;
     overflow: hidden;
 }
@@ -280,6 +265,7 @@
     justify-content: center; /* Center content in the header */
     position: relative; /* Position the button relative to this container */
     gap:20px;
+ 
 }
 
 .noveldashboard-add-note {
@@ -290,7 +276,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #ffffff;
+    border: 2px solid #897865;
     background: none;
     cursor: pointer;
     padding: 5px;
@@ -305,34 +291,46 @@
 }
 
 .noveldashboard-notes-header h2{
-  margin-top: 20px;
+  margin-top: 30px;
+  color: black;
+  font-size: 30px;
+  font-weight: 300;
+  border-bottom: 2px solid black;
+  margin-left: 30px;
 }
+
 
 
 .noveldashboard-buttons {
   display: flex;
   gap: 10px;
   margin-top: 10px;
+  
 }
 
 .noveldashboard-button {
-  padding: 6px 12px;
-  background-color: #F47D4B;
+  padding: 10px;
+  background-color: #191B30;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: 300;
+  border: 2px solid #e1dbd6;
+  width: 100px;
  
 }
 
 .noveldashboard-button:hover {
-  background-color: #F47D4B;
+  background-color: white;
+  color:black;
 }
 
 .noveldashboard-buttons{
   padding: 10px;
   justify-content: center;
+  
 
 }
 
@@ -342,25 +340,67 @@
     top: 50%;
     left: 50%;
     width: 400px;
-    height: 200px;
+    height: 210px;
     transform: translate(-50%, -50%);
-    background-color: #f9f9f9; /* Light background color */
+    background-color: #f9f6f2; /* Light background color */
     border-radius: 12px; /* More rounded corners */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Slightly more shadow */
-    padding: 25px;
+    padding: 20px;
     position: relative; /* Relative positioning for the close button */
 }
 
 .noveldashboard-modal h2 {
     position: absolute;
     top: 10px; /* Adjust this value as needed */
-    left: 25px; /* Adjust this value as needed for horizontal positioning */
-    font-size: 16px;
+    left: 170px; /* Adjust this value as needed for horizontal positioning */
+    font-size: 20px;
     color: #191B30;
     margin: 0; /* Remove default margin */
-    font-weight: 300;
+    font-weight: 500;
     font-family: 'Kanit', sans-serif;
 }
+
+.noveldashboard-modal-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  width: 100%;
+  height: 150px;
+}
+
+.noveldashboard-note-text{
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  font-size: 15px;
+  text-align: start;
+  font-family: sans-serif;
+  padding:10px;
+  resize: none;
+
+}
+
+.novelboard-notes-save-button{
+  background-color: #191B30;
+  color: white;
+  padding:10px;
+  border-radius: 3px;
+  margin-top: 10px;
+  cursor: pointer;
+  margin-left: 170px;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+
+
+}
+
+.novelboard-notes-save-button:hover{
+  background-color: white;
+  color: black;
+}
+
 
 .noveldashboard-close-button {
     position: absolute; /* Absolute positioning */
@@ -369,7 +409,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
+    padding: 10px;
 }
 
 .noveldashboard-close-icon {
@@ -379,12 +419,10 @@
 
 .noveldashboard-close-icon:hover {
     opacity: 0.6; /* Lighter opacity on hover */
+    background-color: none;
 }
 
-.noveldashboard-notes-header h2 {
-    font-weight: 500;
-    color: #ffffff;
-}
+
 
 .noveldashboard-notes-list {
     list-style: none;

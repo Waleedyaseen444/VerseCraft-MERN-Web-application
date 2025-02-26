@@ -9,121 +9,345 @@
 }
 
 
-.character-overview {
+  
+  
+  
+  .character-sidebar {
+    position: fixed; /* Sidebar should be fixed so that it can overlap other content */
+    top: 13.1%;
+    margin-left: 20px;
+    height: 81%;
+    width: 2.4%; /* Collapsed width */
+    background:white;
+    padding: 10px;
+    z-index: 10;
+    transition: width 0.3s ease; /* Smooth transition for opening/closing */
+    overflow: hidden; /* Hide overflowing content when collapsed */
+    margin-top: 50px;
+    color: rgb(237, 230, 217);
+    font-size: 20px;
+    font-family: sans-serif;
+    margin-top: -9px;
+    border-radius: 20px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* X, Y, Blur, Colour */
+    
+  }
+  
+  /* Expanded sidebar */
+  .character-sidebar.open {
+    width: 12%; /* Expanded width */
+  }
+  
+  /* Toggle button styling */
+  .character-sidebar-toggle {
+    position: absolute; /* Position the toggle button relative to the sidebar */
+    top: 10px; /* Fixed distance from the top of the sidebar */
+    left: 12px; /* Fixed distance from the left of the sidebar */
+    background: none;
+    border: none;
+    color: black;
+    font-size: 25px;
+    cursor: pointer;
+  }
+  
+  
+  
+  /* Styling for the icons and labels within the sidebar */
+  .character-journal,
+  .character-notifications,
+  .character-goals,
+  .character-favorites,
+  .character-communities,
+  .character-settings {
+    display: flex;
+    align-items: center; /* Vertically center icons and text */
+    margin: 10px 0; /* Space between each item */
+    padding-left: 10px; /* Indentation for better visual spacing */
+    width: 100%; /* Ensures each item takes full width */
+    transition: opacity 0.3s ease; /* Smooth transition for opacity */
+    cursor: pointer;
+    color: black;
+  }
+  
+  /* Maintain fixed width for items when sidebar is collapsed */
+  .character-journal,
+  .character-notifications,
+  .character-goals,
+  .character-favorites,
+  .character-communities,
+  .character-settings {
+    width: calc(100% - 10px); /* Adjust width minus padding */
+    margin-top:20px;
+    margin-left: -10px;
+    padding:10px;
+    font-size: 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+    
+  }
+  
+  /* Maintain fixed width for items when sidebar is collapsed */
+  .character-journal:hover,
+  .character-notifications:hover,
+  .character-goals:hover,
+  .character-favorites:hover,
+  .character-communities:hover,
+  .character-settings:hover {
+   background-color: #e1e1e1;
+   border-radius: 5px;
+   cursor: pointer;
+    
+  }
+  
+  .character-journal{
+    margin-top: 70px;
+  }
+  
+  
+  
+  /* Icon Styles */
+  .character-journal-icon,
+  .character-noti-icon,
+  .character-goal-icon,
+  .character-fav-icon,
+  .character-comm-icon,
+  .character-set-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 20px; /* Space between icon and text */
+    cursor: pointer;
+    margin-left: 7px;
+    
+  }
+  
+  
+  /* Adjust the text and labels for expanded state */
+  .character-sidebar.open .character-journal,
+  .character-sidebar.open .character-notifications,
+  .character-sidebar.open .character-goals,
+  .character-sidebar.open .character-favorites,
+  .character-sidebar.open .character-communities,
+  .character-sidebar.open .character-settings {
+    justify-content: flex-start; /* Align items when expanded */
+    cursor: pointer;
+  }
+  
+  /* Label for the icons when the sidebar expands */
+  .character-sidebar.open .character-journal::after,
+  .character-sidebar.open .character-notifications::after,
+  .character-sidebar.open .character-goals::after,
+  .character-sidebar.open .character-favorites::after,
+  .character-sidebar.open .character-communities::after,
+  .character-sidebar.open .character-settings::after {
+    content: attr(data-label);
+    color: #FFF;
+    margin-left: 10px; /* Space between icon and label */
+    font-size: 16px; /* Adjust label font size */
+  }
+  
+
+
+
+/* Description Modal Overlay */
+.character-description-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure the modal is on top of other elements */
+}
+
+/* Description Modal Content */
+.character-description-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 500px; /* Adjust as needed */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    
+}
+
+/* Close Button for Description Modal */
+.character-description-close-popup-button {
     position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    background-color: #f47d4b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.character-description-close-popup-button:hover {
+    background-color: #d16c3f;
+}
+
+/* Textarea for Description Input */
+.character-description-textarea {
+    width: 100%;
+    height: 200px; /* Adjust as needed */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+
+.character-overview {
+  
     width: 12%;
     height: 100%;
-    margin-top: 57px;
-    background: #1F2247;
-    box-shadow: 5px 0px 15px rgba(0, 0, 0, 0.5);
+    background: #e1dbd6;
+    position: relative;
     padding: 0px;
+    border-radius: 5px;
     padding-top: 5px;
+    border: 1px solid rgb(145, 134, 112);
     overflow-wrap: break-word;
     word-wrap: break-word;
     white-space: normal;
     overflow: hidden;
-    margin-left:60px
+    border-top-right-radius: 0px;
+   
 }
 
-.character-save-btn, .character-save-btn:after {
-  width: 160px;
-  height: 50px;
-  line-height: 50px;
-  font-size: 13px;
-  font-weight: 300;
-  font-family: 'kanit', sans-serif;
-  background: linear-gradient(45deg, transparent 5%, #F47D4B 5%);
-  border: 0;
-  color: #fff;
-  letter-spacing: 2px;
-  margin-left:10px;
-  outline: transparent;
+
+/* CSS */
+.character-save-btn {
+  appearance: none;
+  background-color: #FFFFFF;
+  border-width: 0;
+  box-sizing: border-box;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Clarkson,Helvetica,sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1em;
+  margin: 0;
+  opacity: 1;
+  outline: 0;
+  padding: 15px;
   position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: geometricprecision;
+
+  transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),background-color 100ms cubic-bezier(.694, 0, 0.335, 1),color 100ms cubic-bezier(.694, 0, 0.335, 1);
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+  width: 90%;
+  border-radius: 5px;
+}
+
+.character-save-btn:before {
+  animation: opacityFallbackOut .5s step-end forwards;
+  backface-visibility: hidden;
+  background-color: #EBEBEB;
+  clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: translateZ(0);
+  transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1), -webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+  width: 100%;
+}
+
+.character-save-btn:hover:before {
+  animation: opacityFallbackIn 0s step-start forwards;
+  clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
+  color-scheme: black;
 }
 
 .character-save-btn:after {
-  --slice-0: inset(50% 50% 50% 50%);
-  --slice-1: inset(80% -6px 0 0);
-  --slice-2: inset(50% -6px 30% 0);
-  --slice-3: inset(10% -6px 85% 0);
-  --slice-4: inset(40% -6px 43% 0);
-  --slice-5: inset(80% -6px 5% 0);
+  background-color: #FFFFFF;
+  color-scheme: black;
+}
 
-  content: 'Save me';
-  display: block;
+.character-save-btn span {
+  z-index: 1;
+  position: relative;
+}
+
+
+
+/* CSS */
+.character-see-btn {
+  appearance: none;
+  background-color: #FFFFFF;
+  border-width: 0;
+  
+  width: 90%;
+  box-sizing: border-box;
+  color: #000000;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Clarkson,Helvetica,sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 5px;
+  letter-spacing: 0;
+  line-height: 1em;
+  margin: 0;
+  opacity: 1;
+  outline: 0;
+  padding: 15px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: geometricprecision;
+  
+  transition: opacity 300ms cubic-bezier(.694, 0, 0.335, 1),background-color 100ms cubic-bezier(.694, 0, 0.335, 1),color 100ms cubic-bezier(.694, 0, 0.335, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.character-see-btn:before {
+  animation: opacityFallbackOut .5s step-end forwards;
+  backface-visibility: hidden;
+  background-color: #EBEBEB;
+  clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
+  content: "";
+  height: 100%;
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent 3%, #191B30 3%, #191B30 5%, #191B30 5%);
-  text-shadow:  3px 3px 0px #F47D4B;
-  clip-path: var(--slice-0);
+  transform: translateZ(0);
+  transition: clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1), -webkit-clip-path .5s cubic-bezier(.165, 0.84, 0.44, 1);
+  width: 100%;
 }
 
-.character-save-btn:hover:after {
-  animation: 1s glitch;
-  animation-timing-function: steps(2, end);
+.character-see-btn:hover:before {
+  animation: opacityFallbackIn 0s step-start forwards;
+  clip-path: polygon(0 0, 101% 0, 101% 101%, 0 101%);
 }
 
-@keyframes glitch {
-  0% {
-    clip-path: var(--slice-1);
-    transform: translate(-20px, -10px);
-  }
-  10% {
-    clip-path: var(--slice-3);
-    transform: translate(10px, 10px);
-  }
-  20% {
-    clip-path: var(--slice-1);
-    transform: translate(-10px, 10px);
-  }
-  30% {
-    clip-path: var(--slice-3);
-    transform: translate(0px, 5px);
-  }
-  40% {
-    clip-path: var(--slice-2);
-    transform: translate(-5px, 0px);
-  }
-  50% {
-    clip-path: var(--slice-3);
-    transform: translate(5px, 0px);
-  }
-  60% {
-    clip-path: var(--slice-4);
-    transform: translate(5px, 10px);
-  }
-  70% {
-    clip-path: var(--slice-2);
-    transform: translate(-10px, 10px);
-  }
-  80% {
-    clip-path: var(--slice-5);
-    transform: translate(20px, -10px);
-  }
-  90% {
-    clip-path: var(--slice-1);
-    transform: translate(-10px, 0px);
-  }
-  100% {
-    clip-path: var(--slice-1);
-    transform: translate(0);
-  }
+.character-see-btn:after {
+  background-color: #FFFFFF;
 }
 
-@media (min-width: 768px) {
-  .character-save-btn,
-  .character-save-btn:after {
-    width: 160px;
-    height: 50px;
-    line-height: 50px;
-    margin-left: 0px;
-  }
+.character-see-btn span {
+  z-index: 1;
+  position: relative;
 }
 
 .character-list {
@@ -192,21 +416,56 @@
     color: white;
 }
 
+
+.character-main-dashboard{
+    display: flex;
+    flex-direction: row;
+    height: 87%;
+    width: 93%;
+    overflow: hidden;
+    border-radius:10px ;
+    border: 1px solid black;
+    margin-left: 90px;
+}
+
 .character-dashboard {
-    position: absolute;
-    margin-left: 260px;
-    margin-top: 57px;
-    margin-bottom: 30px;
-    width: 80%;
-    height: 85%;
-    background-color: #191B30;
-    border-radius: 10px;
+    width: 88%;
+    height: 100%;
+    position: relative;
+    background-color: #f9f6f2;
+    border-radius: 5px;
     display: flex;
     flex-wrap: wrap;
     padding: 20px;
     gap: 10px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
     overflow: auto;
+    border-top-left-radius: 0px;
+    
+}
+
+.character-dashboard {
+    /* ... existing styles ... */
+    scrollbar-width: thin;
+    scrollbar-color: #666 #f9f6f2;
+}
+
+.character-dashboard::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.character-dashboard::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 5px;
+}
+
+.character-dashboard::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+.character-dashboard::-webkit-scrollbar-track {
+    background-color: #f9f6f2;
+    border-radius: 5px;
 }
 
 .character-image {
@@ -214,7 +473,7 @@
     width: 11%;
     height: 20%;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     resize: both;
     overflow: auto;
@@ -228,6 +487,7 @@
 
 .character-image:hover {
     border-color: #F47D4B;
+    cursor: pointer;
 }
 
 .character-image h1 {
@@ -265,6 +525,7 @@
 
 .character-image-select {
     background-image: url("../Images/upload.png");
+   
 }
 
 .character-image-popup {
@@ -300,7 +561,7 @@
     background-color: #191B30;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 15px;
     font-size: 24px;
     font-family: "Kanit", sans-serif;
@@ -313,7 +574,7 @@
 .character-uploader:hover {
     background-color: #F47D4B;
     color: #191B30;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -335,7 +596,7 @@
 .character-avatar-modal-content {
     background-color: #fff;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 5px;
      /* Adjust the width as per your need */
     width: 1050px; /* Max width */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -367,7 +628,7 @@
     background-color: #191B30;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
     font-size: 20px;
     font-family: "Kanit", sans-serif;
@@ -387,7 +648,7 @@
     background-color: #F47D4B;
     color: #191B30;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
     font-size: 20px;
     font-family: "Kanit", sans-serif;
@@ -410,11 +671,11 @@
     border: 2px solid #191B30;
 }
 
-.character-save-button {
+.character-overview .character-save-button {
     background-color: #191B30;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
     font-size: 20px;
     font-family: "Kanit", sans-serif;
@@ -424,7 +685,7 @@
     margin-top: 25px;
 }
 
-.character-save-button:hover {
+.character-overview .character-save-button:hover {
     background-color: #F47D4B;
     color: white;
     cursor: pointer;
@@ -456,7 +717,7 @@
     position: absolute;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 15px;
     font-size: 24px;
     font-family: "Kanit", sans-serif;
@@ -478,7 +739,7 @@
     position: absolute;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 15px;
     font-size: 24px;
     font-family: "Kanit", sans-serif;
@@ -507,7 +768,7 @@
 
 .character-ql-editor {
     border: 2px solid #191B30;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     outline: none;
@@ -515,15 +776,16 @@
 
 .character-summary {
     position: relative;
-    width: 86.3%;
+    width: 86.5%;
     height: 20%;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
-    
     resize: both;
     overflow: hidden;
     box-sizing: border-box;
+    cursor: grab;
+    
 }
 
 .character-summary:hover {
@@ -557,10 +819,10 @@
 
 .character-backstory {
     position: relative;
-    width: 72.3%;
-    height: 20%;
+    width: 72.5%;
+    height: 36.5%;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     resize: both;
     overflow: hidden;
@@ -597,7 +859,7 @@
     width: 300px;
     height: 220px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow-y: auto;
     border: 2px solid #191B30;
       /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
@@ -677,7 +939,7 @@
     width: 290px;
     height: 140px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
@@ -707,7 +969,7 @@
     align-items: center;
     padding: 3px;
     height: 30px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     top: 3%;
     left: 84%;
@@ -784,7 +1046,7 @@
     width: 290px;
     height: 140px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
@@ -813,7 +1075,7 @@
     align-items: center;
     padding: 3px;
     height: 30px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     top: 3%;
     left: 84%;
@@ -891,7 +1153,7 @@
     width: 290px;
     height: 140px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
@@ -919,7 +1181,7 @@
     border: none;
     align-items: center;
     padding: 3px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     top: 3%;
     left: 86%;
@@ -993,7 +1255,7 @@
     width: 290px;
     height: 140px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
@@ -1022,7 +1284,7 @@
     align-items: center;
     padding: 3px;
     height: 30px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     top: 3%;
     left: 85%;
@@ -1095,8 +1357,7 @@
     width: 290px;
     height: 140px;
     background-color: white;
-    border-radius: 10px;
-    
+    border-radius: 5px;
     overflow: auto;
     border: 2px solid #191B30;
     padding: 10px;
@@ -1104,6 +1365,7 @@
     min-width: 290px;
     min-height: 140px;
     box-sizing: border-box;
+    margin-bottom: 30px;
 }
 
 .character-skills h1 {
@@ -1125,7 +1387,7 @@
     align-items: center;
     padding: 3px;
     height: 30px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     top: 3%;
     left: 84%;
@@ -1198,7 +1460,7 @@
     width: 290px;
     height: 140px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
    
     overflow-y: auto;
     border: 2px solid #191B30;
@@ -1207,6 +1469,7 @@
     min-width: 290px;
     min-height: 140px;
     box-sizing: border-box;
+    margin-bottom: 30px;
 }
 
 .character-weaknesses h1 {
@@ -1224,7 +1487,7 @@
     align-items: center;
     padding: 3px;
     height: 30px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     top: 3%;
     left: 85%;
@@ -1302,7 +1565,7 @@
     width: 290px;
     height: 140px;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow-y: auto;
     border: 2px solid #191B30;
     padding: 10px;
@@ -1310,6 +1573,7 @@
     min-width: 290px;
     min-height: 140px;
     box-sizing: border-box;
+    margin-bottom: 30px;
 }
 
 .character-roles h1 {
@@ -1327,7 +1591,7 @@
     align-items: center;
     padding: 3px;
     height: 30px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 2px solid #191B30;
     top: 3%;
     left: 80%;

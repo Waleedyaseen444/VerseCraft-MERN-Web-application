@@ -1,547 +1,622 @@
+
+body {
+  overflow: hidden; /* Disable page scrolling */
+  margin: 0; /* Remove default margin */
+}
 .publishing-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-    background-color:#f5f5f5;
-  
-  }
-  
-  
-  .publishing-dashboard {
-    position: relative;
-    background-color: #191B30;
-    width: 100%;
-    height: 100%;
-    margin-left:50px;
-    
-    font-family: sans-serif;
-    border:1px solid #191B30;
-  }
-  
-
-  
-
-  .publishing-title{
-    font-size:50px;
-    color:white;
-    font-family: 'Times New Roman', Times, serif;
-    margin:0px;
-    background-color: #191B30;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  }
-
-  .publishing-right-sidepanel{
-    width:200px;
-    height:100vh;
-    background-color: #f5f5f5;
-    margin-top:-58px;
-    overflow: auto;
-    margin-left:-1px;
-  }
-
-  /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
-.publishing-right-sidepanel::-webkit-scrollbar {
-    display: none;
-}
-
-/* Hide scrollbar for Firefox */
-.publishing-right-sidepanel {
-    scrollbar-width: none; /* Firefox */
-}
-
-/* Hide scrollbar for Edge, Internet Explorer */
-.publishing-right-sidepanel {
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-}
-
-  .publishing-myprojects{
-    color: #191B30;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 30px;
-    background-color: #F06B37;
-    width: 200px;
-    position: fixed;
-    z-index: 2;
-   
-    
-  }
-
-  .publishing-project-list{
-    margin-top: 40px;
-  }
-
-  .publishing-project-item {
-    margin: 10px;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    font-family: "Kanit", sans-serif;
-    font-size: 14px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-  .publishing-project-metrics {
-    position: absolute;
-    width: 65%;
-    height: 75%;
-    background-color: transparent;
-    margin-top: -630px;
-    border-radius: 10px;
-    border: 2px solid #F06B37; /* Removed the comma after 'solid' */
-    margin-left: 220px;
-    display: flex;
-    flex-direction: column; /* Stack items vertically first */
-    flex-wrap: wrap; /* Allow items to wrap horizontally when filled vertically */
-    align-content: flex-start; /* Align wrapped items to the left */
-   
-}
-
-.publishing-project-performance-metrics {
-    width: 460px;
-    height: 150px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    margin: 10px;
-    display: flex;
-    flex-direction: column; /* Stack title vertically above */
-    align-items: center; /* Center the title horizontally */
-    justify-content: flex-start; /* Keep content aligned to the top */
-    padding: 20px;
-    position: relative;
-    gap: 10px; /* Add a small gap between items */
-}
-
-/* Title styling */
-.publishing-project-performance-metrics-title {
-    font-size: 17px;
-    font-family: "Kanit", sans-serif;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-
-
-.publishing-metrics-container {
-    display: flex;
-    width: 100%; /* Ensure it takes full width of the performance metrics container */
-    justify-content: space-between; /* Space them apart */
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    gap: 5px; /* Reduce the gap between items */
-}
-
-/* Project views box */
-.publishing-project-views {
-  width: 153px;
-  height: 100px;
-  display: flex;
-  flex-direction: column; /* Change to column for text and value to be displayed vertically */
-  background-color: #191B30;
-  border-radius: 10px;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  margin: 0 auto; /* Center the box */
-  padding: 10px; /* Add padding for better spacing */
-  box-sizing: border-box; /* Include padding in width and height */
-}
-
-.publishing-project-views-value {
-  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-
-/* Sentiment analysis box */
-.publishing-sentiment-analysis {
-  width: 300px;
-  height: 100px;
-  background-color: #191B30;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  margin-right: 30px;
-  padding: 10px;
-  box-sizing: border-box;
+  min-height: 100vh;
+  position: relative;
+  background: radial-gradient(circle, rgb(247, 188, 79), rgb(0, 204, 255));
+  overflow: hidden;
 }
 
-/* Container to hold both positive and negative values */
-.publishing-sentiment-analysis-value {
-  width: 100%;
-  height: 40px;
+/* Header Styles */
+.publishing-header {
+  display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    z-index: 4; /* Ensure it's higher than other overlapping elements */
+    height: 43px;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding:10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: white;
+}
+
+.publishing-menu-icon {
+  width: 80px; /* Menu icon size */
+    height: 80px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.publishing-logo-text{
+  font-family: monospace;
+  font-size: 20px;
+  margin-left: -10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.publishing-header nav {
+  margin-left: 10px; /* Space between app title and nav */
+    width:fit-content;
+}
+
+.publishing-header nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: flex-start; /* Align items to the start */
+  margin: 0;
+  padding: 0;
+  color: black;
+  margin-left: 250px;
+}
+
+.publishing-header nav ul li {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 5px;
+  padding:5px;
+  font-weight: 50px;
+  transition: background-color 0.3s ease;
+  color: black;
+  font-family: sans-serif;
+  margin-right: 20px; /* Space between each nav item */
+  margin-left: 20px;
+}
+
+.publishing-header nav ul li:hover {
+  background-color: rgb(163, 162, 162);
+}
+
+.publishing-profile {
+  color: black;
+  font-weight:100;
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding:5px;
   border-radius: 5px;
-  overflow: hidden; /* Ensure content stays within container */
+  margin-left: 200px;
 }
 
-/* Positive sentiment box */
-.publishing-sentiment-analysis-pos {
-  flex: 65; /* Represents 65% of the width */
-  background-color: aquamarine;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #191B30; /* Dark color for contrast */
-  font-weight: bold;
+.publishing-profile:hover{
+  background-color: rgba(95, 92, 92, 0.1); /* Slight highlight on hover */
+  border-radius: 5px;
+  cursor: pointer ;
 }
 
-/* Negative sentiment box */
-.publishing-sentiment-analysis-neg {
-  flex: 35; /* Represents 35% of the width */
-  background-color: red;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff; /* White color for contrast */
-  font-weight: bold;
+.publishing-profile-icon {
+  width: 20px; /* Consistent width for all icons */
+  height: 20px; /* Consistent height for all icons */
+  margin-right: 0.5rem; /* Space between icon and text */
+  border-radius: 50%; /* Circular icon */
+  border: 2px solid #191B30; /* Border color */
 }
 
 
-
-
-.publishing-project-engagement-metrics {
-    width: 480px;
-    height: auto; /* Auto height to adjust to content */
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    margin: 10px;
-    display: flex;
-    flex-direction: row; /* Items in a row */
-    flex-wrap: wrap; /* Wrap horizontally if needed */
-    align-items: flex-start; /* Align items at the top */
-    padding: 10px; /* Add padding inside the container */
-    gap: 10px; /* Add gap between items */
-}
-
-.publishing-project-engagement-metrics-title {
-    font-size: 17px;
-    font-family: "Kanit", sans-serif;
-    font-weight: bold;
-    text-align: center; /* Center the title text */
-    margin-bottom: 20px; /* Add spacing below the title */
-    width: 100%; /* Ensures title spans the full width of the container */
-}
-
-
-
-
-.publishing-likes, 
-.publishing-followercount, 
-.publishing-bookmarked {
-    border-radius: 10px;
-    width: 153px;
-    height: 100px;
-    background-color: #191B30;
-    color: white; /* For better visibility of text inside */
-    display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    text-align: center; /* Center text */
-    display: flex;
-  flex-direction: column; 
-}
-
-/* Optional: Specific margin adjustments to fine-tune the layout */
-.publishing-likes {
-    margin-left: 0; /* Remove left margin on first item */
-}
-
-.publishing-followercount, 
-.publishing-bookmarked {
-    margin-left: 0; /* Ensure these have consistent left margin */
-}
-
-.publishing-project-like-value{
-  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
-  font-weight: bold;
-  margin-top: 5px;
-
-}
-.publishing-project-follower-value{
-  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
-  font-weight: bold;
-  margin-top: 5px;
-
-}
-
-.publishing-project-bookmark-value{
-  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
-  font-weight: bold;
-  margin-top: 5px;
-
-}
-
-.publishing-project-audience-metrics{
-    width: 450px;
-    height: 330px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    margin: 10px;
-    overflow: auto;
-    display: flex;
-    flex-direction: row; /* Stack items vertically first */
-    flex-wrap: wrap; /* Allow items to wrap horizontally when filled vertically */
-    align-content: flex-start; 
-
-}
-/* Main container for audience metrics */
-.publishing-project-audience-metrics {
-  width: 440px;
-  height: auto;
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  margin: 10px 10px 10px 0px;
-  overflow:hidden;
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  padding: 10px;
-  gap: 10px; /* Add space between elements */
-  box-sizing: border-box;
-}
-
-/* Title styling */
-.publishing-project-audience-metrics-title {
-  font-size: 17px;
-  font-family: "Kanit", sans-serif;
+.publishing-profile-name{
+  font-family: sans-serif;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 0px; /* Reduced margin for compact layout */
-  width: 100%;
 }
 
-/* Main geographic data panel */
-.publishing-geographic-data {
-  width: 100%; /* Takes full width inside the flex container */
-  height: 160px;
-  background: url("../Images/map.png");
-  background-size: 400px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #f5f5f5;
-  border: 2px solid #191B30;
-}
 
-/* Container to hold both average age and gender metric side by side */
-.publishing-metrics-row {
-  display: flex;
-  width: 100%; /* Full width */
-  gap: 10px; /* Add spacing between the two metrics */
-  align-items: center; /* Center metrics vertically */
-}
 
-/* Smaller metrics (average age and gender metric) */
-.publishing-average-age {
-  border-radius: 10px;
-  background-color: #191B30;
-  display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
-  color: white; /* Ensure text is visible */
-  width: 100px; /* Fixed width for average age box */
-  height: 90px; /* Fixed height for average age box */
-  margin-right: 10px; /* Add spacing to the right */
-  font-size: 16px;
-  font-weight: bold;
-}
 
-/* Gender metric container */
-.publishing-gender-metric {
-  flex: 1; /* Take up remaining space in the row */
-  height: 90px;
-  background-color: #191B30;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
+.publishing-sidebar {
+  position: fixed; /* Sidebar should be fixed so that it can overlap other content */
+  top: 13.1%;
+  margin-left: 20px;
+  height: 81%;
+  width: 2.4%; /* Collapsed width */
+  background:white;
   padding: 10px;
-  box-sizing: border-box;
-  width: 300px;
+  z-index: 10;
+  transition: width 0.3s ease; /* Smooth transition for opening/closing */
+  overflow: hidden; /* Hide overflowing content when collapsed */
+  margin-top: 50px;
+  color: rgb(237, 230, 217);
+  font-size: 20px;
+  font-family: sans-serif;
+  margin-top: -9px;
+  border-radius: 20px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); /* X, Y, Blur, Colour */
+  
 }
 
-/* Container to hold both male and female values */
-.publishing-project-gender-value {
-  width: 100%;
-  height: 40px;
+/* Expanded sidebar */
+.publishing-sidebar.open {
+  width: 12%; /* Expanded width */
+}
+
+/* Toggle button styling */
+.publishing-sidebar-toggle {
+  position: absolute; /* Position the toggle button relative to the sidebar */
+  top: 10px; /* Fixed distance from the top of the sidebar */
+  left: 12px; /* Fixed distance from the left of the sidebar */
+  background: none;
+  border: none;
+  color: black;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+
+
+/* Styling for the icons and labels within the sidebar */
+.publishing-journal,
+.publishing-notifications,
+.publishing-goals,
+.publishing-favorites,
+.publishing-communities,
+.publishing-settings {
+  display: flex;
+  align-items: center; /* Vertically center icons and text */
+  margin: 10px 0; /* Space between each item */
+  padding-left: 10px; /* Indentation for better visual spacing */
+  width: 100%; /* Ensures each item takes full width */
+  transition: opacity 0.3s ease; /* Smooth transition for opacity */
+  cursor: pointer;
+  color: black;
+}
+
+/* Maintain fixed width for items when sidebar is collapsed */
+.publishing-journal,
+.publishing-notifications,
+.publishing-goals,
+.publishing-favorites,
+.publishing-communities,
+.publishing-settings {
+  width: calc(100% - 10px); /* Adjust width minus padding */
+  margin-top:20px;
+  margin-left: -10px;
+  padding:10px;
+  font-size: 15px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+  
+}
+
+/* Maintain fixed width for items when sidebar is collapsed */
+.publishing-journal:hover,
+.publishing-notifications:hover,
+.publishing-goals:hover,
+.publishing-favorites:hover,
+.publishing-communities:hover,
+.publishing-settings:hover {
+ background-color: #e1e1e1;
+ border-radius: 10px;
+ cursor: pointer;
+  
+}
+
+.publishing-journal{
+  margin-top: 70px;
+}
+
+
+
+/* Icon Styles */
+.publishing-journal-icon,
+.publishing-noti-icon,
+.publishing-goal-icon,
+.publishing-fav-icon,
+.publishing-comm-icon,
+.publishing-set-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 20px; /* Space between icon and text */
+  cursor: pointer;
+  margin-left: 7px;
+  
+}
+
+
+/* Adjust the text and labels for expanded state */
+.publishing-sidebar.open .publishing-journal,
+.publishing-sidebar.open .publishing-notifications,
+.publishing-sidebar.open .publishing-goals,
+.publishing-sidebar.open .publishing-favorites,
+.publishing-sidebar.open .publishing-communities,
+.publishing-sidebar.open .publishing-settings {
+  justify-content: flex-start; /* Align items when expanded */
+  cursor: pointer;
+}
+
+/* Label for the icons when the sidebar expands */
+.publishing-sidebar.open .publishing-journal::after,
+.publishing-sidebar.open .publishing-notifications::after,
+.publishing-sidebar.open .publishing-goals::after,
+.publishing-sidebar.open .publishing-favorites::after,
+.publishing-sidebar.open .publishing-communities::after,
+.publishing-sidebar.open .publishing-settings::after {
+  content: attr(data-label);
+  color: #FFF;
+  margin-left: 10px; /* Space between icon and label */
+  font-size: 16px; /* Adjust label font size */
+}
+
+
+/* Dashboard Styles */
+.publishing-dashboard {
+  flex: 1;
+  margin-top: 20px;
+  background-color: white;
+  width: 92%;
+  padding: 20px;
+  border: 1px solid #191B30;
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  border-radius: 5px;
-  overflow: hidden; /* Ensure content stays within container */
+  position: relative;
+  margin-left: 100px;
+  margin-bottom: 2%;
+  border-radius: 10px;
+  height: 400px; /* Set a fixed height */
 }
 
-/* Male gender box */
-.publishing-gender-male {
-  flex: 50; /* Set the proportion of male participants */
-  background-color: #1e90ff; /* Light blue color for male */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #191B30; /* Dark color for contrast */
-  font-weight: bold;
+.publishing-project-preview-container{
+  padding:20px;
+  width:30%;
+  height: 500px;
+  border: 2px solid black;
+border-radius: 2%;
+display:flex;
+flex-direction: column;
 }
 
-/* Female gender box */
-.publishing-gender-female {
-  flex: 50; /* Set the proportion of female participants */
-  background-color: #ff69b4; /* Pink color for female */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff; /* White color for contrast */
-  font-weight: bold;
-}
-
-
-
-
-.publishing-project-quality-metrics{
-    width: 460px;
-    height: auto;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    margin: 10px 10px 10px 0px;
-
-}
-
-
-.publishing-project-quality-metrics-title {
-    font-size: 17px;
-    font-family: "Kanit", sans-serif;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 0px; /* Reduced margin for compact layout */
-    width: 100%;
-    margin-top:10px;
+/* The div that contains the images of texts */
+.publishing-project {
+  
+  flex-wrap: nowrap; /* Prevent wrapping of images to new rows */
+  justify-content: flex-start; /* Align images to the left */
+  height: 100%; /* Ensure it takes up the full height of the container */
+  overflow-x: auto; /* Allow horizontal scrolling */
+  scroll-snap-type: x mandatory; /* Snap scrolling */
 }
 
 
 
-.publishing-project-word-count{
-    margin:10px 10px 10px 10px;
-    border-radius: 10px;
-    width: 200px;
-    height: 100px;
-    background-color: #191B30;
-    color: #f5f5f5;
-    display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; 
-    flex-direction: column;
+/* Optional: Add a scrollbar style */
+.publishing-project::-webkit-scrollbar {
+  height: 8px;
 }
 
-.publishing-project-word-value{
-  font-size: clamp(16px, 2vw, 24px); /* Adjusts the font size between 16px and 24px, responsive to container size */
-  font-weight: bold;
+.publishing-project::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 4px;
+}
+
+.publishing-project::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+
+.publishing-project-description {
+  width: 30%;
+  margin-left: 2%;
+  margin-right: 7%;
+  padding: 5px;
+  border-radius: 10px;
+  text-align: left; /* Align text to the left */
+}
+
+.publishing-publishing-heading {
+  margin-left: 30%;
+  font-size: 50px;
+  font-weight: 500;
+  font-family: 'Times New Roman', Times, serif;
+  margin-top: -20px;
+}
+
+.publishing-project-title,
+.publishing-project-short-title,
+.publishing-project-summary,
+.publishing-project-genre,
+.publishing-project-audience {
+  margin-bottom: 10px; /* Reduced the vertical space between elements */
+  margin-top: -20px;
+}
+
+.publishing-project-title h2,
+.publishing-project-short-title h3,
+.publishing-project-audience h4 {
+  font-size: 1.0rem;
+  font-weight: 600;
+  color: #191B30;
+  text-align: left; /* Ensure all titles are aligned to the left */
+  margin-bottom: -1px;
+    margin-bottom: 5px;
+}
+
+.publishing-project-summary h4{
+  font-weight: 500;
+  margin-bottom: 10px;
+
+}
+
+.publishing-project-genre h4{
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.publishing-project-title input{
+  padding:10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border:0.5px solid black
+  
+}
+
+.publishing-project-short-title input{
+  padding:10px;
   margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+  border-radius: 10px;
+  border:0.5px solid black
+}
+
+.publishing-project-summary textarea{
+  padding:10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+  border-radius: 10px;
+  border:0.5px solid black
+}
+
+.publishing-project-genre input{
+  padding:10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+  border-radius: 10px;
+  border:0.5px solid black
+}
+
+.publishing-project-audience textarea{
+  padding:10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+  border-radius: 10px;
+  border:0.5px solid black
 
 }
 
-.publishing-all-characters-button{
-  position: absolute;
+.publishing-project-summary p,
+.publishing-project-genre p,
+.publishing-project-audience p {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 400;
+  text-align: left; /* Align paragraph text to the left */
+}
+
+.publishing-input{
+  height: fit-content;
+}
+
+
+
+.publishing-textarea{
+  width: 105%;
+  height: 20%;
+  resize: none;
+}
+
+
+.publishing-project-genre p,
+.publishing-project-audience p {
+  color: #555;
+}
+
+.publishing-publish-button {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #191B30;
+  color: white;
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: 400;
+  width: fit-content;
+  height: fit-content;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+  text-align: left; /* Align button text to the left */
+}
+
+.publishing-publish-button:hover {
+  background-color: #F06B37;
+  color: #191B30;
+  cursor: pointer;
+}
+
+/* Button Styles */
+.publishing-all-characters-button {
+  align-self: flex-start;
   border-radius: 10px;
   background-color: #f5f5f5;
   color: #191B30;
-  padding: 10px;
-  width: fit-content;
-  height: fit-content;
-  margin-left: 220px;
-  margin-top: -40px;
-
+  padding: 10px 20px;
+  margin: 20px 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.publishing-all-characters-button:hover{
+.publishing-all-characters-button:hover {
   background-color: #F06B37;
   color: white;
   cursor: pointer;
 }
-         
 
-
-
-
-
-
-  .publishing-left-sidepanel {
-    width:235px;
-    height:100vh;
-    background-color: #f5f5f5;
-    border: 2px solid,#F06B37;
-    margin-top: -705px;
-   
-
-    margin-left:1240px;
-    font-family: sans-serif;
+/* Sidepanel Styles */
+.publishing-left-sidepanel {
+  width: 20%;
+  background-color: #fb8b5f;
+  border-radius: 20px;
+  padding: 1%;
+  margin: 2%;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  position: absolute; /* Positioning the side panel */
+  top: 0; /* Align it to the top */
+  right: 0; /* Align it to the right side */
+  z-index: 10; /* Ensure it is above other elements */
 }
 
-.publishing-left-sidepanel-title{
-    font-size: 25px;
-    margin-top:10px;
+.publishing-left-sidepanel-title {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
 }
 
 .publishing-project-collaborators {
-    margin-top: 20px;
-    overflow-y: auto;
-    height: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
 }
 
 .publishing-collaborator-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-    background-color: #F06B37;
-    border-radius: 10px;
-    width:90%;
-    padding:5px;
-    margin:5px;
-
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 7px;
+  transition: background-color 0.3s ease;
+}
+.publishing-collaborator-icon{
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
 }
 
 .publishing-collaborator-image {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #191B30;
-    margin-left: 10px;
-    border-radius: 100%;
-}
+  width:15%;
+  height: 15%;
+  border-radius:100%;
+  background-color: #24263e;
 
-.publishing-profile-icon{
-    width: 30px;
-    height: 30px;
-    border-radius: 100%;
 }
 
 .publishing-collaborator-text {
-    font-size: 14px;
-    color: #333;
-    flex-grow: 1;
-    margin-left: -10px;
-    font-weight: bold;
-    font-family: "Kanit",sans-serif;
+  font-size: 1rem;
+  color: #333;
+  flex-grow: 1;
+  font-weight: 300;
+  font-family: "Kanit", sans-serif;
 }
 
-.publishing-collaborator-container:hover  {
-    background-color: #191B30;
+.publishing-collaborator-container:hover {
+  background-color: #525682;
+  cursor: pointer;
 }
 
-.publishing-collaborator-container:hover .publishing-collaborator-text  {
-    color:#f5f5f5
+.publishing-collaborator-container:hover .publishing-collaborator-text {
+  color: #f5f5f5;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .publishing-header {
+      flex-direction: column;
+      align-items: flex-start;
+      height: auto;
+      padding: 10px;
+  }
+
+  .publishing-header nav ul {
+      flex-direction: column;
+      width: 100%;
+  }
+
+  .publishing-header nav ul li {
+      margin: 5px 0;
+  }
+
+  .publishing-left-sidepanel {
+      max-width: 100%;
+      margin-top: 20px;
+  }
+
+  .publishing-dashboard {
+      padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .publishing-header {
+      padding: 10px;
+  }
+
+  .publishing-menu-icon {
+      width: 30px;
+      height: 30px;
+  }
+
+  .publishing-profile-icon {
+      width: 25px;
+      height: 25px;
+  }
+
+  .publishing-all-characters-button {
+      width: 100%;
+      text-align: center;
+  }
+
+  .publishing-left-sidepanel {
+      display: none; /* Hide sidepanel on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .publishing-header nav ul li {
+      padding: 6px 8px;
+      font-size: 0.9rem;
+  }
+
+  .publishing-collaborator-text {
+      font-size: 0.9rem;
+  }
 }
 
 
 
+/* Additional Styles for the Cover Picture Upload */
 
+
+
+.publishing-input-file {
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: 0.5px solid black;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+.cover-picture-preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.cover-picture-image {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+/* Existing styles for the rest of the page remain unchanged */

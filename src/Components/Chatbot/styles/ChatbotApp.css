@@ -2,44 +2,39 @@
 .chatbot-app {
   margin: 0;
   font-family: sans-serif;
-  background-color: #121212;
-  color: #f0f0f0;
+  background-color: #fefefe;
   overflow: hidden;
 }
 
-.chatbot-header {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(135deg, black 85%, white 15%);
-  color: white;
-  justify-content: space-between;
-  z-index: 4; /* Ensure it's higher than other overlapping elements */
-  height: 50px;
-  border-bottom:2px solid #ff9d43;
-}
 
 
 .chatbot-container {
   display: flex;
   height: 652px;
   overflow: hidden;
+  background-color: #fefefe;
 }
 
 /* Sidebar */
 .chatbot-sidebar {
   width: 250px;
-  background-color: #1e1e1e;
+  background-color: #e2e2e4;
   padding: 20px;
+  margin-left:10px ;
+  border-radius: 5px;
+  border: 1px solid gray;
 }
 
 .chatbot-sidebar h2 {
   margin-top: 0;
-  color: #ff9d43;
+  color: black;
 }
 
 .chatbot-sidebar ul {
   list-style: none;
   padding: 0;
+  color: black;
+ 
 }
 
 .chatbot-sidebar li {
@@ -53,11 +48,14 @@
   width: 100%;
   text-align: left;
   cursor: pointer;
-  color: #f0f0f0;
+  color: black;
+  background-color: #fefefe;
+  border-radius: 3px;
 }
 
 .chatbot-sidebar button:hover {
-  background-color: #333;
+  background-color: #353543;
+  color: white;
 }
 
 /* Main Content */
@@ -69,7 +67,7 @@
 }
 
 .chatbot-content-area {
-  background-color: #282828;
+  background-color: #d1d1d3;
   border-radius: 10px;
   padding: 20px;
   height: 94.5%;
@@ -83,7 +81,7 @@
 .chatbot-output-area {
   flex-grow: 1; 
   padding: 20px;
-  background-color: #1e1e1e;
+  background-color: #fefefe;
   border-radius: 10px;
   overflow-y: auto;
   margin-bottom: 20px; 
@@ -97,6 +95,7 @@
   max-width: 70%; 
   word-wrap: break-word;
   border: 1px solid #555;
+  width:fit-content;
 }
 
 .chatbot-user-message {
@@ -104,6 +103,7 @@
   background-color: #343541;
   color: #f0f0f0; 
   margin-left: auto; 
+  width:fit-content;
 }
 
 .chatbot-llm-message {
@@ -136,12 +136,18 @@
   cursor: pointer;
 }
 
+.chatbot-input-area button:hover {
+  background-color: #121212;
+  color: white;
+}
+
 /* History - Updated Styles */
 .chatbot-history {
-  background-color: #282828;
+  background-color: #e2e2e4;
   border-radius: 10px;
   padding: 20px;
   margin-left: 20px;
+  border: 1px solid gray;
   margin-top: 10px;
   width: 300px;
 }
@@ -154,18 +160,24 @@
 }
 
 .chatbot-history h3 {
-  color: #ff9d43;
+  color: black;
   margin: 0; 
 }
 
 .chatbot-new-prompt-button {
-  background-color: #343541;
-  color: #f0f0f0;
+  background-color: #f59922;
+  color: #121212;
   border: none;
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
 }
+
+
+.chatbot-new-prompt-button:hover{
+  background-color: #121212;
+  color: white;
+} 
 
 .chatbot-history-items {
   overflow-y: auto;
@@ -178,6 +190,7 @@
   margin-bottom: 10px;
   border-radius: 5px;
   cursor: pointer; 
+  color: white;
 }
 
 .chatbot-history-item:hover {

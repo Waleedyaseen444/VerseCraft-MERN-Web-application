@@ -1,155 +1,102 @@
-/* Global Styles */
+/* Login.css */
 
-/* Container Styles */
 .login-container {
-    width: 100%;
-    height: 100vh; /* Full viewport height */
     display: flex;
-    align-items: center;
     justify-content: center;
-    background: linear-gradient(to right, #191B30 50%, #F47D4B 50%);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Login Box Styles */
-.login-container-message {
-    max-width: 400px;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    background: radial-gradient(circle at center, #FFA07A, #ADD8E6); /* Radial Gradient: Dark Orange to Dark Blue */
     width: 100%;
-    padding: 20px;
-    border-radius: 5px;
-    background: rgba(255, 255, 255); /* White background */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 2;
-}
+  }
 
-h2 {
+  
+  .login-logo-container{
+    display: flex;
+    flex-direction: row;
     text-align: center;
-    margin-bottom: 20px;
-    color: #191B30;
-    font-size: 24px;
-}
-
-/* Form Styles */
-.login-form .login-input-group {
-    margin-bottom: 15px;
-}
-
-.login-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    text-align: left; /* Align input labels to the left */
-}
-
-.login-form .login-input-group input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.login-form .login-btn {
-    width: 100%;
-    padding: 10px;
-    background-color: #191B30;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.login-form .login-btn:hover {
-    background-color: #F47D4B;
-    color: #191B30;
-}
-
-/* Error Message */
-.login-error {
-    color: red;
-    font-size: 12px;
-    margin-top: -5px;
-}
-
-/* Link to Signup Page */
-.login-container-message p {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.login-container-message p a {
-    color: #F47D4B;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.login-container-message p a:hover {
-    text-decoration: underline;
-}
-
-.login-container-login-btn{
-    margin-top: 10px;
-    background-color: #191B30;
-    color: white;
-    padding:10px;
-    width:100%;
-    border-radius: 5px;
-    font-family: sans-serif;
-    font-size: 15px;
-    
-}
-
-.login-container-login-btn:hover{
-    background-color: #F47D4B;
-    color: #191B30;
-}
-
-.login-btn-admin-btn{
-    margin-top: 10px;
-    background-color: #191B30;
-    color: white;
-    padding:10px;
-    width:100%;
-    border-radius: 5px;
-    font-family: sans-serif;
-    font-size: 15px;
-}
-
-.login-btn-admin-btn:hover{
-    background-color: #F47D4B;
-    color: #191B30;
-}
-
-
-/* Particle Animation */
-.login-container .particle {
+    justify-content: center;
+    align-items: center;
     position: absolute;
-    bottom: 0;
-    width: 10px;
-    height: 10px;
-    background-color: rgba(240, 248, 255, 0.7); /* Light snowy blue */
-    border-radius: 0; /* Square particles */
-    opacity: 0;
-    transform: rotate(45deg); /* Initial angle */
-    animation: float-upwards infinite, rotate-particle infinite; /* Add rotation animation */
-}
+    top: 1%;
+    left: 1%;
+  }
+  
 
-/* Keyframes for Floating Upwards */
-@keyframes float-upwards {
-    0% {
-        transform: translateY(0) rotate(0deg); /* Start at original position */
-        opacity: 0;
+  .login-logo-image{
+    width: 70px;
+    height: 70px;
+  }
+
+  .login-logo-text{
+    font-size: 30px;
+    font-family:fantasy;
+    font-weight: 100;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: -10px;
+ 
+
+  }
+
+
+  
+  .login-flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: transparent;
+    max-width: 1200px; /* Optional: Max width for larger screens */
+  }
+  
+  .animation-section,
+  .form-section {
+    flex: 1;
+    padding: 20px;
+     
+
+  }
+  
+  .animation-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:transparent; /* Optional: Background color for animation */
+    border-radius: 8px;
+    margin-top: -20px;
+    margin-right: 20px; /* Space between animation and form */
+  }
+  
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .subtitle {
+    color: black; /* Optional: Subtitle color */
+    margin-bottom: 24px;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  
+  /* Responsive Design: Stack vertically on small screens */
+  @media (max-width: 768px) {
+    .login-flex-container {
+      flex-direction: column;
     }
-    50% {
-        opacity: 1; /* Become visible midway */
+  
+    .animation-section,
+    .form-section {
+      padding: 10px;
+      margin: 0;
     }
-    100% {
-        transform: translateY(-100vh) rotate(360deg); /* Move to top and complete a 360-degree rotation */
-        opacity: 0;
+  
+    .animation-section {
+      margin-bottom: 20px; /* Space between animation and form on small screens */
     }
-}
+  }
+  

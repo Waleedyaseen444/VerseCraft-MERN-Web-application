@@ -2,18 +2,15 @@
 import React, { useState } from "react";
 import './favorites.css'; // Create a separate CSS file for Favorites
 import { useNavigate } from 'react-router-dom';
-import menuIcon from '../Images/Logo-V.png';
 import profileIcon from '../Images/generic-user-profile-picture.png';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
-import journalIcon from '../Images/journal.png';
-import botIcon from "../Images/Bot.png";
 import closeIcon from "../Images/Close-black.png";
 import favoriteImage1 from "../Images/image01.webp";
 import favoriteImage2 from "../Images/image02.webp";
 import favoriteImage3 from "../Images/image04.webp";
 import favoriteImage4 from "../Images/image05.webp";
+import logoIcon from '../Images/Logo-V.png';
+import Header from '../Header/header';
+
 
 const Favorites = () => {
   const navigate = useNavigate();
@@ -21,6 +18,7 @@ const Favorites = () => {
   // State for search and sorting
   const [searchTerm, setSearchTerm] = useState("");
   const [sortCriteria, setSortCriteria] = useState("title");
+  const [user, setUser] = useState(null);
 
   // Array of favorite works
   const favoriteWorks = [
@@ -48,8 +46,123 @@ const Favorites = () => {
       summary: 'An epic journey through the stars and beyond.',
       rating: 4.8,
     },
+    {
+      image: favoriteImage1,
+      title: 'Whispers in the Wind',
+      summary: 'A tale of love and loss carried by the gentle breeze.',
+      rating: 4.7,
+    },
+    {
+      image: favoriteImage2,
+      title: 'Shadow Realm',
+      summary: 'Exploring the dark and mysterious shadowy dimensions.',
+      rating: 4.9,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage2,
+      title: 'Shadow Realm',
+      summary: 'Exploring the dark and mysterious shadowy dimensions.',
+      rating: 4.9,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    {
+      image: favoriteImage3,
+      title: 'Echoes of Eternity',
+      summary: 'A story that transcends time and space.',
+      rating: 4.6,
+    },
+    
+    
     // Add more favorite works as needed
   ];
+
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(8);
+
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    const gridContainer = document.querySelector('.favorites-works-grid');
+    const scrollPosition = (pageNumber - 1) * gridContainer.offsetWidth;
+    gridContainer.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+  };
+
+  const renderPagination = () => {
+    const pageCount = Math.ceil(filteredFavorites.length / itemsPerPage);
+    const paginationButtons = [];
+
+    for (let i = 1; i <= pageCount; i++) {
+      paginationButtons.push(
+        <button
+          key={i}
+          className={`pagination-button ${currentPage === i ? 'active' : ''}`}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    return (
+      <div className="pagination-container">
+        {paginationButtons}
+      </div>
+    );
+  };
 
   // Handlers for navigation
   const handleHomepageClick = () => {
@@ -108,52 +221,11 @@ const Favorites = () => {
 
   return (
     <div className="favorites-container">
-      {/* Header with Navigation */}
-      <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img src={menuIcon} alt="Menu" className="homepage-menu-icon" />
-          <div className="homepage-app-title" onClick={handleHomepageClick}>VerseCraft</div>
-          <nav>
-            <ul>
-              <li className="homepage-Plot" onClick={handleProjectsClick}>
-                <img src={journalIcon} alt="My Projects" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick}>
-                <img src={favIcon} alt="Favorites" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                <img src={botIcon} alt="InspireBot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              <li className="homepage-Published" onClick={handleNotificationClick}>
-                <img src={notiIcon} alt="Notifications" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick}>
-                <img src={setIcon} alt="Settings" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick}>
-                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                John Doe
-              </li>
-            </ul>
-          </nav>
-        </header>
-      </div>
+     <Header/>
 
       {/* Dashboard Area */}
       <div className="favorites-dashboard">
-        {/* Page Header */}
-        <div className="favorites-header">
-          <h1>My Favorite Works</h1>
-          <div className="favorites-summary">
-            <span>Total Favorites: {favoriteWorks.length}</span>
-          </div>
-        </div>
-
+        <h1>Favorites</h1>
         {/* Search and Sort Controls */}
         <div className="favorites-controls">
           <input
@@ -169,30 +241,42 @@ const Favorites = () => {
           </select>
         </div>
 
-        {/* Favorite Works Grid */}
         <div className="favorites-works-grid">
-          {filteredFavorites.map((work, index) => (
-            <div className="favorite-work-item" key={index}>
-              <div
-                className="favorite-work-image"
-                style={{ backgroundImage: `url(${work.image})` }}
-              ></div>
-              <div className="favorite-work-details">
-                <h3 className="favorite-work-title">{work.title}</h3>
-                <p className="favorite-work-summary">{work.summary}</p>
-                <div className="favorite-work-rating">Rating: {work.rating} ⭐</div>
-              </div>
-              <button className="remove-favorite-button">
-              <img src={closeIcon} alt="Profile" className="favorite-close-icon" />
-              </button>
+        {filteredFavorites.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((work, index) => (
+          <div className="favorite-work-item" key={index}>
+            <div
+              className="favorite-work-image"
+              style={{ backgroundImage: `url(${work.image})` }}
+            ></div>
+            <div className="favorite-work-details">
+              <h3 className="favorite-work-title">{work.title}</h3>
+              <p className="favorite-work-summary">{work.summary}</p>
+             
             </div>
-          ))}
-        </div>
+            <div className="favorite-work-rating">{work.rating} ⭐</div>
+            <div className="favorite-genre-container">
+              Genres
+              <div className="favorite-genre-types">
+                <span className="genre-tag">Action</span>
+                <span className="genre-tag">Adventure</span>
+                <span className="genre-tag">Comedy</span>
+                <span className="genre-tag">Drama</span>
+                <span className="genre-tag">Fantasy</span>
+              </div>
+            </div>
 
-        {/* Action Buttons */}
-        <div className="favorites-actions">
-          <button className="clear-favorites-button">Clear All Favorites</button>
-        </div>
+            
+            
+          </div>
+        ))}
+      </div>
+      {renderPagination()}
+
+        
+      </div>
+
+      <div className="favorite-suggestions-container">
+        Suggestions
       </div>
     </div>
   );

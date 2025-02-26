@@ -10,19 +10,11 @@ import {
   FaBold, FaItalic, FaUnderline, FaListOl, FaListUl, 
   FaTimes, FaUndo, FaRedo, FaChevronLeft, FaChevronRight 
 } from 'react-icons/fa';
-import menuIcon from '../Images/Logo-V.png';
-import plotIcon from '../Images/Plot.png';
-import characterIcon from '../Images/Character.png';
-import publishIcon from '../Images/Published.png';
-import profileIcon from '../Images/generic-user-profile-picture.png';
-import goalIcon from '../Images/goal.png';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
-import journalIcon from '../Images/journal.png';
-import comIcon from "../Images/comm.png";
-import plusIcon from '../Images/Plus.png';
-import botIcon from "../Images/Bot.png";
+import AddCollaborators from './AddCollaborators'; // Import the AddCollaborators component
+import Header from '../Header/header';
+import Sidebar from "../Sidebar/sidebar";
+
+
 
 const UrduEditor = () => {
   const { projectId } = useParams(); // Ensure that projectId is correctly obtained from the route
@@ -31,6 +23,7 @@ const UrduEditor = () => {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
+  const [user, setUser] = useState(null); 
   const [goal, setGoal] = useState(500);
   const [progress, setProgress] = useState(0);
   const [showGoalModal, setShowGoalModal] = useState(false);
@@ -42,7 +35,7 @@ const UrduEditor = () => {
   const [theme, setTheme] = useState('theme-light'); // Default theme
   const [leftPanelVisible, setLeftPanelVisible] = useState(true); // Left panel visibility
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown state
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -60,19 +53,15 @@ const UrduEditor = () => {
     { label: "Teal Theme", value: "theme-teal" },
   ];
 
-  // Handlers for navigation
-  const handleHomepageClick = () => navigate('/Homepage');
-  const handlePlotClick = () => navigate('/Plot');
-  const handleCharacterClick = () => navigate('/Character');
-  const handlePublishClick = () => navigate('/Publishing');
-  const handleProfileClick = () => navigate('/Profile');
-  const handleProjectsClick = () => navigate('/Saved');
-  const handleNotificationClick = () => navigate('/Notification');
-  const handleProgressClick = () => navigate('/Progress');
-  const handleSettingClick = () => navigate('/Setting');
-  const handleFavoriteClick = () => navigate('/Favorites');
-  const handleChatbotClick = () => navigate('/Chatbot');
 
+
+
+  const [isAddCollaboratorsOpen, setIsAddCollaboratorsOpen] = useState(false);
+
+
+  const handleCloseCollaborators = () => {
+    setIsAddCollaboratorsOpen(false);
+  };
   // Handlers for modals
   const handleNoteModal = () => {
     setShowNoteModal(prev => {
@@ -83,10 +72,7 @@ const UrduEditor = () => {
   const handleGoalModal = () => setShowGoalModal(!showGoalModal);
   const handleChapterModal = () => setShowChapterModal(!showChapterModal);
 
-  // Toggle sidebar
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  
 
   // Toggle left panel visibility
   const toggleLeftPanel = () => {
@@ -239,6 +225,9 @@ const UrduEditor = () => {
       alert('Please enter a note and ensure a chapter is selected.');
     }
   };
+  
+
+
 
   // Delete Note
   const deleteNote = async (noteId) => {
@@ -270,7 +259,10 @@ const UrduEditor = () => {
     setIsDropdownOpen(false);
   };
 
-  // Urdu Keyboard Layout
+
+
+
+  // Urdu ''Keyboard Layout
   const urduLayout = {
     default: [
       "ذ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩ ٠ - = {bksp}",
@@ -368,102 +360,14 @@ const UrduEditor = () => {
     color: '#fff',
   };
 
+
+
   return (
     <div className={`urdu-editor-container ${theme}`}>
-      {/* Header */}
-      <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img 
-            src={menuIcon} 
-            alt="Menu" 
-            className="homepage-menu-icon" 
-            onClick={toggleSidebar} 
-            style={{ cursor: 'pointer' }}
-          />
-          <div className="homepage-app-title" onClick={handleHomepageClick} style={{ cursor: 'pointer' }}>
-            VerseCraft
-          </div>
-          <nav>
-            <ul>
-              <li className="homepage-Plot" onClick={handleProjectsClick} style={{ cursor: 'pointer' }}>
-                <img src={journalIcon} alt="My Projects" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick} style={{ cursor: 'pointer' }}>
-                <img src={favIcon} alt="Favorites" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick} style={{ cursor: 'pointer' }}>
-                <img src={botIcon} alt="InspireBot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              <li className="homepage-Published" onClick={handleNotificationClick} style={{ cursor: 'pointer' }}>
-                <img src={notiIcon} alt="Notifications" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick} style={{ cursor: 'pointer' }}>
-                <img src={setIcon} alt="Settings" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
-                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                John Doe
-              </li>
-            </ul>
-          </nav>
-        </header>
-      </div>
+       <Header/>
+       <Sidebar/>
 
-      {/* Sidebar */}
-      <div className={`homepage-sidebar ${isSidebarOpen ? 'open' : ''}`} id="sidebar">
-        <button id="sidebarToggle" className="homepage-sidebar-toggle" onClick={toggleSidebar} style={{ cursor: 'pointer', background: 'none', border: 'none', fontSize: '1.5em' }}>
-          &#9776;
-        </button>
-
-        <div className='homepage-journal' style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }} onClick={handlePlotClick}>
-          <img src={plotIcon} alt="Plot" className="homepage-journal-icon" />
-          <span>Plot</span>
-          <img 
-            src={plusIcon} 
-            alt="Add Plot" 
-            className="noveldashboard-Add-plot-icon" 
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => { e.stopPropagation(); handlePlotClick(); }}
-          />
-        </div>
-        <div className='homepage-notifications' style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }} onClick={handleCharacterClick}>
-          <img src={characterIcon} alt="Character" className="homepage-noti-icon" />
-          <span>Character</span>
-          <img 
-            src={plusIcon} 
-            alt="Add Character" 
-            className="noveldashboard-Add-character-icon" 
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => { e.stopPropagation(); handleCharacterClick(); }}
-          />
-        </div>
-        <div className='homepage-notifications' style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }} onClick={handleCharacterClick}>
-          <img src={comIcon} alt="Collaborators" className="homepage-noti-icon" />
-          <span>Collaborators</span>
-          <img 
-            src={plusIcon} 
-            alt="Add Collaborator" 
-            className="noveldashboard-Add-collaborator-icon" 
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => { e.stopPropagation(); handleCharacterClick(); }} // Ensure this points to the correct handler if different
-          />
-        </div>
-
-        <div className='homepage-goals' onClick={handlePublishClick} style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', marginTop: '10px' }}>
-          <img src={publishIcon} alt="Publishing" className="homepage-goal-icon" />
-          <span>Publishing</span>
-        </div>
-        <div className='homepage-favorites' onClick={handleProgressClick} style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', marginTop: '10px' }}>
-          <img src={goalIcon} alt="Progress" className="homepage-fav-icon" />
-          <span>Progress</span>
-        </div>
-      </div>
-
+     
       {/* Toolbar */}
       <div className="urdu-toolbar" style={{ display: 'flex', alignItems: 'center', padding: '10px', backgroundColor: '#f0f0f0' }}>
         {/* Custom Dropdown for Themes */}
@@ -538,7 +442,7 @@ const UrduEditor = () => {
       </div>
 
       {/* Main Content */}
-      <div className="urdu-main-content" style={{ display: 'flex', padding: '20px' }}>
+      <div className="urdu-main-content" style={{ display: 'flex'}}>
         {/* Left Panel */}
         {leftPanelVisible && (
           <div className="urdu-left-panel" style={{ width: '20%', paddingRight: '20px' }}>
@@ -593,14 +497,18 @@ const UrduEditor = () => {
           background: 'none', 
           border: 'none', 
           fontSize: '1.5em', 
-          marginRight: '10px' 
+          height: '40px',
+          color:'black',
+          borderRight:'1px solid #a18e75',
+          borderBottom:'1px solid #a18e75',
+          backgroundColor: '#e1dbd6',
         }}>
           {leftPanelVisible ? <FaChevronLeft /> : <FaChevronRight />}
         </button>
 
         {/* Editor Panel */}
         <div className="urdu-editor-panel flex-grow-1" style={{ flexGrow: 1, paddingRight: '20px' }}>
-          <h2>Urdu Text Editor</h2>
+          
 
           <div className="urdu-editor-area" style={{ marginBottom: '10px' }}>
             <textarea
@@ -608,8 +516,8 @@ const UrduEditor = () => {
               onChange={handleChange}
               placeholder="لکھنا شروع کریں..."
               style={{
-                width: "100%",
-                height: "400px", // Fixed typo from "400x" to "400px"
+                width: "90%",
+                height: "300px", // Fixed typo from "400x" to "400px"
                 fontFamily: "Noto Nastaliq Urdu, serif",
                 fontSize: "18px",
                 direction: "rtl",
@@ -624,7 +532,7 @@ const UrduEditor = () => {
           </div>
 
           {/* Save Chapter Button */}
-          <button className="save-chapter-btn" onClick={saveChapter} style={{ padding: '8px 12px', cursor: 'pointer', marginBottom: '10px' }}>
+          <button className="save-chapter-btn" onClick={saveChapter} style={{color:'white', padding: '8px 12px', cursor: 'pointer', marginBottom: '10px' ,borderRadius:'2px', backgroundColor:'#191B30'}}>
             Save Chapter
           </button>
 
@@ -638,21 +546,23 @@ const UrduEditor = () => {
         </div>
 
         {/* Right Panel */}
-        <div className="urdu-right-panel" style={{ width: '20%', paddingLeft: '20px' }}>
+        <div className="urdu-right-panel" >
           <h4>Goals & Streaks</h4>
           <div className="urdu-goal-tracker" style={{ marginBottom: '20px' }}>
             <h5>Goal: {goal} Words</h5>
-            <div className="urdu-progress-bar" style={{ width: '100%', backgroundColor: '#e0e0e0', borderRadius: '8px', overflow: 'hidden' }}>
+            <div className="urdu-progress-bar" style={{  border:'1px solid #191B30',  width: '100%', backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden' }}>
               <div 
                 className="urdu-progress-fill" 
                 style={{ 
                   width: `${progress}%`, 
-                  backgroundColor: '#1890ff', 
+                  backgroundColor: '#191B30', 
                   height: '20px', 
                   textAlign: 'center', 
-                  color: '#fff', 
+                  marginleft:'10px',
+                  color: 'orange', 
                   lineHeight: '20px', 
-                  transition: 'width 0.3s ease'
+                  transition: 'width 0.3s ease',
+                  border:'1px solid #191B30'
                 }}
               >
                 {progress.toFixed(0)}%
@@ -699,11 +609,11 @@ const UrduEditor = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="noveldashboard-buttons" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button className="noveldashboard-button" onClick={saveChapter} style={{ padding: '8px 12px', cursor: 'pointer' }}>
+          <div className="urdu-save-note-buttons" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <button className="urdu-save-note-button" onClick={saveChapter} style={{ padding: '8px 12px', cursor: 'pointer' }}>
               Save
             </button>
-            <button className="noveldashboard-button" onClick={() => navigate('/AddCollaborators')} style={{ padding: '8px 12px', cursor: 'pointer' }}>
+            <button className="urdu-save-note-button" onClick={() => navigate('/AddCollaborators')} style={{ padding: '8px 12px', cursor: 'pointer' }}>
               Add Collaborators
             </button>
             {/* Add functionality for Save As and Preview if needed */}
@@ -824,6 +734,14 @@ const UrduEditor = () => {
           </div>
         </div>
       )}
+
+{/* AddCollaborators Modal */}
+<AddCollaborators 
+        isOpen={isAddCollaboratorsOpen} 
+        onClose={handleCloseCollaborators} 
+        projectId={projectId} 
+      />
+
     </div>
   );
 };

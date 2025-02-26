@@ -1,83 +1,219 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './noveldashboard.css';
-import menuIcon from '../Images/Logo-V.png';
-import plotIcon from '../Images/Plot.png';
-import characterIcon from '../Images/Character.png';
-import publishIcon from '../Images/Published.png';
-import profileIcon from '../Images/generic-user-profile-picture.png';
-import goalIcon from '../Images/goal.png';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
 import plusIcon from "../Images/Plus.png";
-import journalIcon from '../Images/journal.png';
 import Modal from 'react-modal';
 import closeIcon from '../Images/Close.png';
 import { Scrollbars } from 'react-custom-scrollbars-2';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import comIcon from "../Images/comm.png"
-import botIcon from "../Images/Bot.png"
+import AddCollaborators from './AddCollaborators';
+import Editor from './Editor';
+import Sidebar from './Sidebar';
+import socket from './socket'; 
+import axios from 'axios';
+import { debounce } from 'lodash';
+import Header from '../Header/header';
+import Sidebars from '../Sidebar/sidebar';
 
-// Import the components
-import Chatbot from './Chatbot'; // Chatbot component
-import Editor from './Editor'; // Editor component
-import Sidebar from './Sidebar'; // Sidebar component
+// For accessibility with Modal
+Modal.setAppElement('#root');
 
 function NovelDashboard() {
-  const { projectId } = useParams(); // Assuming projectId refers to Novel ID
+  const { projectId } = useParams(); 
+  const navigate = useNavigate();
 
+  // State for chapters, current chapter, notes, user, etc.
   const [chapters, setChapters] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentChapter, setCurrentChapter] = useState(null);
   const [visible, setVisible] = useState(false);
-  const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
+  const [user, setUser] = useState(null);
+  const [usersInChapter, setUsersInChapter] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Fetch chapters when the component mounts
+  const [isAddCollaboratorsOpen, setIsAddCollaboratorsOpen] = useState(false);
+
+  // Ref to track the current chapter ID
+  const currentChapterIdRef = useRef(null);
+
+  // Debounced handler to reduce socket emissions
+  const debouncedHandleTextChange = useRef(
+    debounce((chapterId, value) => {
+      if (chapterId) {
+        socket.emit('novelsendChanges', { chapterId, content: value });
+      }
+    }, 300)
+  ).current;
+
+  // Fetch user data
   useEffect(() => {
-    fetch(`/api/novels/${projectId}/chapters`)
-      .then((res) => res.json())
-      .then((data) => {
-        setChapters(data);
-        if (data.length > 0) {
-          setCurrentChapter(data[0]);
-          setCurrentPage(0);
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
         }
-      })
-      .catch((error) => console.error(error));
+        const response = await axios.get('http://localhost:5001/api/users/profile', {
+          headers: { 'x-auth-token': token },
+        });
+        setUser(response.data);
+      } catch (err) {
+        console.error('Failed to load user data', err);
+      }
+    };
+    fetchUserData();
+  }, [navigate]);
+
+  // Fetch chapters when component mounts or projectId changes
+  useEffect(() => {
+    if (projectId) {
+      setLoading(true);
+      fetch(`/api/novels/${projectId}/chapters`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch chapters');
+          return res.json();
+        })
+        .then((data) => {
+          setChapters(data);
+          // Auto-load first chapter if available
+          if (data.length > 0) {
+            selectChapterByIndex(0, data);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setLoading(false);
+        });
+    }
+    // Cleanup on projectId change
+    return () => {
+      if (currentChapterIdRef.current) {
+        leaveChapterRoom(currentChapterIdRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
+
+  // Socket event listeners for collaborative editing
+  useEffect(() => {
+    // Listen for updated user list
+    socket.on('novelupdateUserList', (userList) => {
+      setUsersInChapter(userList);
+    });
+
+    // Listen for incoming content changes from other users
+    socket.on('novelreceiveChanges', ({ chapterId, newContent }) => {
+      if (currentChapter && chapterId === currentChapter._id) {
+        setCurrentChapter((prev) => ({ ...prev, content: newContent }));
+      }
+    });
+
+    return () => {
+      socket.off('novelupdateUserList');
+      socket.off('novelreceiveChanges');
+    };
+  }, [currentChapter]);
 
   // Fetch notes when the current chapter changes
   useEffect(() => {
-    if (currentChapter) {
-      fetch(`/api/novels/${projectId}/chapters/${currentChapter._id}/notes`)
-        .then((res) => res.json())
-        .then((data) => {
-          setNotes(data);
-        })
-        .catch((error) => console.error(error));
+    if (currentChapter && projectId) {
+      fetchNotesForChapter(currentChapter._id);
     }
   }, [currentChapter, projectId]);
 
-  // Function to handle chapter click
-  const handleChapterClick = (index) => {
-    const chapter = chapters[index];
-    fetch(`/api/novels/${projectId}/chapters/${chapter._id}`)
-      .then((res) => res.json())
+  const fetchNotesForChapter = (chapterId) => {
+    fetch(`/api/novels/${projectId}/chapters/${chapterId}/notes`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch notes');
+        return res.json();
+      })
       .then((data) => {
-        setCurrentChapter(data);
-        setCurrentPage(index);
+        setNotes(data);
       })
       .catch((error) => console.error(error));
   };
 
-  // Function to update the content of the current chapter
+  
+  const handleCloseCollaborators = () => {
+    setIsAddCollaboratorsOpen(false);
+  };
+
+  const selectChapterByIndex = (index, chapterArray = chapters) => {
+    const chapter = chapterArray[index];
+    if (!chapter) return;
+
+    setLoading(true);
+
+    // If currently in another chapter, leave it first
+    if (currentChapter && currentChapter._id !== chapter._id) {
+      leaveChapterRoom(currentChapter._id);
+    }
+
+    fetch(`/api/novels/${projectId}/chapters/${chapter._id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch chapter');
+        return res.json();
+      })
+      .then((data) => {
+        setCurrentChapter(data);
+        setCurrentPage(index);
+        // Update the ref with the new chapter ID
+        currentChapterIdRef.current = data._id;
+        // Join this new chapter room for collaboration
+        joinChapterRoom(data._id);
+        fetchNotesForChapter(data._id);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  // Function to handle chapter click from sidebar
+  const handleChapterClick = (index) => {
+    selectChapterByIndex(index);
+  };
+
+  const joinChapterRoom = (chapterId) => {
+    if (user && chapterId) {
+      socket.emit('noveljoinProject', { chapterId, username: user.fullname, profileImage: user.profileImage });
+    }
+  };
+
+  const leaveChapterRoom = (chapterId) => {
+    if (user && chapterId) {
+      socket.emit('novelleaveProject', { chapterId, username: user.fullname });
+      // No need to call socket.leave(chapterId)
+      // The server will handle removing the socket from the room
+      if (currentChapterIdRef.current === chapterId) {
+        currentChapterIdRef.current = null;
+      }
+    }
+  };
+
+  // Handle component unmount to leave the current room
+  useEffect(() => {
+    return () => {
+      if (currentChapterIdRef.current) {
+        leaveChapterRoom(currentChapterIdRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleTextChange = (value) => {
-    setCurrentChapter((prevChapter) => ({ ...prevChapter, content: value }));
+    if (currentChapter) {
+      setCurrentChapter((prevChapter) => ({ ...prevChapter, content: value }));
+      // Emit changes to other collaborators via debounced function
+      debouncedHandleTextChange(currentChapter._id, value);
+    }
   };
 
   const handleSaveChapter = () => {
@@ -87,7 +223,10 @@ function NovelDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(currentChapter),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to save chapter');
+          return res.json();
+        })
         .then((data) => {
           const updatedChapters = [...chapters];
           updatedChapters[currentPage] = data;
@@ -105,18 +244,29 @@ function NovelDashboard() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to create chapter');
+        return res.json();
+      })
       .then((data) => {
-        setChapters([...chapters, data]);
-        setCurrentPage(chapters.length);
+        // If currently in another chapter, leave it first
+        if (currentChapter) {
+          leaveChapterRoom(currentChapter._id);
+        }
+
+        const newChapters = [...chapters, data];
+        setChapters(newChapters);
+        setCurrentPage(newChapters.length - 1);
         setCurrentChapter(data);
+        // Update the ref with the new chapter ID
+        currentChapterIdRef.current = data._id;
+        joinChapterRoom(data._id);
+        fetchNotesForChapter(data._id);
       })
       .catch((error) => console.error(error));
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar state
-  };
+ 
 
   const stripHtmlTags = (html) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -131,13 +281,18 @@ function NovelDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: plainTextNote }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to add note');
+          return res.json();
+        })
         .then((data) => {
           setNotes([...notes, data]);
-          setNewNote(''); // Clear the editor after saving
-          setVisible(false); // Close the modal
+          setNewNote(''); 
+          setVisible(false); 
         })
         .catch((error) => console.error(error));
+    } else {
+      alert("Note cannot be empty.");
     }
   };
 
@@ -146,7 +301,8 @@ function NovelDashboard() {
       fetch(`/api/novels/${projectId}/chapters/${currentChapter._id}/notes/${noteId}`, {
         method: 'DELETE',
       })
-        .then(() => {
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to delete note');
           const updatedNotes = notes.filter((note) => note._id !== noteId);
           setNotes(updatedNotes);
         })
@@ -154,120 +310,13 @@ function NovelDashboard() {
     }
   };
 
-  // Navigation handlers
-  const handleHomepageClick = () => {
-    navigate('/Homepage');
-  };
+ 
 
-  const handlePlotClick = () => {
-    navigate('/Plot');
-  };
-
-  const handleCharacterClick = () => {
-    navigate('/Character');
-  };
-
-  const handlePublishClick = () => {
-    navigate('/Publishing');
-  };
-
-  const handleProfileClick = () => {
-    navigate('/Profile');
-  };
-
-  const handleProjectsClick = () => {
-    navigate('/Saved');
-  };
-
-  const handleNotificationClick = () => {
-    navigate('/Notification');
-  };
-
-  const handleChatbotClick = () => {
-    navigate('/Chatbot');
-  };
-
-  const handleProgressClick = () => {
-    navigate('/Progress');
-  };
-
-  const handleSettingClick = () => {
-    navigate('/Setting');
-  };
-
-  const handleFavoriteClick = () => {
-    navigate('/Favorite');
-  };
 
   return (
     <div className="noveldashboard-container">
-      <div className="homepage-header">
-        <header className="homepage-header-item">
-          <img src={menuIcon} alt="Menu" className="homepage-menu-icon" />
-          <div className="homepage-app-title" onClick={handleHomepageClick}>VerseCraft</div>
-          <nav>
-            <ul>
-              <li className="homepage-Plot" onClick={handleProjectsClick}>
-                <img src={journalIcon} alt="Character" className="homepage-character-icon" />
-                My Projects
-              </li>
-              <li className="homepage-Character" onClick={handleFavoriteClick}>
-                <img src={favIcon} alt="Character" className="homepage-character-icon" />
-                Favorites
-              </li>
-              <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                <img src={botIcon} alt="homepage-chatbot" className="homepage-chatbot-icon" />
-                InspireBot
-              </li>
-              <li className="homepage-Published" onClick={handleNotificationClick}>
-                <img src={notiIcon} alt="Published Works" className="homepage-publish-icon" />
-                Notifications
-              </li>
-              <li className="homepage-inspire-bot" onClick={handleSettingClick}>
-                <img src={setIcon} alt="InspireBot" className="homepage-bot-icon" />
-                Settings
-              </li>
-              <li className="homepage-Profile" onClick={handleProfileClick}>
-                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                John Doe
-              </li>
-            </ul>
-          </nav>
-        </header>
-      </div>
-
-      <div className={`homepage-sidebar ${isSidebarOpen ? 'open' : ''}`} id="sidebar">
-        <button id="sidebarToggle" className="homepage-sidebar-toggle" onClick={toggleSidebar}>
-          &#9776;
-        </button>
-
-        <div className='homepage-journal'>
-          <img src={plotIcon} alt="journal" className="homepage-journal-icon" />
-          Plot
-          <img src={plusIcon} alt="noveldashboard-add-plot" className="noveldashboard-Add-plot-icon" onClick={handlePlotClick} />
-        </div>
-        <div className='homepage-notifications'>
-          <img src={characterIcon} alt="notifications" className="homepage-noti-icon" />
-          Character
-          <img src={plusIcon} alt="noveldashboard-add-character" className="noveldashboard-Add-character-icon" onClick={handleCharacterClick} />
-        </div>
-        <div className='homepage-notifications'>
-          <img src={comIcon} alt="notifications" className="homepage-noti-icon" />
-          Collaborators
-          <img src={plusIcon} alt="noveldashboard-collaborator-plot" className="noveldashboard-Add-collaborator-icon" onClick={handleCharacterClick} />
-        </div>
-
-        <div className='homepage-goals' onClick={handlePublishClick}>
-          <img src={publishIcon} alt="goals" className="homepage-goal-icon" />
-          Publishing
-        </div>
-        <div className='homepage-favorites' onClick={handleProgressClick}>
-          <img src={goalIcon} alt="favorites" className="homepage-fav-icon" />
-          Progress
-        </div>
-
-      </div>
-
+         <Header/>
+         <Sidebars/>
       <div className="noveldashboard-dashboard">
         {/* Sidebar Component */}
         <div className="noveldashboard-sidebar">
@@ -278,6 +327,7 @@ function NovelDashboard() {
             handleChapterClick={handleChapterClick}
           />
         </div>
+       
 
         {/* Editor Component */}
         <div className="noveldashboard-editor">
@@ -287,10 +337,7 @@ function NovelDashboard() {
           />
         </div>
 
-        {/* Chatbot Component */}
-        <div className="noveldashboard-chatbot">
-          <Chatbot />
-        </div>
+       
 
         <div className="noveldashboard-notes">
           <aside className="noveldashboard-notes-section">
@@ -309,14 +356,14 @@ function NovelDashboard() {
                   <img src={closeIcon} alt="Close Note" className="noveldashboard-close-icon" />
                 </button>
                 <div className="noveldashboard-modal-content">
-                  <ReactQuill
+                <textarea
                     className="noveldashboard-note-text"
                     value={newNote}
-                    onChange={setNewNote}
+                    onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Write your note here..."
                   />
                 </div>
-                <button onClick={handleSaveNote}>Save</button>
+                <button className="novelboard-notes-save-button" onClick={handleSaveNote}>Save</button>
               </Modal>
               <h2>Notes</h2>
             </div>
@@ -335,19 +382,79 @@ function NovelDashboard() {
                 ))}
               </ul>
             </Scrollbars>
+
+            <div>
+              <h3 style={{ textAlign: "center", color: "#333", marginBottom: "5px" }}>Users in this chapter:</h3>
+              <div
+                style={{
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                  padding: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  backgroundColor: "#fff",
+                }}
+              >
+                <ul
+                  style={{
+                    listStyleType: "none",
+                    padding: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
+                  {usersInChapter.map((u, index) => (
+                    <li
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "10px",
+                        border: "1px solid #eee",
+                        borderRadius: "8px",
+                        backgroundColor: "#f9f9f9",
+                        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
+                      }}
+                    >
+                      <img
+                        src={`http://localhost:5001/${u.profileImage}`}
+                        alt={u.username}
+                        width="30"
+                        height="30"
+                        style={{ borderRadius: "50%", marginRight: "10px" }}
+                      />
+                      <span style={{ fontSize: "14px", color: "#555" }}>{u.username}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+
           </aside>
 
           <div className="noveldashboard-buttons">
             <button className="noveldashboard-button" onClick={handleSaveChapter}>
               Save
             </button>
-            <button className="noveldashboard-button" >
-              Add Collaborators
-            </button>
+            
             {/* Add functionality for Save As and Preview if needed */}
           </div>
+
+          
         </div>
       </div>
+
+
+{/* AddCollaborators Modal */}
+<AddCollaborators 
+        isOpen={isAddCollaboratorsOpen} 
+        onClose={handleCloseCollaborators} 
+        projectId={projectId} 
+      />
+      
     </div>
   );
 }

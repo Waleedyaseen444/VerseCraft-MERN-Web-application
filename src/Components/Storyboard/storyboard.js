@@ -3,33 +3,35 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './storyboard.css';
-import menuIcon from '../Images/Logo-V.png';
 import closeIcon from '../Images/Close.png';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import Modal from 'react-modal';
-import plotIcon from '../Images/Plot.png';
-import characterIcon from '../Images/Character.png';
-import publishIcon from '../Images/Published.png';
-import profileIcon from '../Images/generic-user-profile-picture.png';
-import goalIcon from '../Images/goal.png';
-import favIcon from '../Images/fav.png';
-import notiIcon from '../Images/noti.png';
-import setIcon from '../Images/set.png';
-import journalIcon from '../Images/journal.png';
 import plusIcon from "../Images/Plus.png";
-import comIcon from "../Images/comm.png";
-import botIcon from "../Images/Bot.png";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddCollaborators from './AddCollaborators'; // Import the AddCollaborators component
+import axios from 'axios'; // Ensure axios is imported
+import socket from './socket'; // Path to your socket.js
+import  {  useRef } from 'react';
+import crosshover from "../Images/cross-hover.png";
+import crossNohover from "../Images/cross-no-hover.png";
+import Header from '../Header/header';
+import Sidebar from '../Sidebar/sidebar';
+
 
 // Bind modal to the appElement for accessibility
 Modal.setAppElement('#root');
 
 function Storyboard() {
+
+    
     const { projectId } = useParams(); // Assuming projectId refers to Story ID
     const navigate = useNavigate();
+    const [user, setUser] = useState(null); // Store the logged-in user data
+    const [error, setError] = useState(null); // Track error state
+    const [loading, setLoading] = useState(true);
 
     // Editor State
     const [value, setValue] = useState('');
@@ -49,11 +51,48 @@ function Storyboard() {
     // Project Data State
     const [projectData, setProjectData] = useState(null);
 
+    // Add Collaborators Modal State
+    const [isAddCollaboratorsOpen, setIsAddCollaboratorsOpen] = useState(false);
+    const [usersInChapter, setUsersInChapter] = useState([]); // Active users
+
     // Fetch Project Data
     useEffect(() => {
+
+        const fetchUserData = async () => {
+            try {
+              const token = localStorage.getItem('token');
+              if (!token) {
+                navigate('/login');
+                return;
+              }
+        
+              const response = await axios.get('http://localhost:5001/api/users/profile', {
+                headers: { 'x-auth-token': token },
+              });
+        
+              setUser(response.data);
+           
+        
+            } catch (err) {
+              console.error(err);
+              setError('Failed to load user data');
+            } finally {
+              setLoading(false);
+            }
+          };
+
+
+
+
+
         const fetchProjectData = async () => {
             try {
-                const response = await fetch(`/api/stories/${projectId}`);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/stories/${projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
+                    },
+                });
                 if (!response.ok) {
                     if (response.status === 404) {
                         throw new Error('Story not found.');
@@ -70,6 +109,7 @@ function Storyboard() {
         };
 
         if (projectId) {
+            fetchUserData();
             fetchProjectData();
         }
     }, [projectId]);
@@ -78,7 +118,12 @@ function Storyboard() {
     useEffect(() => {
         const fetchChapters = async () => {
             try {
-                const response = await fetch(`/api/stories/${projectId}/chapters`);
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/stories/${projectId}/chapters`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
+                    },
+                });
                 if (!response.ok) {
                     if (response.status === 404) {
                         throw new Error('Chapters not found.');
@@ -99,10 +144,92 @@ function Storyboard() {
         }
     }, [projectId]);
 
+
+   // Reference to the Quill editor instance
+   const quillRef = useRef(null);
+
+  
+// Listen for updates to the user list
+useEffect(() => {
+    socket.on('updateUserList', (userList) => {
+        setUsersInChapter(userList);
+    });
+
+    socket.on('receiveChanges', ({ chapterId, newContent }) => {
+        if (chapterId === selectedChapterId) {
+            setValue(newContent);
+        }
+    });
+
+    return () => {
+        socket.off('updateUserList');
+        socket.off('receiveChanges');
+    };
+}, [selectedChapterId]);
+
+const handleSelectChapter = async (chapterId) => {
+    try {
+        setSelectedChapterId(chapterId);
+
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/chapters/${chapterId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch chapter content');
+        }
+
+        const chapterData = await response.json();
+        setValue(chapterData.content);
+        setLanguage(chapterData.language || 'en');
+
+        // Join chapter room with username and profile image
+        socket.emit('joinProject', { chapterId, username: user.fullname, profileImage: user.profileImage });
+    } catch (error) {
+        console.error('Error fetching chapter content:', error);
+        toast.error(`Error fetching chapter content: ${error.message}`);
+    }
+};
+
+const handleContentChange = (newContent) => {
+    setValue(newContent);
+    if (selectedChapterId) {
+        socket.emit('sendChanges', { chapterId: selectedChapterId, content: newContent });
+    } else {
+        console.error('No chapter selected for emitting changes');
+    }
+};
+
+
+const handleLeaveChapter = () => {
+    if (selectedChapterId) {
+        socket.emit('leaveProject', { chapterId: selectedChapterId, username: user.fullname });
+        setSelectedChapterId(null);
+        setValue('');
+        setUsersInChapter([]);
+        toast.info('You have left the chapter');
+    }
+};
+
+
+
+
+
+   
+   
+
     // Fetch Notes for a Chapter
     const fetchNotes = async (chapterId) => {
         try {
-            const response = await fetch(`/api/stories/${projectId}/chapters/${chapterId}/notes`);
+            const token = localStorage.getItem('token');
+            const response = await fetch(`/api/stories/${projectId}/chapters/${chapterId}/notes`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
+                },
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch notes');
             }
@@ -171,11 +298,7 @@ function Storyboard() {
         toolbar: toolbarOptions,
     };
 
-    // Language Toggle
-    const handleLanguageToggle = () => {
-        setLanguage(prevLanguage => prevLanguage === 'en' ? 'ur' : 'en');
-    };
-
+  
     const placeholderText = language === 'en' ? "Write your content here..." : "اپنا مواد یہاں لکھیں";
 
     // Notes Handlers
@@ -184,10 +307,12 @@ function Storyboard() {
     const handleSaveNote = async () => {
         if (newNote.trim()) {
             try {
+                const token = localStorage.getItem('token');
                 const response = await fetch(`/api/stories/${projectId}/chapters/${selectedChapterId}/notes`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
                     },
                     body: JSON.stringify({ content: newNote }),
                 });
@@ -214,8 +339,12 @@ function Storyboard() {
     // Delete a note
     const handleDeleteNote = async (noteId) => {
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch(`/api/notes/${noteId}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
+                },
             });
 
             if (!response.ok) {
@@ -251,10 +380,12 @@ function Storyboard() {
         }
 
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch(`/api/stories/${projectId}/chapters`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
                 },
                 body: JSON.stringify({
                     number: Number(number.trim()),
@@ -286,39 +417,30 @@ function Storyboard() {
     };
 
     // Handle Chapter Selection
-    const handleSelectChapter = async (chapterId) => {
-        setSelectedChapterId(chapterId);
-        try {
-            const response = await fetch(`/api/chapters/${chapterId}`);
-            if (!response.ok) throw new Error('Failed to fetch chapter content');
-            const chapterData = await response.json();
-            setValue(chapterData.content);
-            setLanguage(chapterData.language || 'en'); // Assuming language is part of chapter data
+   
+    
 
-            // Fetch notes for this chapter
-            await fetchNotes(chapterId);
-        } catch (error) {
-            console.error("Error fetching chapter content:", error);
-            toast.error(`Error fetching chapter content: ${error.message}`);
-        }
-    };
 
-    // Save Chapter Content
-    const handleSaveChapter = async () => {
+
+
+
+    const handleSaveChapter = async () => { 
         if (!selectedChapterId) {
             toast.warn("Please select a chapter to save.");
             return;
         }
 
         try {
+            const token = localStorage.getItem('token');
             const response = await fetch(`/api/chapters/${selectedChapterId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     content: value,
-                    language: language, // Save current language setting
+                    language: language,
                 }),
             });
 
@@ -330,11 +452,20 @@ function Storyboard() {
             const updatedChapter = await response.json();
             setChapters(chapters.map(chapter => chapter._id === selectedChapterId ? updatedChapter : chapter));
             toast.success("Chapter saved successfully!");
+
+            // Optionally emit the save event to notify others
+            socket.emit('editChapter', {
+                chapterId: selectedChapterId,
+                content: updatedChapter.content,
+                language: updatedChapter.language
+            });
         } catch (error) {
             console.error("Error saving chapter:", error);
             toast.error(`Error saving chapter: ${error.message}`);
         }
     };
+
+   
 
     // Save as New Chapter
     const handleSaveAsNewChapter = async () => {
@@ -345,7 +476,12 @@ function Storyboard() {
 
         try {
             // Fetch the current chapter data
-            const response = await fetch(`/api/chapters/${selectedChapterId}`);
+            const token = localStorage.getItem('token');
+            const response = await fetch(`/api/chapters/${selectedChapterId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
+                },
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch current chapter data');
             }
@@ -360,6 +496,7 @@ function Storyboard() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Ensure token is stored and accessible
                 },
                 body: JSON.stringify({
                     number: nextNumber,
@@ -386,127 +523,13 @@ function Storyboard() {
         }
     };
 
-    // Sidebar State and Handlers
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
-
-    // Navigation Handlers
-    const handleHomepageClick = () => {
-        navigate('/Homepage');
-    };
-
-    const handlePlotClick = () => {
-        navigate('/Plot');
-    };
-
-    const handleCharacterClick = () => {
-        navigate('/Character');
-    };
-
-    const handlePublishClick = () => {
-        navigate('/Publishing');
-    };
-
-    const handleProfileClick = () => {
-        navigate('/Profile');
-    };
-
-    const handleProjectsClick = () => {
-        navigate('/Saved');
-    };
-
-    const handleNotificationClick = () => {
-        navigate('/Notification');
-    };
-
-    const handleProgressClick = () => {
-        navigate('/Progress');
-    };
-
-    const handleSettingClick = () => {
-        navigate('/Setting');
-    };
-
-    const handleFavoriteClick = () => {
-        navigate('/Favorites');
-    };
-
-    const handleChatbotClick = () => {
-        navigate('/Chatbot');
-    };
 
     return (
         <div className="story-Container">
-            {/* Header */}
-            <div className="homepage-header">
-                <header className="homepage-header-item">
-                    <img src={menuIcon} alt="Menu" className="homepage-menu-icon" onClick={toggleSidebar} />
-                    <div className="homepage-app-title" onClick={handleHomepageClick}>VerseCraft</div>
-                    <nav>
-                        <ul>
-                            <li className="homepage-Plot" onClick={handleProjectsClick}>
-                                <img src={journalIcon} alt="My Projects" className="homepage-journal-icon" />
-                                My Projects
-                            </li>
-                            <li className="homepage-Character" onClick={handleFavoriteClick}>
-                                <img src={favIcon} alt="Favorites" className="homepage-fav-icon" />
-                                Favorites
-                            </li>
-                            <li className="homepage-Chatbot" onClick={handleChatbotClick}>
-                                <img src={botIcon} alt="InspireBot" className="homepage-chatbot-icon" />
-                                InspireBot
-                            </li>
-                            <li className="homepage-Published" onClick={handleNotificationClick}>
-                                <img src={notiIcon} alt="Notifications" className="homepage-publish-icon" />
-                                Notifications
-                            </li>
-                            <li className="homepage-inspire-bot" onClick={handleSettingClick}>
-                                <img src={setIcon} alt="Settings" className="homepage-bot-icon" />
-                                Settings
-                            </li>
-                            <li className="homepage-Profile" onClick={handleProfileClick}>
-                                <img src={profileIcon} alt="Profile" className="homepage-profile-icon" />
-                                {projectData?.author?.name || 'John Doe'}
-                            </li>
-                        </ul>
-                    </nav>
-                </header>
-            </div>
-
-            {/* Sidebar */}
-            <div className={`homepage-sidebar ${isSidebarOpen ? 'open' : ''}`} id="sidebar">
-                <button id="sidebarToggle" className="homepage-sidebar-toggle" onClick={toggleSidebar}>
-                    &#9776;
-                </button>
-
-                <div className='homepage-journal'>
-                    <img src={plotIcon} alt="Plot" className="homepage-journal-icon" />
-                    Plot
-                    <img src={plusIcon} alt="Add Plot" className="noveldashboard-Add-plot-icon" onClick={handlePlotClick} />
-                </div>
-                <div className='homepage-notifications'>
-                    <img src={characterIcon} alt="Character" className="homepage-noti-icon" />
-                    Character
-                    <img src={plusIcon} alt="Add Character" className="noveldashboard-Add-character-icon" onClick={handleCharacterClick} />
-                </div>
-                <div className='homepage-notifications'>
-                    <img src={comIcon} alt="Collaborators" className="homepage-noti-icon" />
-                    Collaborators
-                    <img src={plusIcon} alt="Add Collaborator" className="noveldashboard-Add-collaborator-icon" onClick={handleCharacterClick} />
-                </div>
-
-                <div className='homepage-goals' onClick={handlePublishClick}>
-                    <img src={publishIcon} alt="Publishing" className="homepage-goal-icon" />
-                    Publishing
-                </div>
-                <div className='homepage-favorites' onClick={handleProgressClick}>
-                    <img src={goalIcon} alt="Progress" className="homepage-fav-icon" />
-                    Progress
-                </div>
-            </div>
+            <Header/>
+            <Sidebar projectId={projectId} />
+           
+        
 
             {/* Main Content */}
             <div className="story-main-content">
@@ -544,9 +567,12 @@ function Storyboard() {
                 {/* Editor Section */}
                 <div className="story-editor">
                     <ReactQuill
+
+                        theme="snow"
+                        ref={quillRef}
                         modules={modules}
                         value={value}
-                        onChange={setValue}
+                        onChange={handleContentChange}
                         placeholder={placeholderText}
                         className={language === 'ur' ? 'rtl' : ''}
                         style={{ direction: language === 'ur' ? 'rtl' : 'ltr' }}
@@ -590,10 +616,25 @@ function Storyboard() {
                             </ul>
                         </Scrollbars>
                     </div>
+
+                 <div className="storyboard-users-self-and-collab">
+                    <h3 className="storyboard-users-number">Users in this chapter</h3>
+                    <ul className="storyboard-collaborators-container">
+                        {usersInChapter.map((user, index) => (
+                            <li className="storyboard-collaborators" key={index}>
+                                <img src={`http://localhost:5001/${user.profileImage}`} alt={user.username} width="16%" height="30" className="storyboard-users-profile-image" />
+                                <span className="storyboard-user-name-collaborator">{user.username} </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
                     <div className="story-action-buttons">
+
                         <button className="story-save-button" onClick={handleSaveChapter}>Save</button>
                         <button className="story-save-as-new-button" onClick={handleSaveAsNewChapter}>Save as New</button>
                         <button className="story-preview-button">Preview the Project</button>
+                        
                     </div>
                 </aside>
             </div>
@@ -605,18 +646,22 @@ function Storyboard() {
                 onRequestClose={() => setIsNotesModalVisible(false)}
             >
                 <h2>Add Note</h2>
-                <button className="story-close-button" onClick={() => setIsNotesModalVisible(false)}>
-                    <img src={closeIcon} alt="Close Note" className="story-close-icon" />
-                </button>
+                <div
+                className="story-close-button" 
+                    onMouseOver={(e) => (e.target.src = crosshover)}
+                    onMouseOut={(e) => (e.target.src = crossNohover)}
+                    onClick={() => setIsNotesModalVisible(false)}>
+                    <img src={crossNohover} alt="Close Note" className="story-close-icon-chapter" />
+                </div>
                 <div className="story-modal-content">
-                    <ReactQuill
+                    <input
                         className="story-note-text"
                         value={newNote}
                         onChange={setNewNote}
                         placeholder="Write your note here..."
                     />
                 </div>
-                <button onClick={handleSaveNote} className="story-save-note-button">Save</button>
+                <div onClick={handleSaveNote} className="story-save-note-button">Save</div>
             </Modal>
 
             {/* Add Chapter Modal */}
@@ -626,9 +671,14 @@ function Storyboard() {
                 onRequestClose={handleCancelChapter}
             >
                 <h3>Add New Chapter</h3>
-                <button className="story-close-button" onClick={handleCancelChapter}>
-                    <img src={closeIcon} alt="Close Chapter" className="story-close-icon" />
-                </button>
+                <div
+                    className="story-close-button"
+                    onMouseOver={(e) => (e.target.src = crosshover)}
+                    onMouseOut={(e) => (e.target.src = crossNohover)}
+                    onClick={handleCancelChapter}
+                    >
+                    <img src={crossNohover} alt="Close Chapter" className="story-close-icon-chapter" />
+                </div>
                 <div className="story-modal-content">
                     <input
                         type="number"
@@ -646,11 +696,18 @@ function Storyboard() {
                         className="chapter-input"
                     />
                 </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    <button onClick={handleChapterSubmit} className="submit-chapter-button">Submit</button>
-                    <button onClick={handleCancelChapter} className="cancel-button">Cancel</button>
-                </div>
+               
+                    <div onClick={handleChapterSubmit} className="submit-chapter-button">Submit</div>
+                    
+                
             </Modal>
+
+            {/* Add Collaborators Modal */}
+            <AddCollaborators 
+                isOpen={isAddCollaboratorsOpen} 
+                onClose={() => setIsAddCollaboratorsOpen(false)} 
+                projectId={projectId} 
+            />
 
             {/* Toast Notifications */}
             <ToastContainer />

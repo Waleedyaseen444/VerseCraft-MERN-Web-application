@@ -1,16 +1,30 @@
 // src/components/AdminPanel.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './AdminPanel.css';
 import profileIcon from '../Images/generic-user-profile-picture.png';
-
-// Management Components
 import UserManagement from './UserManagement';
 import NovelManagement from './NovelManagement';
 import StoryManagement from './StoryManagement';
 import UrduManagement from './UrduManagement';
 import NotifyUsers from './NotifyUsers';
+
+// Chart components & auto registration
+import {
+  Chart as ChartJS,
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title,
+  PointElement,
+  LineElement,
+  Filler
+} from 'chart.js';
+import { Bar, Doughnut, Line } from 'react-chartjs-2';  // <--- ADDED Line here
 
 // Icons
 import {
@@ -23,15 +37,101 @@ import {
   FaBars,
   FaTimes,
   FaHome,
+  FaSyncAlt,
+  FaSearch,
+  FaSun,
+  FaMoon,
+  FaUsers,
+  FaMale,
+  FaFemale,
+  FaUserShield,
+  FaUserFriends,
+  FaUserEdit,
+  FaUserAlt,
+  FaQuestionCircle,
+  FaInfoCircle
 } from 'react-icons/fa';
 
+// Register Chart.js components
+ChartJS.register(
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  Title,
+  PointElement,
+  LineElement,
+  Filler
+);
+
+// Debounce hook
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
 const AdminPanel = () => {
-  const [user, setUser] = useState(null);
-  const [activeSection, setActiveSection] = useState('users'); // Default section
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Sidebar state
   const navigate = useNavigate();
 
-  // Fetch admin data on component mount
+  // State for user
+  const [user, setUser] = useState(null);
+
+  // Active section
+  const [activeSection, setActiveSection] = useState('users');
+
+  // Sidebar
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Basic stats
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [maleUsers, setMaleUsers] = useState(0);
+  const [femaleUsers, setFemaleUsers] = useState(0);
+
+  // Age breakdown
+  const [under18Count, setUnder18Count] = useState(0);
+  const [between18And25Count, setBetween18And25Count] = useState(0);
+  const [above26Count, setAbove26Count] = useState(0);
+
+  // UserType breakdown
+  const [adminCount, setAdminCount] = useState(0);
+  const [moderatorCount, setModeratorCount] = useState(0);
+  const [normalUserCount, setNormalUserCount] = useState(0);
+
+  // Loading / error for stats
+  const [loadingStats, setLoadingStats] = useState(false);
+  const [statsError, setStatsError] = useState('');
+
+  // Global search
+  const [globalSearchTerm, setGlobalSearchTerm] = useState('');
+  const [filterRole, setFilterRole] = useState('all');    // no longer displayed in UI
+  const [filterStatus, setFilterStatus] = useState('all'); // no longer displayed in UI
+
+  const debouncedSearchTerm = useDebounce(globalSearchTerm, 300);
+
+  // Theming
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem('adminPanelTheme') || 'light'
+  );
+
+  // For stories, novels, urdu data
+  const [stories, setStories] = useState([]);
+  const [novels, setNovels] = useState([]);
+  const [urduProjects, setUrduProjects] = useState([]);
+  const [dataError, setDataError] = useState('');
+
+  // Top authors limit
+  const [topAuthorsLimit, setTopAuthorsLimit] = useState(5);
+
+  // Selection for Male/Female data display
+  const [genderDataType, setGenderDataType] = useState('absolute'); // 'absolute' or 'percentage'
+
+  // Fetch admin user data
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
@@ -40,52 +140,648 @@ const AdminPanel = () => {
           navigate('/login');
           return;
         }
-
         const response = await axios.get('http://localhost:5001/api/users/profile', {
           headers: { 'x-auth-token': token },
         });
         setUser(response.data);
       } catch (error) {
         console.error('Error fetching admin data:', error);
-        // Optionally, handle token expiration or invalid token
         navigate('/login');
       }
     };
-
     fetchAdmin();
   }, [navigate]);
 
-  const renderManagementSection = () => {
-    switch (activeSection) {
-      case 'users':
-        return <UserManagement />;
-      case 'stories':
-        return <StoryManagement />;
-      case 'novels':
-        return <NovelManagement />;
-      case 'urdu':
-        return <UrduManagement />;
-      case 'notify':
-        return <NotifyUsers />;
-      default:
-        return <UserManagement />;
+  // Fetch stats initially and when filters change
+  useEffect(() => {
+    fetchAllStats();
+  }, [debouncedSearchTerm, filterRole, filterStatus]);
+
+  // Also fetch stories, novels, and urdu data
+  useEffect(() => {
+    fetchStoriesNovelsUrdu();
+  }, []);
+
+  const fetchStoriesNovelsUrdu = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+      // 1) Stories
+      const storiesRes = await axios.get('http://localhost:5001/api/stories', {
+        headers: { 'x-auth-token': token },
+      });
+      setStories(storiesRes.data || []);
+
+      // 2) Novels
+      const novelsRes = await axios.get('http://localhost:5001/api/admin/novels', {
+        headers: { 'x-auth-token': token },
+      });
+      setNovels(novelsRes.data || []);
+
+      // 3) Urdu
+      const urduRes = await axios.get('http://localhost:5001/api/urdu', {
+        headers: { 'x-auth-token': token },
+      });
+      setUrduProjects(urduRes.data || []);
+    } catch (err) {
+      console.error(err);
+      setDataError('Failed to fetch stories/novels/urdu data.');
     }
   };
 
+  const fetchAllStats = async () => {
+    setLoadingStats(true);
+    setStatsError('');
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      // Build query parameters based on search
+      let query = '';
+      if (debouncedSearchTerm) {
+        query += `&search=${encodeURIComponent(debouncedSearchTerm)}`;
+      }
+      // role, status if you want them (not shown in UI now)
+      if (filterRole !== 'all') {
+        query += `&role=${encodeURIComponent(filterRole)}`;
+      }
+      if (filterStatus !== 'all') {
+        query += `&status=${encodeURIComponent(filterStatus)}`;
+      }
+
+      // Get all users with query
+      const usersRes = await axios.get(`http://localhost:5001/api/admin/users?${query}`, {
+        headers: { 'x-auth-token': token },
+      });
+
+      const allUsers = usersRes.data || [];
+      setTotalUsers(allUsers.length);
+
+      // Gender
+      const males = allUsers.filter(u => u.gender === 'Male').length;
+      const females = allUsers.filter(u => u.gender === 'Female').length;
+      setMaleUsers(males);
+      setFemaleUsers(females);
+
+      // Age
+      let under18 = 0;
+      let between18And25 = 0;
+      let above26 = 0;
+      allUsers.forEach(u => {
+        if (u.age < 18) under18++;
+        else if (u.age >= 18 && u.age <= 25) between18And25++;
+        else if (u.age >= 26) above26++;
+      });
+      setUnder18Count(under18);
+      setBetween18And25Count(between18And25);
+      setAbove26Count(above26);
+
+      // userType
+      let admin = 0;
+      let moderator = 0;
+      let normal = 0;
+      allUsers.forEach(u => {
+        if (u.userType === 'admin') admin++;
+        else if (u.userType === 'moderator') moderator++;
+        else normal++;
+      });
+      setAdminCount(admin);
+      setModeratorCount(moderator);
+      setNormalUserCount(normal);
+
+    } catch (err) {
+      console.error(err);
+      setStatsError('Failed to fetch stats. Please try again later.');
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  // Render whichever management section is active
+  const renderManagementSection = () => {
+    switch (activeSection) {
+      case 'users':
+        return <UserManagement globalSearchTerm={debouncedSearchTerm} />;
+      case 'stories':
+        return <StoryManagement globalSearchTerm={debouncedSearchTerm} />;
+      case 'novels':
+        return <NovelManagement globalSearchTerm={debouncedSearchTerm} />;
+      case 'urdu':
+        return <UrduManagement globalSearchTerm={debouncedSearchTerm} />;
+      case 'notify':
+        return <NotifyUsers />;
+      case 'help':
+        return (
+          <div className="adminpenal-help-section">
+            <div className="help-card">
+              <h2><FaInfoCircle /> Help &amp; Documentation</h2>
+              <p>This panel allows you to manage Users, Stories, Novels, and Urdu projects.</p>
+              <p><strong>User Management:</strong> Create, edit, delete users and update roles.</p>
+              <p><strong>Story/Novel/Urdu Management:</strong> Manage literary items, etc.</p>
+              <p><strong>Notify Users:</strong> Broadcast important announcements or updates.</p>
+              <p><strong>Analytics:</strong> View detailed statistics about your platform.</p>
+              <p>
+                Need further assistance?{' '}
+                <a href="mailto:support@yourdomain.com" className="support-link">Contact Support</a>
+              </p>
+            </div>
+          </div>
+        );
+      default:
+        return <UserManagement globalSearchTerm={debouncedSearchTerm} />;
+    }
+  };
+
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
   };
 
+  // Toggle sidebar
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  // Toggle theme
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : theme === 'dark' ? 'custom' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('adminPanelTheme', newTheme);
+  };
+
+  // Theme class
+  const themeClass =
+    theme === 'dark' ? 'dark-theme' : theme === 'custom' ? 'custom-theme' : 'light-theme';
+
+  // ======================
+  // CHART DATA EXAMPLES (USER STATS)
+  // ======================
+  const ageBarData = {
+    labels: ['<18', '18-25', '26+'],
+    datasets: [
+      {
+        label: 'Number of Users',
+        data: [under18Count, between18And25Count, above26Count],
+        backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],
+        borderRadius: 5,
+      },
+    ],
+  };
+  const ageBarOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Age Distribution',
+        font: { size: 18, weight: 'bold' },
+        color: theme === 'dark' ? '#fff' : '#333',
+      },
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: theme === 'dark' ? '#444' : '#fff',
+        titleColor: theme === 'dark' ? '#fff' : '#333',
+        bodyColor: theme === 'dark' ? '#ddd' : '#555',
+        borderColor: theme === 'dark' ? '#555' : '#ccc',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+        },
+        grid: { display: false },
+      },
+      y: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+        },
+        grid: { color: theme === 'dark' ? '#555' : '#ccc' },
+      },
+    },
+  };
+
+  // Doughnut chart for user types
+  const userTypeDoughnutData = {
+    labels: ['Admin', 'Moderator', 'User'],
+    datasets: [
+      {
+        data: [adminCount, moderatorCount, normalUserCount],
+        backgroundColor: ['#EF5350', '#AB47BC', '#29B6F6'],
+        hoverOffset: 10,
+        borderWidth: 1,
+      },
+    ],
+  };
+  const userTypeDoughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'User Types',
+        font: { size: 18, weight: 'bold' },
+        color: theme === 'dark' ? '#fff' : '#333',
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+        },
+      },
+      tooltip: {
+        backgroundColor: theme === 'dark' ? '#444' : '#fff',
+        titleColor: theme === 'dark' ? '#fff' : '#333',
+        bodyColor: theme === 'dark' ? '#ddd' : '#555',
+        borderColor: theme === 'dark' ? '#555' : '#ccc',
+        borderWidth: 1,
+      },
+    },
+  };
+
+  // ============================================================
+  // STORIES/NOVELS/URDU - AGGREGATION & CHARTS (by Author)
+  // ============================================================
+  const aggregateByAuthorEmail = (items = []) => {
+    const map = {};
+    items.forEach((item) => {
+      const authorEmail =
+        item.author?.email ||
+        item.authorEmail ||
+        'unknown@example.com';
+      if (!map[authorEmail]) {
+        map[authorEmail] = 1;
+      } else {
+        map[authorEmail]++;
+      }
+    });
+    const arr = Object.keys(map).map((email) => ({
+      authorEmail: email,
+      count: map[email],
+    }));
+    arr.sort((a, b) => b.count - a.count);
+    return arr;
+  };
+
+  const topStoriesAuthors = useMemo(
+    () => aggregateByAuthorEmail(stories).slice(0, topAuthorsLimit),
+    [stories, topAuthorsLimit]
+  );
+  const topNovelsAuthors = useMemo(
+    () => aggregateByAuthorEmail(novels).slice(0, topAuthorsLimit),
+    [novels, topAuthorsLimit]
+  );
+  const topUrduAuthors = useMemo(
+    () => aggregateByAuthorEmail(urduProjects).slice(0, topAuthorsLimit),
+    [urduProjects, topAuthorsLimit]
+  );
+
+  // 1) Stories
+  const storiesByAuthorsBarData = {
+    labels: topStoriesAuthors.map((a) => a.authorEmail),
+    datasets: [
+      {
+        label: 'Stories Count',
+        data: topStoriesAuthors.map((a) => a.count),
+        backgroundColor: '#FF8A65',
+        borderRadius: 5,
+      },
+    ],
+  };
+  const storiesByAuthorsOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: `Top ${topAuthorsLimit} Authors (Stories)`,
+        font: { size: 18, weight: 'bold' },
+        color: theme === 'dark' ? '#fff' : '#333',
+      },
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: theme === 'dark' ? '#444' : '#fff',
+        titleColor: theme === 'dark' ? '#fff' : '#333',
+        bodyColor: theme === 'dark' ? '#ddd' : '#555',
+        borderColor: theme === 'dark' ? '#555' : '#ccc',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+          maxRotation: 45,
+          minRotation: 0,
+        },
+        grid: { display: false },
+      },
+      y: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+        },
+        grid: { color: theme === 'dark' ? '#555' : '#ccc' },
+      },
+    },
+  };
+
+  // 2) Novels
+  const novelsByAuthorsBarData = {
+    labels: topNovelsAuthors.map((a) => a.authorEmail),
+    datasets: [
+      {
+        label: 'Novels Count',
+        data: topNovelsAuthors.map((a) => a.count),
+        backgroundColor: '#9CCC65',
+        borderRadius: 5,
+      },
+    ],
+  };
+  const novelsByAuthorsOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: `Top ${topAuthorsLimit} Authors (Novels)`,
+        font: { size: 18, weight: 'bold' },
+        color: theme === 'dark' ? '#fff' : '#333',
+      },
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: theme === 'dark' ? '#444' : '#fff',
+        titleColor: theme === 'dark' ? '#fff' : '#333',
+        bodyColor: theme === 'dark' ? '#ddd' : '#555',
+        borderColor: theme === 'dark' ? '#555' : '#ccc',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+          maxRotation: 45,
+          minRotation: 0,
+        },
+        grid: { display: false },
+      },
+      y: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+        },
+        grid: { color: theme === 'dark' ? '#555' : '#ccc' },
+      },
+    },
+  };
+
+  // 3) Urdu
+  const urduByAuthorsBarData = {
+    labels: topUrduAuthors.map((a) => a.authorEmail),
+    datasets: [
+      {
+        label: 'Urdu Count',
+        data: topUrduAuthors.map((a) => a.count),
+        backgroundColor: '#EF9A9A',
+        borderRadius: 5,
+      },
+    ],
+  };
+  const urduByAuthorsOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: `Top ${topAuthorsLimit} Authors (Urdu)`,
+        font: { size: 18, weight: 'bold' },
+        color: theme === 'dark' ? '#fff' : '#333',
+      },
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: theme === 'dark' ? '#444' : '#fff',
+        titleColor: theme === 'dark' ? '#fff' : '#333',
+        bodyColor: theme === 'dark' ? '#ddd' : '#555',
+        borderColor: theme === 'dark' ? '#555' : '#ccc',
+        borderWidth: 1,
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+          maxRotation: 45,
+          minRotation: 0,
+        },
+        grid: { display: false },
+      },
+      y: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+        },
+        grid: { color: theme === 'dark' ? '#555' : '#ccc' },
+      },
+    },
+  };
+
+  // ================================
+  // Male/Female Distribution Chart
+  // ================================
+  const maleFemaleChartData = {
+    labels: ['Male', 'Female'],
+    datasets: [
+      {
+        label: 'Gender Distribution',
+        data:
+          genderDataType === 'absolute'
+            ? [maleUsers, femaleUsers]
+            : [
+                ((maleUsers / totalUsers) * 100).toFixed(2),
+                ((femaleUsers / totalUsers) * 100).toFixed(2)
+              ],
+        backgroundColor: ['#42A5F5', '#FF4081'],
+        hoverOffset: 10,
+        borderWidth: 1,
+      },
+    ],
+  };
+  const maleFemaleDoughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text:
+          genderDataType === 'absolute'
+            ? 'Gender Distribution (Absolute)'
+            : 'Gender Distribution (Percentage)',
+        font: { size: 18, weight: 'bold' },
+        color: theme === 'dark' ? '#fff' : '#333',
+      },
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: {
+          color: theme === 'dark' ? '#fff' : '#333',
+          font: { size: 14, weight: '600' },
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            let label = context.label || '';
+            if (genderDataType === 'percentage') {
+              label += `: ${context.parsed}%`;
+            } else {
+              label += `: ${context.parsed}`;
+            }
+            return label;
+          },
+        },
+        backgroundColor: theme === 'dark' ? '#444' : '#fff',
+        titleColor: theme === 'dark' ? '#fff' : '#333',
+        bodyColor: theme === 'dark' ? '#ddd' : '#555',
+        borderColor: theme === 'dark' ? '#555' : '#ccc',
+        borderWidth: 1,
+      },
+    },
+  };
+
+  // ============================================================
+  // MULTI-LINE CHART: Monthly Creations for Stories/Novels/Urdu
+  // ============================================================
+  // Helper: count how many items in each month of the current year
+  function getMonthlyCounts(items = []) {
+    const counts = new Array(12).fill(0);
+    const currentYear = new Date().getFullYear();
+
+    items.forEach((item) => {
+      if (item.createdAt) {
+        const date = new Date(item.createdAt);
+        if (date.getFullYear() === currentYear) {
+          const monthIndex = date.getMonth(); // 0=Jan, 1=Feb, ...
+          counts[monthIndex]++;
+        }
+      }
+    });
+
+    return counts;
+  }
+
+
+  console.log('Profile image path:', user?.profileImage);
+
+  // Build arrays
+  const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  const storiesMonthly = getMonthlyCounts(stories);
+  const novelsMonthly = getMonthlyCounts(novels);
+  const urduMonthly = getMonthlyCounts(urduProjects);
+
+  // Combine into line chart data
+  const monthlyLineData = {
+    labels: monthLabels,
+    datasets: [
+      {
+        label: 'Stories Created',
+        data: storiesMonthly,
+        borderColor: '#42A5F5',
+        backgroundColor: 'rgba(66,165,245,0.1)',
+        fill: true,
+        tension: 0.3,
+      },
+      {
+        label: 'Novels Created',
+        data: novelsMonthly,
+        borderColor: '#f9a109',
+        backgroundColor: 'rgba(249,161,9,0.1)',
+        fill: true,
+        tension: 0.3,
+      },
+      {
+        label: 'Urdu Created',
+        data: urduMonthly,
+        borderColor: '#AB47BC',
+        backgroundColor: 'rgba(171,71,188,0.1)',
+        fill: true,
+        tension: 0.3,
+      },
+    ],
+  };
+
+  const monthlyLineOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Monthly Creation (Stories, Novels, Urdu)',
+        font: { size: 18, weight: 'bold' },
+        color: theme === 'dark' ? '#fff' : '#333',
+      },
+      legend: {
+        position: 'top',
+        labels: {
+          color: theme === 'dark' ? '#fff' : '#333',
+        },
+      },
+      tooltip: {
+        backgroundColor: theme === 'dark' ? '#444' : '#fff',
+        titleColor: theme === 'dark' ? '#fff' : '#333',
+        bodyColor: theme === 'dark' ? '#ddd' : '#555',
+        borderColor: theme === 'dark' ? '#555' : '#ccc',
+        borderWidth: 1,
+        callbacks: {
+          label: (context) => {
+            const label = context.dataset.label || '';
+            const value = context.parsed.y || 0;
+            return `${label}: ${value}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+        },
+        grid: { display: false },
+      },
+      y: {
+        ticks: {
+          color: theme === 'dark' ? '#fff' : '#333',
+        },
+        grid: {
+          color: theme === 'dark' ? '#555' : '#ccc',
+        },
+      },
+    },
+  };
+
   return (
-    <div className="adminpenal-container">
-      {/* Sidebar Navigation */}
-      <aside className={`adminpenal-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
-        <div className="adminpenal-sidebar-header">
+    <div className={`adminpenal-container ${themeClass}`}>
+      {/* SIDEBAR */}
+      <aside className={`adminpenal-sidebar ${sidebarOpen ? 'open' : 'closed'} tooltip-container`}>
+        <div className="adminpenal-sidebar-header fancy-gradient-bg">
           <h2 className="adminpenal-sidebar-title">
             {sidebarOpen ? 'Admin Panel' : <FaHome />}
           </h2>
@@ -93,11 +789,25 @@ const AdminPanel = () => {
             className="adminpenal-sidebar-toggle-btn"
             onClick={toggleSidebar}
             aria-label="Toggle Sidebar"
+            title={sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'}
           >
             {sidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
+
+        {/* Welcome text */}
+        {sidebarOpen && (
+          <div className="adminpenal-welcome-text">
+            <p>Welcome, {user?.fullname || 'Administrator'}!</p>
+            <span>Manage all your resources in one place.</span>
+          </div>
+        )}
+
         <ul className="adminpenal-sidebar-menu">
+          {/* Section: Management */}
+          <li className="adminpenal-menu-section">
+            <span className="adminpenal-menu-section-title">Management</span>
+          </li>
           <li
             className={activeSection === 'users' ? 'active' : ''}
             onClick={() => setActiveSection('users')}
@@ -105,7 +815,7 @@ const AdminPanel = () => {
             title="User Management"
           >
             <FaUser className="adminpenal-menu-icon" />
-            {sidebarOpen && <span className="adminpenal-menu-text">User Management</span>}
+            <span className="adminpenal-menu-text">User Management</span>
           </li>
           <li
             className={activeSection === 'stories' ? 'active' : ''}
@@ -114,7 +824,7 @@ const AdminPanel = () => {
             title="Story Management"
           >
             <FaPenFancy className="adminpenal-menu-icon" />
-            {sidebarOpen && <span className="adminpenal-menu-text">Story Management</span>}
+            <span className="adminpenal-menu-text">Story Management</span>
           </li>
           <li
             className={activeSection === 'novels' ? 'active' : ''}
@@ -123,7 +833,7 @@ const AdminPanel = () => {
             title="Novel Management"
           >
             <FaBook className="adminpenal-menu-icon" />
-            {sidebarOpen && <span className="adminpenal-menu-text">Novel Management</span>}
+            <span className="adminpenal-menu-text">Novel Management</span>
           </li>
           <li
             className={activeSection === 'urdu' ? 'active' : ''}
@@ -132,7 +842,12 @@ const AdminPanel = () => {
             title="Urdu Management"
           >
             <FaLanguage className="adminpenal-menu-icon" />
-            {sidebarOpen && <span className="adminpenal-menu-text">Urdu Management</span>}
+            <span className="adminpenal-menu-text">Urdu Management</span>
+          </li>
+
+          {/* Section: Communications */}
+          <li className="adminpenal-menu-section">
+            <span className="adminpenal-menu-section-title">Communications</span>
           </li>
           <li
             className={activeSection === 'notify' ? 'active' : ''}
@@ -141,8 +856,27 @@ const AdminPanel = () => {
             title="Notify Users"
           >
             <FaBell className="adminpenal-menu-icon" />
-            {sidebarOpen && <span className="adminpenal-menu-text">Notify Users</span>}
+            <span className="adminpenal-menu-text">Notify Users</span>
           </li>
+
+          {/* Section: Support & Info */}
+          <li className="adminpenal-menu-section">
+            <span className="adminpenal-menu-section-title">Support & Info</span>
+          </li>
+          <li
+            className={activeSection === 'help' ? 'active' : ''}
+            onClick={() => setActiveSection('help')}
+            aria-label="Help & Documentation"
+            title="Help & Documentation"
+          >
+            <FaQuestionCircle className="adminpenal-menu-icon" />
+            <span className="adminpenal-menu-text">Help & Docs</span>
+          </li>
+
+          {/* Divider */}
+          <li className="adminpenal-menu-divider"></li>
+
+          {/* Logout */}
           <li
             onClick={handleLogout}
             className="adminpenal-logout"
@@ -150,25 +884,55 @@ const AdminPanel = () => {
             title="Logout"
           >
             <FaSignOutAlt className="adminpenal-menu-icon" />
-            {sidebarOpen && <span className="adminpenal-menu-text">Logout</span>}
+            <span className="adminpenal-menu-text">Logout</span>
           </li>
         </ul>
       </aside>
 
-      {/* Main Content */}
+      {/* MAIN CONTENT */}
       <div className="adminpenal-main-content">
-        {/* Top Navigation Bar */}
+        {/* TOP BAR */}
         <header className="adminpenal-header">
           <button
             className="adminpenal-header-toggle-btn"
             onClick={toggleSidebar}
             aria-label="Toggle Sidebar"
+            title={sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'}
           >
             <FaBars />
           </button>
+
+          {/* Global Search with Filters */}
+          <div className="adminpenal-search-container">
+            <div className="adminpenal-global-search tooltip-container">
+              <FaSearch className="adminpenal-search-icon" />
+              <input
+                type="text"
+                placeholder="Search by name, email, etc."
+                value={globalSearchTerm}
+                onChange={(e) => setGlobalSearchTerm(e.target.value)}
+                aria-label="Global Search"
+              />
+              <span className="tooltip-text"></span>
+            </div>
+            <div className="adminpenal-filters">
+              {/* Role/Status removed from UI */}
+            </div>
+          </div>
+
           <div className="adminpenal-header-right">
-            
-            <div className="adminpenal-profile">
+            {/* Theme Toggle */}
+            <button
+              className="adminpenal-theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label="Toggle Theme"
+              title="Toggle Theme"
+            >
+              {theme === 'dark' ? <FaSun /> : theme === 'custom' ? <FaMoon /> : <FaMoon />}
+            </button>
+
+            {/* Profile */}
+            <div className="adminpenal-profile tooltip-container">
               <img
                 src={
                   user?.profileImage
@@ -180,14 +944,169 @@ const AdminPanel = () => {
               />
               <div className="adminpenal-profile-details">
                 <h3>{user ? user.fullname : 'Guest'}</h3>
-                <p>{user ? user.email : 'Guest'}</p>
+                <p>{user ? user.email : 'guest@example.com'}</p>
               </div>
+              <span className="tooltip-text">View Profile</span>
             </div>
           </div>
         </header>
 
-        {/* Content Section */}
+        {/* CONTENT */}
         <main className="adminpenal-content">
+          <div className="adminpenal-dashboard-overview">
+            <div className="adminpenal-dashboard-header">
+              <h2>Dashboard Overview</h2>
+              <button
+                className="adminpenal-refresh-button"
+                onClick={fetchAllStats}
+                disabled={loadingStats}
+                aria-label="Refresh Statistics"
+                title="Refresh Statistics"
+              >
+                {loadingStats ? 'Refreshing...' : (
+                  <>
+                    <FaSyncAlt /> Refresh Stats
+                  </>
+                )}
+              </button>
+            </div>
+            {statsError && <div className="adminpenal-stats-error">{statsError}</div>}
+
+            {/* Summary Cards */}
+            <div className="adminpenal-cards-row">
+              <div className="adminpenal-card highlight-card card1">
+                <FaUsers className="adminpenal-card-icon" />
+                <h3 className="adminpenal-card-title">Total Users</h3>
+                <p className="adminpenal-card-value">{totalUsers}</p>
+                <span className="adminpenal-badge success">All</span>
+              </div>
+
+              <div className="adminpenal-card highlight-card card2">
+                <div className="adminpenal-gender-icons">
+                  <FaMale className="adminpenal-gender-icon male" />
+                  <FaFemale className="adminpenal-gender-icon female" />
+                </div>
+                <h3 className="adminpenal-card-title">Males / Females</h3>
+                <p className="adminpenal-card-value">
+                  {maleUsers} / {femaleUsers}
+                </p>
+                <span className="adminpenal-badge warning">
+                  Total: {maleUsers + femaleUsers}
+                </span>
+              </div>
+
+              <div className="adminpenal-card highlight-card card3">
+                <FaUserAlt className="adminpenal-card-icon" />
+                <h3 className="adminpenal-card-title">Under 18</h3>
+                <p className="adminpenal-card-value">{under18Count}</p>
+                <span className="adminpenal-badge success">Age Group</span>
+              </div>
+
+              <div className="adminpenal-card highlight-card card3">
+                <FaUserFriends className="adminpenal-card-icon" />
+                <h3 className="adminpenal-card-title">18-25</h3>
+                <p className="adminpenal-card-value">{between18And25Count}</p>
+                <span className="adminpenal-badge success">Age Group</span>
+              </div>
+            </div>
+
+            <div className="adminpenal-cards-row">
+              <div className="adminpenal-card highlight-card card3">
+                <FaUserShield className="adminpenal-card-icon" />
+                <h3 className="adminpenal-card-title">26+</h3>
+                <p className="adminpenal-card-value">{above26Count}</p>
+                <span className="adminpenal-badge success">Age Group</span>
+              </div>
+              <div className="adminpenal-card highlight-card card4">
+                <FaUserShield className="adminpenal-card-icon" />
+                <h3 className="adminpenal-card-title">Admin</h3>
+                <p className="adminpenal-card-value">{adminCount}</p>
+                <span className="adminpenal-badge danger">User Type</span>
+              </div>
+              <div className="adminpenal-card highlight-card card4">
+                <FaUserEdit className="adminpenal-card-icon" />
+                <h3 className="adminpenal-card-title">Moderator</h3>
+                <p className="adminpenal-card-value">{moderatorCount}</p>
+                <span className="adminpenal-badge danger">User Type</span>
+              </div>
+              <div className="adminpenal-card highlight-card card4">
+                <FaUser className="adminpenal-card-icon" />
+                <h3 className="adminpenal-card-title">User</h3>
+                <p className="adminpenal-card-value">{normalUserCount}</p>
+                <span className="adminpenal-badge danger">User Type</span>
+              </div>
+            </div>
+
+            {/* ADVANCED ANALYTICS GRAPHS */}
+            <div className="adminpenal-analytics-row">
+              <div className="adminpenal-chart-container">
+                <Bar data={ageBarData} options={ageBarOptions} />
+              </div>
+              <div className="adminpenal-chart-container">
+                <Doughnut data={userTypeDoughnutData} options={userTypeDoughnutOptions} />
+              </div>
+              <div className="adminpenal-chart-container">
+                <div className="adminpenal-dropdown-container">
+                  <label htmlFor="gender-data-select">Display as:</label>
+                  <select
+                    id="gender-data-select"
+                    value={genderDataType}
+                    onChange={(e) => setGenderDataType(e.target.value)}
+                    className="adminpenal-dropdown"
+                  >
+                    <option value="absolute">Absolute Numbers</option>
+                    <option value="percentage">Percentages</option>
+                  </select>
+                </div>
+                <Doughnut data={maleFemaleChartData} options={maleFemaleDoughnutOptions} />
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Graphs for Stories/Novels/Urdu */}
+          <div className="adminpenal-dashboard-overview">
+            <h2>Author-Based Analytics (Stories, Novels, Urdu)</h2>
+            {dataError && <div className="adminpenal-stats-error">{dataError}</div>}
+
+            <div className="adminpenal-dropdown-container">
+              <label htmlFor="top-authors-select">Show Top Authors:</label>
+              <select
+                id="top-authors-select"
+                value={topAuthorsLimit}
+                onChange={(e) => setTopAuthorsLimit(Number(e.target.value))}
+                className="adminpenal-dropdown"
+              >
+                <option value={3}>Top 3</option>
+                <option value={5}>Top 5</option>
+                <option value={10}>Top 10</option>
+              </select>
+            </div>
+
+            <div className="adminpenal-analytics-row">
+              <div className="adminpenal-chart-container">
+                <Bar data={storiesByAuthorsBarData} options={storiesByAuthorsOptions} />
+              </div>
+              <div className="adminpenal-chart-container">
+                <Bar data={novelsByAuthorsBarData} options={novelsByAuthorsOptions} />
+              </div>
+              <div className="adminpenal-chart-container">
+                <Bar data={urduByAuthorsBarData} options={urduByAuthorsOptions} />
+              </div>
+            </div>
+          </div>
+
+          {/* MULTI-LINE CHART: Monthly Creation */}
+          <div className="adminpenal-dashboard-overview">
+  <h2>Monthly Creation Analytics</h2>
+  <div className="adminpenal-analytics-row single-chart-center">
+    <div className="adminpenal-chart-container wide-center-chart">
+      <Line data={monthlyLineData} options={monthlyLineOptions} />
+    </div>
+  </div>
+</div>
+
+
+          {/* Renders whichever management section is active */}
           {renderManagementSection()}
         </main>
       </div>
@@ -196,364 +1115,3 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
-
-
-
-
-// Admin Panel CSS
-// .admin-penal-container {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   padding: 40px;
-//   background-color: #1e2226ff; /* Background Color */
-//   font-family: 'Arial', sans-serif;
-// }
-
-// .admin-penal-title {
-//   color: #ef8307; /* Title Color */
-//   margin-bottom: 20px;
-//   font-size: 2.4em;
-//   text-align: center;
-// }
-
-// .admin-penal-profile {
-//   width: 100%;
-//   max-width: 1200px;
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   padding: 30px;
-//   background-color: #171717ff; /* Profile Background */
-//   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-//   border-radius: 12px;
-// }
-
-// .admin-penal-profile-info {
-//   display: flex;
-//   justify-content: space-around;
-//   align-items: center;
-//   gap: 40px;
-//   margin-top: 20px;
-//   width: 100%;
-// }
-
-// .admin-penal-profile-icon {
-//   width: 140px;
-//   height: 140px;
-//   border-radius: 50%;
-//   object-fit: cover;
-//   border: 3px solid #ef8307;
-// }
-
-// .admin-penal-profile-details {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: flex-start;
-//   color: #ef8307; /* Details Text Color */
-// }
-
-// .admin-penal-profile-details h3 {
-//   margin: 0;
-//   font-size: 2em;
-//   font-weight: bold;
-// }
-
-// .admin-penal-profile-details p {
-//   color: #2b343bff; /* Details Text Color */
-//   margin: 8px 0;
-//   font-size: 1em;
-// }
-
-// .admin-penal-navbar {
-//   width: 80%;
-//   background-color: #1e272eff; /* Navbar Background */
-//   padding: 15px 30px;
-//   margin-top: 40px;
-//   border-radius: 12px;
-//   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-// }
-
-// .admin-penal-navbar ul {
-//   list-style: none;
-//   padding: 0;
-//   display: flex;
-//   justify-content: center;
-//   gap: 30px;
-// }
-
-// .admin-penal-navbar ul li {
-//   color: #ffffff;
-//   cursor: pointer;
-//   padding: 15px 25px;
-//   border-radius: 6px;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-// }
-
-// .admin-penal-navbar ul li:hover {
-//   background-color: #2b343bff; /* Hover Background */
-//   transform: scale(1.05);
-// }
-
-// .admin-penal-management {
-//   width: 100%;
-//   max-width: 1200px;
-//   padding: 30px;
-//   margin-top: 40px;
-//   background-color: #171717ff; /* Management Background */
-//   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-//   border-radius: 12px;
-// }
-
-// /* Story Management Styles */
-// .adminpenalstorymanage-container {
-//   margin: 20px;
-//   font-family: Arial, sans-serif;
-// }
-
-// .adminpenalstorymanage-story-form {
-//   margin-bottom: 30px;
-// }
-
-// .adminpenalstorymanage-story-form input,
-// .adminpenalstorymanage-story-form textarea {
-//   width: 100%;
-//   padding: 12px;
-//   margin-bottom: 15px;
-//   border: 1px solid #ccc;
-//   border-radius: 8px;
-//   background-color: #2b343bff; /* Input Background */
-//   color: white;
-// }
-
-// .adminpenalstorymanage-story-form button {
-//   padding: 12px 25px;
-//   background-color: #ef8307; /* Button Background */
-//   color: white;
-//   border: none;
-//   border-radius: 8px;
-//   cursor: pointer;
-//   font-size: 1.1em;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-// }
-
-// .adminpenalstorymanage-story-form button:hover {
-//   background-color: #1e272eff; /* Button Hover Background */
-//   transform: scale(1.05);
-// }
-
-// .adminpenalstorymanage-stories-list {
-//   display: flex;
-//   flex-direction: column;
-//   gap: 25px;
-// }
-
-// .adminpenalstorymanage-story-item {
-//   background-color: #1e2226ff; /* Story Item Background */
-//   padding: 25px;
-//   border-radius: 12px;
-//   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-// }
-
-// .adminpenalstorymanage-story-details {
-//   display: flex;
-//   flex-direction: column;
-//   gap: 12px;
-// }
-
-// .adminpenalstorymanage-story-edit-form input,
-// .adminpenalstorymanage-story-edit-form textarea {
-//   margin-bottom: 12px;
-// }
-
-// button {
-//   margin-top: 15px;
-//   cursor: pointer;
-// }
-
-// .adminpenalstorymanage-error-message {
-//   color: #dc3545; /* Error Message */
-//   margin-bottom: 25px;
-//   font-weight: bold;
-// }
-
-// /* Urdu Management Styles */
-// .UrduManagement-container {
-//   padding: 30px;
-//   background-color: #1e2226ff; /* Urdu Management Container */
-//   border-radius: 12px;
-// }
-
-// .UrduManagement-container h2 {
-//   color: #ef8307; /* Urdu Management Title */
-//   font-size: 2.2em;
-//   text-align: center;
-// }
-
-// .UrduManagement-error-message {
-//   color: #dc3545; /* Error Message */
-//   font-weight: bold;
-// }
-
-// .UrduManagement-list {
-//   margin-top: 25px;
-// }
-
-// .UrduManagement-item {
-//   background: #171717ff; /* Urdu Item Background */
-//   padding: 20px;
-//   margin: 15px 0;
-//   border-radius: 12px;
-//   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-// }
-
-// .UrduManagement-item h3 {
-//   margin: 0;
-//   color: #ef8307; /* Urdu Item Title Color */
-//   font-size: 1.8em;
-// }
-
-// .UrduManagement-actions {
-//   display: flex;
-//   gap: 15px;
-//   margin-top: 15px;
-// }
-
-// .UrduManagement-edit-btn,
-// .UrduManagement-delete-btn {
-//   background-color: #ef8307; /* Action Button Background */
-//   color: white;
-//   border: none;
-//   padding: 8px 18px;
-//   cursor: pointer;
-//   border-radius: 6px;
-//   display: flex;
-//   align-items: center;
-//   font-size: 1em;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-// }
-
-// .UrduManagement-edit-btn:hover {
-//   background-color: #1e272eff; /* Edit Button Hover */
-//   transform: scale(1.05);
-// }
-
-// .UrduManagement-delete-btn {
-//   background-color: #dc3545; /* Delete Button */
-// }
-
-// .UrduManagement-delete-btn:hover {
-//   background-color: #c82333; /* Delete Button Hover */
-// }
-
-// .UrduManagement-edit-form {
-//   background: #171717ff; /* Edit Form Background */
-//   padding: 25px;
-//   border-radius: 12px;
-//   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-// }
-
-// .UrduManagement-edit-form input,
-// .UrduManagement-edit-form textarea {
-//   width: 100%;
-//   padding: 12px;
-//   margin: 12px 0;
-//   border: 1px solid #ccc;
-//   border-radius: 8px;
-//   background-color: #2b343bff; /* Input Background */
-//   color: white;
-// }
-
-// .UrduManagement-edit-actions {
-//   display: flex;
-//   gap: 15px;
-//   margin-top: 25px;
-// }
-
-// .UrduManagement-save-btn,
-// .UrduManagement-cancel-btn {
-//   padding: 12px 25px;
-//   border: none;
-//   color: white;
-//   background-color: #28a745; /* Save Button */
-//   cursor: pointer;
-//   border-radius: 8px;
-//   font-size: 1.1em;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-// }
-
-// .UrduManagement-save-btn:hover {
-//   background-color: #218838;
-//   transform: scale(1.05);
-// }
-
-// .UrduManagement-cancel-btn {
-//   background-color: #dc3545; /* Cancel Button */
-// }
-
-// .UrduManagement-cancel-btn:hover {
-//   background-color: #c82333;
-//   transform: scale(1.05);
-// }
-
-// .adminnotifyuser-container {
-//   padding: 25px;
-//   max-width: 700px;
-//   margin: auto;
-//   background-color: #171717ff;
-//   border-radius: 12px;
-// }
-
-// .adminnotifyuser-container h2 {
-//   text-align: center;
-//   color: #ef8307; /* Notification Title Color */
-//   font-size: 2em;
-// }
-
-// .adminnotifyuser-recipient,
-// .adminnotifyuser-type,
-// .adminnotifyuser-message {
-//   margin-bottom: 18px;
-// }
-
-// .adminnotifyuser-container label {
-//   display: block;
-//   font-weight: bold;
-//   color: #ef8307; /* Label Color */
-// }
-
-// .adminnotifyuser-container select,
-// .adminnotifyuser-container textarea {
-//   width: 100%;
-//   padding: 12px;
-//   margin-top: 5px;
-//   font-size: 16px;
-//   background-color: #2b343bff; /* Input Background */
-//   color: white;
-//   border: 1px solid #ccc;
-//   border-radius: 8px;
-// }
-
-// .adminnotifyuser-button {
-//   padding: 12px 25px;
-//   background-color: #ef8307; /* Notification Button */
-//   color: white;
-//   border: none;
-//   cursor: pointer;
-//   font-size: 1.1em;
-//   display: flex;
-//   align-items: center;
-//   margin-top: 20px;
-//   border-radius: 8px;
-//   transition: background-color 0.3s ease, transform 0.2s ease;
-// }
-
-// .adminnotifyuser-button:disabled {
-//   background-color: #ccc;
-//   cursor: not-allowed;
-// }
-
-// .adminnotifyuser-button:hover {
-//   background-color: #1e272eff; /* Button Hover Background */
-//   transform: scale(1.05);
-// }

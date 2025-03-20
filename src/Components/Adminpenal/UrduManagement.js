@@ -34,6 +34,15 @@ const UrduManagement = () => {
     }
   };
 
+  const filterBySearchTerm = (user) => {
+    if (!globalSearchTerm) return true;
+    const lowerSearch = globalSearchTerm.toLowerCase();
+    const fullNameMatch = user.fullname?.toLowerCase().includes(lowerSearch);
+    const emailMatch = user.email?.toLowerCase().includes(lowerSearch);
+    const genderMatch = user.gender?.toLowerCase().includes(lowerSearch);
+    return (fullNameMatch || emailMatch || genderMatch);
+  };
+
   const handleDeleteUrdu = async (id) => {
     if (!window.confirm('Are you sure you want to delete this Urdu project?')) return;
     try {
